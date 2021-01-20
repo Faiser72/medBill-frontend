@@ -1,3 +1,7 @@
+import { ListproductmasterComponent } from './modules/master/productmaster/listproductmaster/listproductmaster.component';
+import { EditproductmasterComponent } from './modules/master/productmaster/editproductmaster/editproductmaster.component';
+import { AddproductmasterComponent } from './modules/master/productmaster/addproductmaster/addproductmaster.component';
+import { ProductmasterhomeComponent } from './modules/master/productmaster/productmasterhome/productmasterhome.component';
 import { DashboardComponent } from './modules/dashboard/dashboard/dashboard.component';
 import { SalesByProductComponent } from './modules/reports/sales-by-product/sales-by-product.component';
 import { OrderReportsComponent } from './modules/reports/order-reports/order-reports.component';
@@ -40,7 +44,15 @@ const routes: Routes = [
       { path: "", component: DashboardComponent },
       { path: "dashboard", component: DashboardComponent },
       { path: "productCategory", component: ProductCategoryComponent },
-      { path: "productMaster", component: ProductMasterComponent },
+      {
+        path: "productMasterHome",
+        component: ProductmasterhomeComponent,
+        children: [
+          { path: "addproductmaster", component: AddproductmasterComponent },
+          { path: "editproductmaster", component: EditproductmasterComponent },
+          { path: "listproductmaster", component: ListproductmasterComponent },
+        ],
+      },
       {
         path: "manufacturerMasterHome",
         component: ManufacturermasterhomeComponent,

@@ -54,10 +54,10 @@ export class ListmanufacturermasterComponent implements OnInit {
 
 
   routeToEditManufacturer() {
-    this.route.navigate(['manufacturerMasterHome/editmanufacturer'])
+    this.route.navigate(['home/manufacturerMasterHome/editmanufacturer'])
   }
 
   routeToAddManufacturer() {
-    this.route.navigate(['manufacturerMasterHome/addmanufacturer'])
+    this.route.navigate(['home/manufacturerMasterHome/addmanufacturer'])
   }
 }

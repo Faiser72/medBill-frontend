@@ -54,10 +54,10 @@ export class ListsuppliermasterComponent implements OnInit {
 
 
   routeToEditManufacturer() {
-    this.route.navigate(['supplierMasterHome/editsupplier'])
+    this.route.navigate(['home/supplierMasterHome/editsupplier'])
   }
 
   routeToAddManufacturer() {
-    this.route.navigate(['supplierMasterHome/addsupplier'])
+    this.route.navigate(['home/supplierMasterHome/addsupplier'])
   }
 }

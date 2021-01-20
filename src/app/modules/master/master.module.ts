@@ -1,3 +1,4 @@
+import { ProductmasterModule } from './productmaster/productmaster.module';
 import { SuppliermasterModule } from './suppliermaster/suppliermaster.module';
 import { RouterModule } from '@angular/router';
 import { ManufacturemasterModule } from './manufacturemaster/manufacturemaster.module';
@@ -19,7 +20,8 @@ import { ProductMasterComponent } from './product-master/product-master.componen
     ReactiveFormsModule,
     ManufacturemasterModule,
     RouterModule,
-    SuppliermasterModule
+    SuppliermasterModule,
+    ProductmasterModule
   ]
 })
 export class MasterModule { }

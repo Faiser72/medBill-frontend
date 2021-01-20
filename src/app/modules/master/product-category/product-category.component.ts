@@ -1,3 +1,4 @@
+import { ProductCategoryMasterService } from './../../../service/productCategoryMaster/product-category-master.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
@@ -21,20 +22,34 @@ export class ProductCategoryComponent implements OnInit {
   displayedColumns: string[] = [
     "slNo",
     "categoryName",
-    "description",
+    "categoryDescription",
     "action"
   ];
-  categoryDetailsList: any;
-  categoryDetailsListExceptOne: any;
+  productCategoryDetailsList: any;
+  productCategoryDetailsListExceptOne: any;
 
   constructor(private fb: FormBuilder,
     private _snackBar: MatSnackBar,
+    private productCategoryMasterService: ProductCategoryMasterService,
     private router: Router) {
     this.addCategoryMasterFormBuilder();
   }
 
   ngOnInit() {
 
+    this.productCategoryMasterService.productCategoryList().subscribe((data: any) => {
+      if (data.success) {
+        this.productCategoryDetailsList = data['listObject'];
+        this.dataSource = new MatTableDataSource(data['listObject']);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.customFilter();
+      } else {
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+    });
   }
   customFilter() {
     this.dataSource.filterPredicate = (data, filter) => {
@@ -47,13 +62,28 @@ export class ProductCategoryComponent implements OnInit {
     this.addCategoryMasterForm = this.fb.group({
       categoryId: [0],
       categoryName: [null, [Validators.required]],
-      description: [null, [Validators.required]]
+      categoryDescription: [null, [Validators.required]]
     });
     this.addCategoryMasterForm.setValidators(this.customValidation());
   }
 
-  saveCategoryDetails() {
 
+  saveCategoryDetails() {
+    let categoryName = this.addCategoryMasterForm.get('categoryName').value;
+    this.addCategoryMasterForm.patchValue({ categoryName: categoryName.trim().replace(/\s+/g, ' ') });
+    if (this.addCategoryMasterForm.valid) {
+      this.productCategoryMasterService.addProductCategory(this.addCategoryMasterForm.value).subscribe((resp: any) => {
+        if (resp.success) {
+          alert(resp.message);
+          this.customReset();
+        } else {
+          alert(resp.message);
+        }
+      });
+    } else {
+      alert("please fill the proper Details")
+      return false;
+    }
   }
 
   categoryNameInputMsg: string; categoryName: string;
@@ -63,8 +93,8 @@ export class ProductCategoryComponent implements OnInit {
       if (categoryNameFormGroup.value !== '' && categoryNameFormGroup.value !== null) {
         if (categoryNameFormGroup.valid) {
           if (this.btnFlag) {
-            if (!isNullOrUndefined(this.categoryDetailsListExceptOne)) {
-              this.categoryDetailsListExceptOne.forEach((data: any) => {
+            if (!isNullOrUndefined(this.productCategoryDetailsListExceptOne)) {
+              this.productCategoryDetailsListExceptOne.forEach((data: any) => {
                 if (data.categoryName.toLowerCase() == categoryNameFormGroup.value.trim().toLowerCase().replace(/\s+/g, ' ')) {
                   this.categoryName = data.categoryName.toLowerCase();
                   this.categoryNameInputMsg = 'This category name already exist.';
@@ -73,8 +103,8 @@ export class ProductCategoryComponent implements OnInit {
               });
             }
           } else {
-            if (!isNullOrUndefined(this.categoryDetailsList)) {
-              this.categoryDetailsList.forEach((data: any) => {
+            if (!isNullOrUndefined(this.productCategoryDetailsList)) {
+              this.productCategoryDetailsList.forEach((data: any) => {
                 if (data.categoryName.toLowerCase() == categoryNameFormGroup.value.trim().toLowerCase().replace(/\s+/g, ' ')) {
                   this.categoryName = data.categoryName.toLowerCase();
                   this.categoryNameInputMsg = 'This category name already exist.';
@@ -109,45 +139,47 @@ export class ProductCategoryComponent implements OnInit {
     }
   }
 
-  routeToDeleteCategory(categoryDetails: any) {
-    // let index = this.categoryDetailsList.findIndex((data: any) => data.categoryId === categoryDetails.categoryId);
-    // if ((categoryDetails.categoryId > 0) && (index > -1)) {
-    //   this.categoryMasterService.deleteCategoryMasterDetails(categoryDetails.categoryId).subscribe((resp: any) => {
-    //     this.categoryDetailsList.splice(index, 1);
-    //     this.customReset();
-    //     this._snackBar.open(categoryDetails.categoryName, resp.message, { duration: 2500 });
-    //   });
-    // }
+
+  routeToDeleteCategory(productCategoryDetails: any) {
+    let index = this.productCategoryDetailsList.findIndex((data: any) => data.categoryId === productCategoryDetails.categoryId);
+    if ((productCategoryDetails.categoryId > 0) && (index > -1)) {
+      this.productCategoryMasterService.deleteProductCategoryDetails(productCategoryDetails.categoryId).subscribe((resp: any) => {
+        this.productCategoryDetailsList.splice(index, 1);
+        this.customReset();
+        this._snackBar.open(productCategoryDetails.categoryName, resp.message, { duration: 2500 });
+      });
+    }
   }
 
   btnFlag: boolean = false;
-  routeToEditCategory(categoryDetails: any) {
-    // this.btnFlag = true;
-    // this.categoryMasterService.getCategoryMasterListExceptOne(categoryDetails.categoryId).subscribe((data: any) => {
-    //   this.categoryDetailsListExceptOne = data.listObject;
-    //   this.addCategoryMasterForm.patchValue({
-    //     categoryName: categoryDetails.categoryName,
-    //     categoryId: categoryDetails.categoryId
-    //   });
-    // });
+  routeToEditCategory(productCategoryDetails: any) {
+    this.btnFlag = true;
+    this.productCategoryMasterService.getProductCategoryListExceptOne(productCategoryDetails.categoryId).subscribe((data: any) => {
+      this.productCategoryDetailsListExceptOne = data.listObject;
+      this.addCategoryMasterForm.patchValue({
+        categoryName: productCategoryDetails.categoryName,
+        categoryDescription: productCategoryDetails.categoryDescription,
+        categoryId: productCategoryDetails.categoryId
+      });
+    });
   }
 
   updateCategoryDetails() {
-    // let categoryName = this.addCategoryMasterForm.get('categoryName').value;
-    // this.addCategoryMasterForm.patchValue({ categoryName: categoryName.trim().replace(/\s+/g, ' ') });
-    // if (this.addCategoryMasterForm.valid) {
-    //   this.categoryMasterService.updateCategoryMasterDetails(this.addCategoryMasterForm.value).subscribe((resp: any) => {
-    //     if (resp.success) {
-    //       alert(resp.message);
-    //       this.customReset();
-    //     } else {
-    //       alert(resp.message);
-    //     }
-    //   });
-    // } else {
-    //   alert("please fill the proper Details")
-    //   return false;
-    // }
+    let categoryName = this.addCategoryMasterForm.get('categoryName').value;
+    this.addCategoryMasterForm.patchValue({ categoryName: categoryName.trim().replace(/\s+/g, ' ') });
+    if (this.addCategoryMasterForm.valid) {
+      this.productCategoryMasterService.updateProductCategoryDetails(this.addCategoryMasterForm.value).subscribe((resp: any) => {
+        if (resp.success) {
+          alert(resp.message);
+          this.customReset();
+        } else {
+          alert(resp.message);
+        }
+      });
+    } else {
+      alert("please fill the proper Details")
+      return false;
+    }
   }
 
 
