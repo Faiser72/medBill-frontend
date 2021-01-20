@@ -1,0 +1,191 @@
+<div class="container-fluid mt-3">
+    <!-- <div class="card"> -->
+    <mat-card class="card">
+        <div class="card-title">
+            <h4 class="text-center main-bg pt-3">- Sales By Product -</h4>
+        </div>
+        <div class="mx-auto text-center divider mt-2">
+            <mat-divider class="w-75 " color="primary"></mat-divider>
+        </div>
+        <div class="card-body">
+            <div class="card w-50 d-flex justify-content-center border-0 mx-auto cardss">
+                <form class="form-group customhover" [formGroup]="orderReportForm">
+                    <div class="row d-flex justify-content-around w-100">
+                        <div class="col-lg-6 col-md-12 col-sm-12">
+                            <mat-form-field class="master-full-width" appearance="outline">
+                                <mat-label>Product Category</mat-label>
+                                <input matInput placeholder="Enter Category Name" formControlName="categoryName">
+                            </mat-form-field>
+                            <p style="color: red;" *ngIf="orderReportForm.get('categoryName') && orderReportForm.get('categoryName').touched && orderReportForm.get('categoryName').invalid">
+                                {{categoryNameInputMsg}}</p>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-sm-12">
+                            <mat-form-field class="master-full-width" appearance="outline">
+                                <mat-label>Product Name</mat-label>
+                                <input matInput placeholder="Enter Category Name" formControlName="productName">
+                            </mat-form-field>
+                            <p style="color: red;" *ngIf="orderReportForm.get('productName') && orderReportForm.get('productName').touched && orderReportForm.get('productName').invalid">
+                                Please enter this field</p>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-around w-100">
+                        <div class="col-lg-6 col-md-12 col-sm-12">
+                            <mat-form-field class="master-full-width" appearance="outline">
+                                <mat-label>Start Date</mat-label>
+                                <input matInput type="date" placeholder="Ex. 7/7/2020" color="primary" formControlName="startDate" />
+                            </mat-form-field>
+                            <p style="color: red;" *ngIf="orderReportForm.get('startDate') && orderReportForm.get('startDate').touched && orderReportForm.get('startDate').invalid">
+                                Please Select this field</p>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-sm-12">
+                            <mat-form-field class="master-full-width" appearance="outline">
+                                <mat-label>End Date</mat-label>
+                                <input matInput type="date" placeholder="Ex. 7/7/2021" color="primary" formControlName="endDate" />
+                            </mat-form-field>
+                            <p style="color: red;" *ngIf="orderReportForm.get('endDate') && orderReportForm.get('endDate').touched && orderReportForm.get('endDate').invalid">
+                                Please Select this field</p>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="text-center mt-4">
+                        <button [disabled]="orderReportForm.invalid" mat-raised-button *ngIf="!btnFlag" class="mb-2 mr-3 submit-btn" color="primary" type="submit" (click)="saveCategoryDetails(); reportShowHide()">
+                            <mat-icon class="mr-2">save</mat-icon>Generate Report
+                        </button>
+                        <button type="reset" class="mb-2 reset-btn" mat-raised-button color="warn" *ngIf="btnFlag" (click)="customReset()">
+                            <mat-icon class="mr-2">cancel</mat-icon>Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- </div> -->
+    </mat-card>
+</div>
+<!-- <router-outlet></router-outlet> -->
+
+<br />
+<div *ngIf="isShow">
+
+    <h4 class="title-header">- Order Report -</h4>
+
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+            <!-- ID Column -->
+            <ng-container matColumnDef="slNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">Sl.no</th>
+                <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
+            </ng-container>
+
+            <!-- productCategory Column -->
+            <ng-container matColumnDef="productCategory">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    Product Category
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.productCategory }}</td>
+            </ng-container>
+
+            <!-- productName Column -->
+            <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    Product Name
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.productName }}</td>
+            </ng-container>
+
+            <!-- invoiceNumber Column -->
+            <ng-container matColumnDef="invoiceNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    Invoice Number
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
+            </ng-container>
+
+            <!-- invoiceDate Column -->
+            <ng-container matColumnDef="invoiceDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    Invoice Date
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.invoiceDate }}</td>
+            </ng-container>
+
+            <!-- quantity Column -->
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    Quantity
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.quantity }}</td>
+            </ng-container>
+
+            <!-- batch Column -->
+            <ng-container matColumnDef="batch">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    Batch
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.batch }}</td>
+            </ng-container>
+
+            <!-- unitPrice Column -->
+            <ng-container matColumnDef="unitPrice">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    Unit Price
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.unitPrice }}</td>
+            </ng-container>
+
+            <!-- cgst Column -->
+            <ng-container matColumnDef="cgst">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    cgst
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.cgst }}</td>
+            </ng-container>
+
+            <!-- sgst Column -->
+            <ng-container matColumnDef="sgst">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    sgst
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.sgst }}</td>
+            </ng-container>
+            <!-- total Column -->
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                    Total
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.total }}</td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <!-- <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="table_header">Action</th>
+                <td mat-cell *matCellDef="let row;">
+                    <div class="action-btn">
+                        <a (click)="routeToEditCategory(this.row)" class="action-link">
+                            <mat-icon class="edit-btn" title="Edit">edit</mat-icon>
+                        </a>
+                    </div>
+                    <span style="color: #3f51b5;">|</span>
+                    <div class="action-btn">
+                        <a (click)="routeToDeleteCategory(this.row)" class="action-link">
+                            <mat-icon class="delete-btn" title="Delete">delete_forever</mat-icon>
+                        </a>
+                    </div>
+                </td>
+            </ng-container> -->
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="row-style" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+    <h4 class="text-right mt-2 main-bg">
+        Grand Total:
+    </h4>
+</div>
+
+<br />

@@ -1,0 +1,164 @@
+<div class="container-fluid mt-3 p-0">
+    <div class="card shadow-lg">
+        <div class="card-title">
+            <h4 class="text-center main-bg pt-3 mt-1">- Add Purchase Entry -</h4>
+        </div>
+        <mat-divider class="mx-5"></mat-divider>
+        <form action="" class="form-group customhover" [formGroup]="addPurchaseEntry">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Order ID<sup class="text-danger">*</sup></mat-label>
+                            <input matInput placeholder="Ex. 3320012" value="" formControlName="orderId" />
+                            <mat-error *ngIf="addPurchaseEntry.get('orderId').hasError('required')">
+                                <b>Required</b>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Order Date<sup class="text-danger">*</sup></mat-label>
+                            <input matInput placeholder="Ex. 7/2/1995" formControlName="orderDate" type="date" />
+                            <mat-error *ngIf="addPurchaseEntry.get('orderDate').hasError('required')">
+                                Required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Received Date<sup class="text-danger">*</sup></mat-label>
+                            <input matInput placeholder="Ex. 7/2/1995" formControlName="receivedDate" type="date" />
+                            <mat-error *ngIf="addPurchaseEntry.get('receivedDate').hasError('required')">
+                                Required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Supplier Name<sup class="text-danger">*</sup></mat-label>
+                            <mat-select formControlName="supplierName">
+                                <mat-option value=''>Select Here</mat-option>
+                                <mat-option *ngFor="let cus of allSupplierName" [value]="cus">
+                                    {{cus.value}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="addPurchaseEntry.get('supplierName').hasError('required')">
+                                <b>Required</b>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Supplier Invoice Number<sup class="text-danger">*</sup></mat-label>
+                            <input matInput placeholder="Ex. 3320012" value="" formControlName="supplierInvoiceNumber" />
+                            <mat-error *ngIf="addPurchaseEntry.get('supplierInvoiceNumber').hasError('required')">
+                                <b>Required</b>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-4 mb-4">
+                <div class="mat-elevation-z8" style="border: 2px solid black;">
+                    <table mat-table [dataSource]="dataSource" matSort>
+                        <!-- ID Column -->
+                        <ng-container matColumnDef="slNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">SL NO</th>
+                            <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="itemCode">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Product Type
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemCode }}</td>
+                        </ng-container>
+
+                        <!-- Specialization Column -->
+                        <ng-container matColumnDef="itemName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Product Name
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemName }}</td>
+                        </ng-container>
+
+                        <!-- Specialization Column -->
+                        <ng-container matColumnDef="itemUnitOfMeasure">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Manufactured Date
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemUnitOfMeasure }}</td>
+                        </ng-container>
+
+                        <!-- Specialization Column -->
+                        <ng-container matColumnDef="itemUnitPrice">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Packaging
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemUnitPrice }}</td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="quanttity">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Quantity
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemCode }}</td>
+                        </ng-container>
+
+                        <!-- Specialization Column -->
+                        <ng-container matColumnDef="unitPrice">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Unit Price
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemName }}</td>
+                        </ng-container>
+
+                        <!-- Specialization Column -->
+                        <ng-container matColumnDef="batchName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Batch Name
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemUnitOfMeasure }}</td>
+                        </ng-container>
+
+                        <!-- Specialization Column -->
+                        <ng-container matColumnDef="manufactureDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Manufacture Date
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemUnitPrice }}</td>
+                        </ng-container>
+
+                        <!-- Specialization Column -->
+                        <ng-container matColumnDef="expiryDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Expiry Date
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemUnitOfMeasure }}</td>
+                        </ng-container>
+
+                        <!-- Specialization Column -->
+                        <ng-container matColumnDef="totalAmount">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                                Total Amount
+                            </th>
+                            <td mat-cell *matCellDef="let row">{{ row.itemUnitPrice }}</td>
+                        </ng-container>
+
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr class="row-style" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

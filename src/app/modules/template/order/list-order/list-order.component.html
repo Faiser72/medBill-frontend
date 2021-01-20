@@ -1,0 +1,89 @@
+<!-- 
+File Name :-listdoctors.component.html	   	Created Date :-13-01-2021    Created By :- Manjunath R(Emp. Id : VTPL/BLR/008)
+	
+Description :- this module is used to display all existing created order list					
+	
+============================================================================================================================
+  Sl.No			    Description			                                Modified By		              	      Modified Date	
+============================================================================================================================
+	
+	
+ -->
+
+<br />
+<h4 class="title-header">- Order Lists -</h4>
+<div class="text-right">
+    <button (click)="routeToAddOrder()" class="addButton btn">Create Order</button>
+</div>
+<div class="text-center">
+    <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyFilter($event)" />
+    </mat-form-field>
+</div>
+
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+        <!-- ID Column -->
+        <ng-container matColumnDef="slNo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">Sl.no</th>
+            <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="doctorName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Order ID
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.doctorName }}</td>
+        </ng-container>
+
+        <!-- Specialization Column -->
+        <ng-container matColumnDef="specialization">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Order Created Date
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.specialization }}</td>
+        </ng-container>
+
+        <!-- visitingTime Column -->
+        <ng-container matColumnDef="morningVisitFrom">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Supplier Name
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.morningVisitFrom }}</td>
+        </ng-container>
+
+        <!-- contactNumber Column -->
+        <ng-container matColumnDef="phoneNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Order Total
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.phoneNumber }}</td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="table_header">Action</th>
+            <td mat-cell *matCellDef="let row">
+                <div class="action-btn">
+                    <a (click)="routeToEditDoctor(this.row)" class="action-link">
+                        <mat-icon class="edit-btn" title="Edit">edit</mat-icon>
+                    </a>
+                </div>
+                <span style="color: #3f51b5;">|</span>
+                <div class="action-btn">
+                    <a (click)="routeToDeleteDoctor(this.row.doctorId, this.row)" class="action-link">
+                        <mat-icon class="delete-btn" title="Delete">delete_forever</mat-icon>
+                    </a>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr class="row-style" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+<br />

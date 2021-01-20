@@ -1,0 +1,80 @@
+<mat-nav-list>
+    <div class="profile-card">
+        <!-- <img src="assets/img/doctor/doctor.png" alt="{{ currentUserAvatar }}" class="my-3" *ngIf='doctorId==null'/> -->
+        <img [src]="placeholder_path" class="p-2 profile-holder my-1" />
+        <div class="header">
+            <h5>{{currentUserName}}</h5>
+            <h6>admin@medbill.com</h6>
+        </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <h2 matSubheader>Pages</h2>
+
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="">
+        <mat-icon color="primary">dvr</mat-icon>Dashboard
+    </a>
+
+    <!-- for master starts here -->
+    <span>
+        <mat-list-item (click)="showMasterSubmenu = !showMasterSubmenu" class="parent mb-1"
+            (click)="toggleMasterSubmenu('master_submenu')">
+            <mat-icon color="primary">menu_book</mat-icon>
+            <span class="full-width" color="primary">Master</span>
+    <mat-icon class="menu-button" color="primary" [ngClass]="{'rotated' : showMasterSubmenu}">expand_more
+    </mat-icon>
+    </mat-list-item>
+    <div class="submenu" [ngClass]="{'expanded' : showMasterSubmenu}" id="master_submenu">
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/productCategory">
+            <mat-icon color="primary">view_list</mat-icon>Product Category
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/productMaster">
+            <mat-icon color="primary"><i class="fa fa-braille" aria-hidden="true"></i></mat-icon>Product
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/manufacturerMasterHome/listmanufacturer">
+            <mat-icon color="primary"><i class="fa fa-ravelry" aria-hidden="true"></i></mat-icon>Manufacturer
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/supplierMasterHome/listsupplier">
+            <mat-icon color="primary">group_work</mat-icon>Supplier
+        </a>
+    </div>
+    </span>
+    <!-- For master ends here -->
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/orderHome/listOrder">
+        <mat-icon color="primary">assignment</mat-icon>Order
+    </a>
+
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/puchaseEntryHome/listPurchaseEntry">
+        <mat-icon color="primary">chrome_reader_mode</mat-icon>Purchase Entry
+    </a>
+
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/salesHome/listSales">
+        <mat-icon color="primary">dns</mat-icon>Sales
+    </a>
+
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/stockDetails">
+        <mat-icon color="primary">important_devices</mat-icon>Stock
+    </a>
+
+    <span>
+        <mat-list-item (click)="showReportSubmenu = !showReportSubmenu" class="parent mb-1"
+            (click)="toggleReportSubmenu('report_submenu')">
+            <mat-icon color="primary"><i class="fa fa-list-alt" aria-hidden="true"></i></mat-icon>
+            <span class="full-width" color="primary">Report</span>
+    <mat-icon class="menu-button" color="primary" [ngClass]="{'rotated' : showReportSubmenu}">expand_more
+    </mat-icon>
+    </mat-list-item>
+    <div class="submenu" [ngClass]="{'expanded' : showReportSubmenu}" id="report_submenu">
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/currentStocksAgingReport">
+            <mat-icon color="primary"><i class="fa fa-stack-exchange" aria-hidden="true"></i></mat-icon>Current Stocks Report
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/orderReport">
+            <mat-icon color="primary"><i class="fa fa-first-order" aria-hidden="true"></i></mat-icon>Order Report
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/salesByProductReport">
+            <mat-icon color="primary"><i class="fa fa-product-hunt" aria-hidden="true"></i></mat-icon>Sales By Product
+        </a>
+    </div>
+    </span>
+
+</mat-nav-list>

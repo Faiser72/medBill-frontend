@@ -1,0 +1,49 @@
+<h1 class="text-center main-bg mt-3">
+
+    Welcome To MedBill</h1>
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-around">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-card class="main-card">
+                <div class="card-body">
+                    <h6 class="card-title title">Products</h6>
+                    <p class="count " id="value">
+                        <ng2-odometer [number]="2950" [config]="{ }"></ng2-odometer>
+                    </p>
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-card class="main-card">
+                <div class="card-body">
+                    <h6 class="card-title title">Product Expire In This Week</h6>
+                    <p class="count " id="value">
+                        <ng2-odometer [number]="18" [config]="{ }"></ng2-odometer>
+                    </p>
+                    <!-- <marquee class="text-danger">
+                        One or more lines or text message or image
+                    </marquee> -->
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-card class="main-card">
+                <div class="card-body">
+                    <h6 class="card-title title">Product Expire In Next Week</h6>
+                    <p class="count " id="value">
+                        <ng2-odometer [number]="47" [config]="{ }"></ng2-odometer>
+                    </p>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<router-outlet></router-outlet>

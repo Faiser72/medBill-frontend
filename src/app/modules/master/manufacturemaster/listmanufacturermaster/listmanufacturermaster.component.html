@@ -1,0 +1,137 @@
+<!-- 
+File Name :-listmanufacturermaster.component.html	   	Created Date :-13-01-2021     Created By :- Faiser I (Emp. Id : VTPL/BLR/006)
+	
+Description :- this component is used to display the list of Manufacturer				
+	
+============================================================================================================================
+  Sl.No			    Description			                                Modified By		              	      Modified Date	
+============================================================================================================================
+	
+	
+ -->
+
+<br />
+<h4 class="title-header">- Manufacturer Master -</h4>
+<div class="row">
+    <div class="col">
+        <div class="text-left">
+            <mat-form-field appearance="outline" class="matFormField">
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search here..." />
+                <mat-icon color="primary" matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col">
+        <div class="text-right">
+            <button (click)="routeToAddManufacturer()" class="addButton btn" mat-raised-button color="primary">Add
+                Manufacturer</button>
+        </div>
+    </div>
+</div>
+
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+        <!-- ID Column -->
+        <ng-container matColumnDef="slNo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">Sl.no</th>
+            <td mat-cell *matCellDef="let row">
+                {{dataSource.filteredData.indexOf(row) + 1}}.</td>
+        </ng-container>
+
+        <!-- manufacturerName Column -->
+        <ng-container matColumnDef="manufacturerName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Manufacturer Name
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.manufacturerName }}</td>
+        </ng-container>
+
+        <!-- address Column -->
+        <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Address
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.address }}</td>
+        </ng-container>
+
+        <!-- phoneNumber Column -->
+        <ng-container matColumnDef="phoneNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Phone Number
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.phoneNumber }}</td>
+        </ng-container>
+
+        <!-- contactPersonName Column -->
+        <ng-container matColumnDef="contactPersonName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Contact Person Name
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.contactPersonName }}</td>
+        </ng-container>
+
+        <!-- contactPersonPhoneNumber Column -->
+        <ng-container matColumnDef="contactPersonPhoneNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Contact Person Pho No
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.contactPersonPhoneNumber }}</td>
+        </ng-container>
+
+        <!-- emailId Column -->
+        <ng-container matColumnDef="emailId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                Email Id
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.emailId }}</td>
+        </ng-container>
+
+
+
+
+
+
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="table_header">Action</th>
+            <td mat-cell *matCellDef="let row">
+                <div class="action-btn">
+                    <a (click)="routeToEditManufacturer()" class="action-link">
+                        <mat-icon class="edit-btn" title="Edit">edit</mat-icon>
+                    </a>
+                </div>
+                <span style="color: #3f51b5;">|</span>
+                <div class="action-btn">
+                    <a (click)="routeToDeleteUser(this.row)" class="action-link">
+                        <mat-icon class="delete-btn" title="Delete">delete_forever</mat-icon>
+                    </a>
+                </div>
+                <span style="color: #3f51b5;">|</span>
+                <div class="action-btn">
+                    <a class="action-link">
+                        <mat-icon class="delete-btn" title="Preliminary Check">description</mat-icon>
+                    </a>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr class="row-style" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+<br />
+
+<div class="action-btn">
+    <a (click)="routeToEditManufacturer()" class="action-link">
+        <mat-icon class="edit-btn" title="Edit">edit</mat-icon>
+    </a>
+</div>

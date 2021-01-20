@@ -1,0 +1,110 @@
+<!-- 
+File Name :-addsuppliermaster.component.html	   	Created Date :-13-1-2021     Created By :- Faiser I (Emp. Id : VTPL/BLR/006)
+	
+Description :- this component is used to add suppliermaster				
+	
+============================================================================================================================
+  Sl.No			    Description			                                Modified By		              	      Modified Date	
+============================================================================================================================
+	
+	
+ -->
+
+<div class="container-fluid mt-3 p-0">
+    <mat-card class=" shadow border ">
+        <div class="card-title">
+            <h4 class="text-center main-bg pt-3 mt-1">- Edit Supplier Master -</h4>
+        </div>
+        <div class="mx-auto text-center divider mt-2">
+            <mat-divider class="w-75 " color="primary"></mat-divider>
+        </div>
+        <form action="" class="form-group customhover" [formGroup]="editSupplierMasterForm" (ngSubmit)="editSupplierMasterFormSubmit()">
+            <div class="row d-flex justify-content-around mt-5 ml-5 mr-5 w-75 mx-auto">
+                <div class="col-lg-6 col-sm-12 col-md-6">
+                    <mat-form-field class="field-full-width" appearance="outline">
+                        <mat-label> Supplier Name <sup class="text-danger">*</sup></mat-label>
+                        <input matInput placeholder="Ex. Shankar" value="" formControlName="supplierName" />
+                        <mat-icon matSuffix color="primary"><i class="fa fa-user" aria-hidden="true"></i></mat-icon>
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="editSupplierMasterForm.get('supplierName') && editSupplierMasterForm.get('supplierName').touched && editSupplierMasterForm.get('supplierName').invalid">
+                        Please enter this field</p>
+                </div>
+                <div class="col-lg-6 col-sm-12 col-md-6">
+                    <mat-form-field class="field-full-width" appearance="outline">
+                        <mat-label>Telephone <sup class="text-danger">*</sup></mat-label>
+                        <span matPrefix>+91 &nbsp;</span>
+                        <input type="tel" matInput placeholder="555-555-1234" formControlName="phoneNumber">
+                        <mat-icon matSuffix color="primary">phone</mat-icon>
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="editSupplierMasterForm.get('phoneNumber') && editSupplierMasterForm.get('phoneNumber').touched && editSupplierMasterForm.get('phoneNumber').invalid">
+                        Please enter a valid email id</p>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-around ml-5 mr-5 w-75 mx-auto">
+                <div class="col-lg-12 col-md-12 col-sm-12 mx-auto">
+                    <mat-form-field class="field-full-width" appearance="outline">
+                        <mat-label>Address <sup class="text-danger">*</sup></mat-label>
+                        <textarea matInput placeholder="Ex. #83, 6th cross opposite to kfc, jalahalli bangalore" formControlName="address"></textarea>
+                        <mat-icon matSuffix color="primary">home</mat-icon>
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="editSupplierMasterForm.get('address') && editSupplierMasterForm.get('address').touched && editSupplierMasterForm.get('address').invalid">
+                        Please enter this field</p>
+                </div>
+            </div>
+
+            <p class="text-center main-bg mt-2 mb-2">Contact Person's Info</p>
+
+            <div class="row d-flex justify-content-around ml-5 mr-5 w-75 mx-auto">
+                <div class="col-lg-6 col-sm-12 col-md-6">
+                    <mat-form-field class="field-full-width" appearance="outline">
+                        <mat-label> Contact Person Name <sup class="text-danger">*</sup></mat-label>
+                        <input matInput placeholder="Ex. Shankar Magi" value="" formControlName="contactPersonName" />
+                        <mat-icon matSuffix color="primary"><i class="fa fa-user" aria-hidden="true"></i></mat-icon>
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="editSupplierMasterForm.get('contactPersonName') && editSupplierMasterForm.get('contactPersonName').touched && editSupplierMasterForm.get('contactPersonName').invalid">
+                        Please enter this field</p>
+                </div>
+                <div class="col-lg-6 col-sm-12 col-md-6">
+                    <mat-form-field class="field-full-width" appearance="outline">
+                        <mat-label>Contact Person Number <sup class="text-danger">*</sup></mat-label>
+                        <span matPrefix>+91 &nbsp;</span>
+                        <input type="tel" matInput placeholder="555-555-1234" formControlName="contactPersonPhoneNumber">
+                        <mat-icon matSuffix color="primary">phone</mat-icon>
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="editSupplierMasterForm.get('contactPersonPhoneNumber') && editSupplierMasterForm.get('contactPersonPhoneNumber').touched && editSupplierMasterForm.get('contactPersonPhoneNumber').invalid">
+                        Please enter a valid Mobile Number</p>
+                </div>
+
+            </div>
+            <div class="row d-flex justify-content-around ml-5 mr-5 w-75 mx-auto">
+                <div class="col-lg-12 col-sm-12 col-md-6">
+                    <mat-form-field class="field-full-width" appearance="outline">
+                        <mat-label>Email Id <sup class="text-danger">*</sup></mat-label>
+                        <input matInput type="email" placeholder="Ex. example@abcd.com" value="" formControlName="emailId" />
+                        <mat-icon matSuffix color="primary">email</mat-icon>
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="editSupplierMasterForm.get('appointmentTime') && editSupplierMasterForm.get('appointmentTime').touched && editSupplierMasterForm.get('appointmentTime').invalid">
+                        Please enter a valid email id</p>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-around mt-4 ml-5 mr-5">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 d-flex justify-content-around">
+                    <button type="submit" mat-raised-button color="primary" [disabled]='editSupplierMasterForm.invalid'>
+                        <mat-icon class="mr-2">save</mat-icon>Submit
+                    </button>
+                    <button type="reset" mat-raised-button color="accent" (click)='back()'>
+                        <mat-icon class="mr-2">360</mat-icon>Back
+                    </button>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12">
+
+                </div>
+            </div>
+        </form>
+    </mat-card>
+</div>

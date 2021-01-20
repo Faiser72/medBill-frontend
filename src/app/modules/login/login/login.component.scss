@@ -1,0 +1,233 @@
+:root {
+    --input-padding-x: 1.5rem;
+    --input-padding-y: .75rem;
+}
+
+
+/* For Dialog box starts*/
+
+.dialog-title {
+    //  color: var(--main-font-3-color);
+    font-weight: 400;
+    color: #4801FF;
+    //  background-image: -webkit-linear-gradient(top,rgba(255,143,28,1),rgba(255,255,255,1), rgba(80,158,47,1));
+    // color:transparent;
+    // -webkit-background-clip: text;
+    // background-clip: text;
+}
+
+.dialog-text {
+    color: var(--main-bg-1-color);
+}
+
+
+/* For Dialog box ends*/
+
+mat-icon {
+    color: var(--main-font-3-color);
+    border: none;
+    background: none;
+}
+
+.hide-btn {
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.login-full-width {
+    color: var(--main-bg-3-color);
+    width: 100%;
+}
+
+.card-signin {
+    border: 1px solid;
+    border-color: var(--main-font-3-color);
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.fgpwd {
+    cursor: pointer;
+    color: #4801FF;
+    margin-top: 10px;
+}
+
+
+/* For Side Bar starts*/
+
+
+/* @media screen and (min-width: 1100px) {
+    .side-card h1{
+      display: none;
+      width: 5rem;
+      transition: width 2s;
+    }
+  } */
+
+
+/* @media screen and (max-width: 600px) {
+    .container-fluid .side-card:hover{
+      width: 12rem;
+      margin-right: 10px;
+      text-align: center;
+      font-size: small;
+      transition: width 2s;
+    }
+  } */
+
+@media screen and (max-width: 600px) {
+    .container-fluid .side-card {
+        width: 5rem;
+        font-size: small;
+        transition: width 2s;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container-fluid .side-card .txt {
+        width: 5rem;
+        font-size: small;
+        display: none;
+        transition: width 2s;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container-fluid .side-card .mi {
+        /* text-align: center;
+      align-items: center; */
+        cursor: pointer;
+    }
+}
+
+.side-card {
+    width: 10rem;
+    height: 700px;
+    transition: width 1s;
+    background-image: linear-gradient(-225deg, #AC32E4 0%, #7918F2 48%, #4801FF 100%);
+}
+
+.side-card .mi {
+    margin-top: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.side-card mat-icon {
+    color: navy;
+}
+
+.side-card .txt {
+    /* width: 10rem;
+    height: 700px; */
+    display: none;
+    color: white;
+    /* transition: width 2s; */
+    /* background-color:var(--main-bg-2-color) ; */
+}
+
+.side-card:hover {
+    width: 20rem;
+    transition: width 1s;
+    /* transition-delay: 500ms; */
+}
+
+.side-card:hover .txt {
+    width: 20rem;
+    transition: width 2s;
+    display: none;
+    font-size: medium;
+    /* transition-delay: 500ms; */
+}
+
+.side-card:hover .txt {
+    width: 20rem;
+    transition: width 2s;
+    transition-delay: 1000ms;
+    display: inline-block;
+}
+
+
+/* .side-card:hover .mi{
+    width: 20rem;
+    transition: width 2s;
+    display: none; */
+
+
+/* transition-delay: 500ms; */
+
+
+/* } */
+
+
+/*<<< For Side Bar Ends>>>*/
+
+.card-title {
+    color: #7918F2;
+    /* font-weight: bolder;
+    font-size: larger; */
+    border-bottom: 2px solid;
+    border-width: thick;
+    padding-bottom: 5px;
+    border-color: #7918F2;
+}
+
+.card-signin .card-title {
+    margin-bottom: 2rem;
+    font-weight: 300;
+    font-size: 1.5rem;
+}
+
+.card-signin .card-body {
+    padding: 2rem;
+}
+
+.form-signin {
+    width: 100%;
+}
+
+.form-signin .btn {
+    font-size: 80%;
+    border-radius: 5rem;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    padding: 1rem;
+    transition: all 0.2s;
+}
+
+
+/* Fallback for Edge
+  -------------------------------------------------- */
+
+@supports (-ms-ime-align: auto) {
+    .form-label-group>label {
+        display: none;
+    }
+    .form-label-group input::-ms-input-placeholder {
+        color: #777;
+    }
+}
+
+
+/* Fallback for IE
+  -------------------------------------------------- */
+
+@media all and (-ms-high-contrast: none),
+(-ms-high-contrast: active) {
+    .form-label-group>label {
+        display: none;
+    }
+    .form-label-group input:-ms-input-placeholder {
+        color: #777;
+    }
+}
+
+p {
+    font-size: 13px;
+}
+
+.btn-submit {
+    color: white;
+    background-color: #4801FF;
+}
