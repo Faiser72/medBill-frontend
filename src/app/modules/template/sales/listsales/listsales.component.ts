@@ -46,7 +46,7 @@ export class ListsalesComponent implements OnInit {
   }
 
   routeToAddListItem() {
-    this.router.navigate(['/salesHome/addSales'])
+    this.router.navigate(['/home/salesHome/addSales'])
   }
 
 

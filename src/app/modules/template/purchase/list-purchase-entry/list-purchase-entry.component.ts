@@ -45,7 +45,7 @@ export class ListPurchaseEntryComponent implements OnInit {
   }
 
   routeToAddListItem() {
-    this.router.navigate(['/puchaseEntryHome/addPurchaseEntry'])
+    this.router.navigate(['/home/puchaseEntryHome/addPurchaseEntry'])
   }
 
 }

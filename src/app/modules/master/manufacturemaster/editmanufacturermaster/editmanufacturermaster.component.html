@@ -33,10 +33,10 @@ Description :- this component is used to edit manufacturesmaster
                     <mat-form-field class="field-full-width" appearance="outline">
                         <mat-label>Telephone <sup class="text-danger">*</sup></mat-label>
                         <span matPrefix>+91 &nbsp;</span>
-                        <input type="tel" matInput placeholder="555-555-1234" formControlName="phoneNumber">
+                        <input type="tel" matInput placeholder="555-555-1234" formControlName="contactNumber">
                         <mat-icon matSuffix color="primary">phone</mat-icon>
                     </mat-form-field>
-                    <p style="color: red;" *ngIf="editManufacturerMasterForm.get('phoneNumber') && editManufacturerMasterForm.get('phoneNumber').touched && editManufacturerMasterForm.get('phoneNumber').invalid">
+                    <p style="color: red;" *ngIf="editManufacturerMasterForm.get('contactNumber') && editManufacturerMasterForm.get('contactNumber').touched && editManufacturerMasterForm.get('contactNumber').invalid">
                         Please enter a valid email id</p>
                 </div>
             </div>
@@ -69,10 +69,10 @@ Description :- this component is used to edit manufacturesmaster
                     <mat-form-field class="field-full-width" appearance="outline">
                         <mat-label>Contact Person Number <sup class="text-danger">*</sup></mat-label>
                         <span matPrefix>+91 &nbsp;</span>
-                        <input type="tel" matInput placeholder="555-555-1234" formControlName="contactPersonPhoneNumber">
+                        <input type="tel" matInput placeholder="555-555-1234" formControlName="contactPersonNumber">
                         <mat-icon matSuffix color="primary">phone</mat-icon>
                     </mat-form-field>
-                    <p style="color: red;" *ngIf="editManufacturerMasterForm.get('contactPersonPhoneNumber') && editManufacturerMasterForm.get('contactPersonPhoneNumber').touched && editManufacturerMasterForm.get('contactPersonPhoneNumber').invalid">
+                    <p style="color: red;" *ngIf="editManufacturerMasterForm.get('contactPersonNumber') && editManufacturerMasterForm.get('contactPersonNumber').touched && editManufacturerMasterForm.get('contactPersonNumber').invalid">
                         Please enter a valid Mobile Number</p>
                 </div>
 
@@ -81,10 +81,10 @@ Description :- this component is used to edit manufacturesmaster
                 <div class="col-lg-12 col-sm-12 col-md-6">
                     <mat-form-field class="field-full-width" appearance="outline">
                         <mat-label>Email Id <sup class="text-danger">*</sup></mat-label>
-                        <input matInput type="email" placeholder="Ex. example@abcd.com" value="" formControlName="emailId" />
+                        <input matInput type="email" placeholder="Ex. example@abcd.com" value="" formControlName="contactPersonEmailId" />
                         <mat-icon matSuffix color="primary">email</mat-icon>
                     </mat-form-field>
-                    <p style="color: red;" *ngIf="editManufacturerMasterForm.get('appointmentTime') && editManufacturerMasterForm.get('appointmentTime').touched && editManufacturerMasterForm.get('appointmentTime').invalid">
+                    <p style="color: red;" *ngIf="editManufacturerMasterForm.get('contactPersonEmailId') && editManufacturerMasterForm.get('contactPersonEmailId').touched && editManufacturerMasterForm.get('contactPersonEmailId').invalid">
                         Please enter a valid email id</p>
                 </div>
             </div>
@@ -95,9 +95,9 @@ Description :- this component is used to edit manufacturesmaster
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 d-flex justify-content-around">
                     <button type="submit" mat-raised-button color="primary" [disabled]='editManufacturerMasterForm.invalid'>
-                        <mat-icon class="mr-2">save</mat-icon>Submit
+                        <mat-icon class="mr-2">save</mat-icon>Update
                     </button>
-                    <button type="reset" mat-raised-button color="accent" (click)='back()'>
+                    <button type="button" mat-raised-button color="accent" (click)='back()'>
                         <mat-icon class="mr-2">360</mat-icon>Back
                     </button>
                 </div>

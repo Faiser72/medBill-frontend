@@ -9,7 +9,7 @@
 
 .addButton {
     background-color: var(--main-font-3-color);
-    color: var(--main-font-2-color);
+    color: lightyellow;
     outline: 0px;
 }
 
@@ -67,4 +67,8 @@ td {
 .row-style:hover {
     border-left: 3px solid var(--main-bg-2-color);
     background-color: inherit;
+}
+
+td {
+    text-align: center;
 }

@@ -1,3 +1,4 @@
+import { SupplierMasterService } from './../../../../service/supplierMaster/supplier-master.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,6 +24,7 @@ export class AddsuppliermasterComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private router: Router,
+    private supplierMasterService : SupplierMasterService,
     private appComponent: AppComponent) {
     // for date validation starts
     var today = new Date();
@@ -40,18 +42,18 @@ export class AddsuppliermasterComponent implements OnInit {
 
   addSupplierMasterFormBuilder() {
     this.addSupplierMasterForm = this.fb.group({
-      supplierName: [null, [Validators.required, Validators.minLength(3)]],
+      supplierName: [null, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z]*$/)]],
       address: [null, [Validators.required, Validators.minLength(3)]],
-      phoneNumber: [
+      contactNumber: [
         null,
-        [Validators.required, Validators.pattern(this.phonePattern)],
+        [Validators.required, Validators.pattern(this.phonePattern),Validators.pattern(/^[0-9]{10}$/)],
       ],
-      contactPersonName: [null, [Validators.required, Validators.minLength(3)]],
-      contactPersonPhoneNumber: [
+      contactPersonName: [null, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z]*$/)]],
+      contactPersonNumber: [
         null,
-        [Validators.required, Validators.pattern(this.phonePattern)],
+        [Validators.required, Validators.pattern(this.phonePattern),Validators.pattern(/^[0-9]{10}$/)],
       ],
-      emailId: [
+      contactPersonEmailId: [
         null,
         Validators.compose([
           Validators.required,
@@ -64,12 +66,43 @@ export class AddsuppliermasterComponent implements OnInit {
 
 
   addSupplierMasterFormSubmit() {
-    console.log(this.addSupplierMasterForm.value);
-    console.log(this.primaryRole.value);
+    if (this.addSupplierMasterForm.valid) {
+      this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
+      this.supplierMasterService
+        .saveSupplierMaster(this.addSupplierMasterForm.value)
+        .subscribe(
+          (resp: any) => {
+            if (resp.success) {
+              alert(resp.message);
+              this.appComponent.stopSpinner();
+              setTimeout(() => {
+                if (confirm("Do you want add more Supplier ?")) {
+                  this.addSupplierMasterForm.reset();
+                } else {
+                  this.backToSupplierList();
+                }
+              }, 500);
+            } else {
+              setTimeout(() => {
+                alert(resp.message);
+                this.appComponent.stopSpinner();
+              }, 1000);
+            }
+          },
+          (error) => {
+            setTimeout(() => {
+              alert("Error! - Something Went Wrong! Try again.");
+              this.appComponent.stopSpinner();
+            }, 1000);
+          }
+        );
+    } else {
+      alert("Please, fill the proper details.");
+    }
   }
 
-  backToAppointmentList() {
-    this.router.navigate(["/home/appointmenthome/listappointment"]);
+  backToSupplierList() {
+    this.router.navigate(["/home/supplierMasterHome/listsupplier"]);
   }
 
   reset() {

@@ -1,3 +1,5 @@
+import { Location } from '@angular/common';
+import { ManufactureMasterServiceService } from './../../../../service/manufactureMaster/manufacture-master-service.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,6 +24,8 @@ export class AddmanufacturermasterComponent implements OnInit {
 
 
   constructor(private fb: FormBuilder,
+    private manufactureService: ManufactureMasterServiceService,
+    private location: Location,
     private router: Router,
     private appComponent: AppComponent) {
     // for date validation starts
@@ -42,34 +46,70 @@ export class AddmanufacturermasterComponent implements OnInit {
     this.addManufacturerMasterForm = this.fb.group({
       manufacturerName: [null, [Validators.required, Validators.minLength(3)]],
       address: [null, [Validators.required, Validators.minLength(3)]],
-      phoneNumber: [
+      contactNumber: [
         null,
         [Validators.required, Validators.pattern(this.phonePattern)],
       ],
       contactPersonName: [null, [Validators.required, Validators.minLength(3)]],
-      contactPersonPhoneNumber: [
+      contactPersonNumber: [
         null,
         [Validators.required, Validators.pattern(this.phonePattern)],
       ],
-      emailId: [
+      contactPersonEmailId: [
         null,
         Validators.compose([
           Validators.required,
           Validators.pattern("^[a-zA-Z0-9._-]+@[a-zA-Z]+.[a-zA-Z]{2,4}$"),
         ]),],
-     
+
 
     });
   }
 
 
   addManufacturerMasterFormSubmit() {
-    console.log(this.addManufacturerMasterForm.value);
-    console.log(this.primaryRole.value);
+    if (this.addManufacturerMasterForm.valid) {
+      this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
+      this.manufactureService
+        .addManufacture(this.addManufacturerMasterForm.value)
+        .subscribe(
+          (resp: any) => {
+            if (resp.success) {
+              alert(resp.message);
+              this.appComponent.stopSpinner();
+              setTimeout(() => {
+                if (confirm("Do you want add more Manufacture ?")) {
+                  this.addManufacturerMasterForm.reset();
+                  this.manufactureService
+                  // .getPatientList()
+                  // .subscribe((data: any) => {
+                  //   this.patientDetailsList = data.listObject;
+                  // });
+                } else {
+                  this.back();
+                }
+              }, 500);
+            } else {
+              setTimeout(() => {
+                alert(resp.message);
+                this.appComponent.stopSpinner();
+              }, 1000);
+            }
+          },
+          (error) => {
+            setTimeout(() => {
+              alert("Error! - Something Went Wrong! Try again.");
+              this.appComponent.stopSpinner();
+            }, 1000);
+          }
+        );
+    } else {
+      alert("Please, fill the proper details.");
+    }
   }
 
-  backToAppointmentList() {
-    this.router.navigate(["/home/appointmenthome/listappointment"]);
+  back() {
+    this.location.back();
   }
 
   reset() {

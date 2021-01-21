@@ -31,7 +31,7 @@
                         </mat-autocomplete>
                     </mat-form-field>
                     <p style="color: red;" *ngIf="addProductMasterForm.get('productCategory') && addProductMasterForm.get('productCategory').touched && addProductMasterForm.get('productCategory').invalid">
-                        Please enter this field</p>
+                        {{productCategoryInputMsg}}</p>
                 </div>
             </div>
 
@@ -47,12 +47,22 @@
                         Please enter this field</p>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
+                    <!-- <mat-form-field class="master-full-width" appearance="outline">
+                        <mat-label>Manufacturer Name</mat-label>
+                        <input matInput placeholder="Enter HSN Code" formControlName="manufacturer">
+                    </mat-form-field> -->
+
                     <mat-form-field class="master-full-width" appearance="outline">
                         <mat-label>Manufacturer Name</mat-label>
-                        <input matInput placeholder="Enter HSN Code" formControlName="manufacturerName">
+                        <input type="text" matInput formControlName="manufacturer" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayManufacturerFn">
+                            <mat-option *ngFor="let manufacturer of filteredManufacturerOptions | async" [value]="manufacturer">
+                                {{manufacturer.manufacturerName}}
+                            </mat-option>
+                        </mat-autocomplete>
                     </mat-form-field>
-                    <p style="color: red;" *ngIf="addProductMasterForm.get('manufacturerName') && addProductMasterForm.get('manufacturerName').touched && addProductMasterForm.get('manufacturerName').invalid">
-                        Please enter this field</p>
+                    <p style="color: red;" *ngIf="addProductMasterForm.get('manufacturer') && addProductMasterForm.get('manufacturer').touched && addProductMasterForm.get('manufacturer').invalid">
+                        {{manufacturerInputMsg}}</p>
                 </div>
             </div>
 

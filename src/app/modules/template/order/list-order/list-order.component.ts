@@ -90,7 +90,7 @@ export class ListOrderComponent implements OnInit {
   }
 
   routeToAddOrder() {
-    this.router.navigate(['/orderHome/addOrder'])
+    this.router.navigate(['/home/orderHome/addOrder'])
   }
 
 }
