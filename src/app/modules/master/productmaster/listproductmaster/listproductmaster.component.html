@@ -19,16 +19,16 @@
 </div>
 
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource">
         <!-- ID Column -->
         <ng-container matColumnDef="slNo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header text-center">Sl.no</th>
+            <th mat-header-cell *matHeaderCellDef class="table_header text-center">Sl.no</th>
             <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
         </ng-container>
 
         <!-- Job Title Column -->
         <ng-container matColumnDef="productName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header text-center">
+            <th mat-header-cell *matHeaderCellDef class="table_header text-center">
                 Product Name
             </th>
             <td mat-cell *matCellDef="let row">{{ row.productName }}</td>
@@ -36,7 +36,7 @@
 
         <!-- productCategory Column -->
         <ng-container matColumnDef="productCategory">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header text-center">
+            <th mat-header-cell *matHeaderCellDef class="table_header text-center">
                 Product Category
             </th>
             <td mat-cell *matCellDef="let row">{{ row.productCategory.categoryName }}</td>
@@ -44,7 +44,7 @@
 
         <!-- hsnCode Column -->
         <ng-container matColumnDef="hsnCode">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header text-center">
+            <th mat-header-cell *matHeaderCellDef class="table_header text-center">
                 HSN Code
             </th>
             <td mat-cell *matCellDef="let row">{{ row.hsnCode }}</td>
@@ -52,7 +52,7 @@
 
         <!-- manufacturer Column -->
         <ng-container matColumnDef="manufacturer">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header text-center">
+            <th mat-header-cell *matHeaderCellDef class="table_header text-center">
                 Manufacturer Name
             </th>
             <td mat-cell *matCellDef="let row">{{ row.manufacturer.manufacturerName }}</td>

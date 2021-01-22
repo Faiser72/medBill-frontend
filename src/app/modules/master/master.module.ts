@@ -7,12 +7,11 @@ import { MaterialImportModuleModule } from 'src/app/shared/material-import-modul
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductCategoryComponent } from './product-category/product-category.component';
-import { ProductMasterComponent } from './product-master/product-master.component';
 
 
 
 @NgModule({
-  declarations: [ProductCategoryComponent, ProductMasterComponent],
+  declarations: [ProductCategoryComponent],
   imports: [
     CommonModule,
     MaterialImportModuleModule,
@@ -21,7 +20,7 @@ import { ProductMasterComponent } from './product-master/product-master.componen
     ManufacturemasterModule,
     RouterModule,
     SuppliermasterModule,
-    ProductmasterModule
+    ProductmasterModule,
   ]
 })
 export class MasterModule { }

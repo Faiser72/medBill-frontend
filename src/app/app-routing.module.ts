@@ -14,7 +14,6 @@ import { ListmanufacturermasterComponent } from './modules/master/manufacturemas
 import { EditmanufacturermasterComponent } from './modules/master/manufacturemaster/editmanufacturermaster/editmanufacturermaster.component';
 import { AddmanufacturermasterComponent } from './modules/master/manufacturemaster/addmanufacturermaster/addmanufacturermaster.component';
 import { ManufacturermasterhomeComponent } from './modules/master/manufacturemaster/manufacturermasterhome/manufacturermasterhome.component';
-import { ProductMasterComponent } from './modules/master/product-master/product-master.component';
 import { ProductCategoryComponent } from './modules/master/product-category/product-category.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';

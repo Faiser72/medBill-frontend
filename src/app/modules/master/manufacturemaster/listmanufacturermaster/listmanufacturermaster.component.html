@@ -30,17 +30,17 @@ Description :- this component is used to display the list of Manufacturer
 </div>
 
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource">
         <!-- ID Column -->
         <ng-container matColumnDef="slNo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">Sl.no</th>
+            <th mat-header-cell *matHeaderCellDef class="table_header">Sl.no</th>
             <td mat-cell *matCellDef="let row">
                 {{dataSource.filteredData.indexOf(row) + 1}}.</td>
         </ng-container>
 
         <!-- manufacturerName Column -->
         <ng-container matColumnDef="manufacturerName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Manufacturer Name
             </th>
             <td mat-cell *matCellDef="let row">
@@ -49,7 +49,7 @@ Description :- this component is used to display the list of Manufacturer
 
         <!-- address Column -->
         <ng-container matColumnDef="address">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Address
             </th>
             <td mat-cell *matCellDef="let row">
@@ -58,7 +58,7 @@ Description :- this component is used to display the list of Manufacturer
 
         <!-- contactNumber Column -->
         <ng-container matColumnDef="contactNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Phone Number
             </th>
             <td mat-cell *matCellDef="let row">
@@ -67,7 +67,7 @@ Description :- this component is used to display the list of Manufacturer
 
         <!-- contactPersonName Column -->
         <ng-container matColumnDef="contactPersonName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Contact Person Name
             </th>
             <td mat-cell *matCellDef="let row">
@@ -76,7 +76,7 @@ Description :- this component is used to display the list of Manufacturer
 
         <!-- contactPersonNumber Column -->
         <ng-container matColumnDef="contactPersonNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Contact Person Pho No
             </th>
             <td mat-cell *matCellDef="let row">
@@ -85,7 +85,7 @@ Description :- this component is used to display the list of Manufacturer
 
         <!-- contactPersonEmailId Column -->
         <ng-container matColumnDef="contactPersonEmailId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Email Id
             </th>
             <td mat-cell *matCellDef="let row">

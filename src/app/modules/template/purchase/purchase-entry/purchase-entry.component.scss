@@ -140,3 +140,50 @@ mat-label {
 table {
     width: 100%;
 }
+
+// for multiple row starts here
+.header-text p {
+    color: var(--main-font-3-color);
+}
+
+.tablecss {
+    border: 1px solid #20054b;
+}
+
+.tablecss th {
+    color: var(--main-font-3-color);
+}
+
+.tablecss td {
+    color: var(--main-font-4-color);
+}
+
+.rowAddIcon {
+    // color: green;
+    cursor: pointer;
+    font-size: xx-large
+}
+
+.rowDeleteIcon {
+    // color:red;
+    cursor: pointer;
+    font-size: xx-large
+}
+
+.profile-holder:hover {
+    cursor: pointer;
+}
+
+mat-datepicker-toggle {
+    outline-style: none;
+}
+
+.lab {
+    font-weight: bold;
+}
+
+.form-control {
+    border: 1px solid black !important;
+}
+
+// for multiple row ends here

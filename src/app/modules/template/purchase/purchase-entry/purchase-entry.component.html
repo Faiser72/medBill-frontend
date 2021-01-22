@@ -8,12 +8,28 @@
             <div class="container mt-5">
                 <div class="row">
                     <div class="col-md-6">
-                        <mat-form-field class="field-full-width" appearance="outline">
+                        <!-- <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Order ID<sup class="text-danger">*</sup></mat-label>
-                            <input matInput placeholder="Ex. 3320012" value="" formControlName="orderId" />
-                            <mat-error *ngIf="addPurchaseEntry.get('orderId').hasError('required')">
+                            <input matInput placeholder="Ex. 3320012" value="" formControlName="orderNumber" />
+                            <mat-error *ngIf="addPurchaseEntry.get('orderNumber').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
+                        </mat-form-field> -->
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Order ID<sup class="text-danger">*</sup></mat-label>
+                            <input type="text" matInput formControlName="orderNumber" [matAutocomplete]="autos">
+                            <mat-autocomplete #autos="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let order of filteredOrderOptions | async" [value]="order">
+                                    {{order.orderNumber}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="addPurchaseEntry.get('orderNumber').hasError('required')">
+                                <b>Required</b>
+                            </mat-error>
+                            <mat-error *ngIf="addPurchaseEntry.get('orderNumber').invalid">
+                                <b>{{orderNumberInputMsg}}</b>
+                            </mat-error>
+
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
@@ -62,101 +78,97 @@
                 </div>
             </div>
 
-            <div class="container mt-4 mb-4">
-                <div class="mat-elevation-z8" style="border: 2px solid black;">
-                    <table mat-table [dataSource]="dataSource" matSort>
-                        <!-- ID Column -->
-                        <ng-container matColumnDef="slNo">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">SL NO</th>
-                            <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
-                        </ng-container>
+            <div class="row d-flex justify-content-around ml-5 mr-5">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <!-- Dynamic Row Starts here -->
+                    <table class="table table-bordered mt-5 tablecss text-center shadow-lg table-responsive" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">Sl.no</th>
+                                <th style="width: 20%;">Product Type</th>
+                                <th style="width: 10%;">Product Name</th>
+                                <th style="width: 10%;">Manufacturer</th>
+                                <th style="width: 10%;">Packaging</th>
+                                <th style="width: 10%;">Quantity</th>
+                                <th style="width: 20%;">Unit Price</th>
+                                <th style="width: 20%;">Total</th>
+                                <th style="width: 5%;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let createOrder of orderArray; let i = index;">
+                                <td style="width: 5%;">
+                                    {{i+1}}.
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <mat-select [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateOrderDetails(i);">
+                                            <mat-option value=''>Select Here</mat-option>
+                                            <mat-option *ngFor="let cate of allProductTypeList" [value]="cate">
+                                                {{cate.categoryName}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <p style="color: red; font-size: 15px;" id="productTypeMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <mat-select [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);">
+                                            <mat-option value=''>Select Here</mat-option>
+                                            <mat-option *ngFor="let pro of allProductList" [value]="pro">
+                                                {{pro.productName}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <p style="color: red;" id="productNameMsg{{i}}"></p>
+                                </td>
 
-                        <!-- Name Column -->
-                        <ng-container matColumnDef="itemCode">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Product Type
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemCode }}</td>
-                        </ng-container>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.manufacturer" [ngModelOptions]="{standalone: true}" id="manufacturer{{i}}" (input)="validateOrderDetails(i);" readonly/>
+                                    </mat-form-field>
+                                    <p style="color: red; font-size: 15px;" id="manufacturerMsg{{i}}"></p>
+                                </td>
 
-                        <!-- Specialization Column -->
-                        <ng-container matColumnDef="itemName">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Product Name
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemName }}</td>
-                        </ng-container>
-
-                        <!-- Specialization Column -->
-                        <ng-container matColumnDef="itemUnitOfMeasure">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Manufactured Date
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemUnitOfMeasure }}</td>
-                        </ng-container>
-
-                        <!-- Specialization Column -->
-                        <ng-container matColumnDef="itemUnitPrice">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Packaging
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemUnitPrice }}</td>
-                        </ng-container>
-
-                        <!-- Name Column -->
-                        <ng-container matColumnDef="quanttity">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Quantity
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemCode }}</td>
-                        </ng-container>
-
-                        <!-- Specialization Column -->
-                        <ng-container matColumnDef="unitPrice">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Unit Price
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemName }}</td>
-                        </ng-container>
-
-                        <!-- Specialization Column -->
-                        <ng-container matColumnDef="batchName">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Batch Name
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemUnitOfMeasure }}</td>
-                        </ng-container>
-
-                        <!-- Specialization Column -->
-                        <ng-container matColumnDef="manufactureDate">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Manufacture Date
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemUnitPrice }}</td>
-                        </ng-container>
-
-                        <!-- Specialization Column -->
-                        <ng-container matColumnDef="expiryDate">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Expiry Date
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemUnitOfMeasure }}</td>
-                        </ng-container>
-
-                        <!-- Specialization Column -->
-                        <ng-container matColumnDef="totalAmount">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                                Total Amount
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.itemUnitPrice }}</td>
-                        </ng-container>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.packaging" [ngModelOptions]="{standalone: true}" id="packaging{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red; font-size: 15px;" id="packagingMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.quantity" [ngModelOptions]="{standalone: true}" id="quantity{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="quantityMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.unitPrice" [ngModelOptions]="{standalone: true}" id="unitPrice{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="unitPriceMsg{{i}}"></p>
+                                </td>
 
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr class="row-style" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                                <td style="width: 15%;">
+                                    <mat-form-field class="field-drugName" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.amount" [ngModelOptions]="{standalone: true}" id="amount{{i}}" (input)="validateOrderDetails(i);" readonly/>
+                                    </mat-form-field>
+                                    <p style="color: red;" id="amountMsg{{i}}"></p>
+                                </td>
 
+                                <!-- <td (click)="addRow()" class="text-center" style="width: 5%;"> -->
+                                <!-- <i class="fa fa-plus fa-1x  text-light"></i> -->
+                                <!-- <mat-icon class="rowAddIcon" title="Add" color="primary">add</mat-icon>
+                                </td> -->
+                                <!-- <span  > -->
+                                <!-- <td (click)="deleteRow(i)" class=" text-center" *ngIf='i!=0' style="width: 5%;"> -->
+                                <!-- <i class="fa fa-trash fa-1x  text-light"></i> -->
+                                <!-- <mat-icon class="rowDeleteIcon" title="Delete" color="accent">delete</mat-icon>
+                                </td> -->
+                                <!-- </span> -->
+                            </tr>
+                        </tbody>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    <!-- Dynamic Row ends here -->
                 </div>
             </div>
         </form>
