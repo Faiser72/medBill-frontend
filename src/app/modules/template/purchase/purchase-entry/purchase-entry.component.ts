@@ -1,11 +1,13 @@
+import { AppComponent } from './../../../../app.component';
+import { Location } from '@angular/common';
 import { OrderService } from './../../../../service/order/order.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatPaginator, MatSort } from '@angular/material';
 import { Router } from '@angular/router';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { isNullOrUndefined } from 'util';
+import { isNull, isNullOrUndefined } from 'util';
 
 
 class createOrder {
@@ -15,8 +17,12 @@ class createOrder {
   packaging: any;
   quantity: any;
   unitPrice: any;
+  batchNumber:any;
+  manufactureDate:any;
+  expiryDate:any;
   amount: any;
 }
+
 
 // "itemCode",
 //     "itemName",
@@ -42,17 +48,18 @@ export class PurchaseEntryComponent implements OnInit {
     { value: 'Veto Drug House', viewValue: 'Interstate' },
   ];
 
-  orderArray: Array<createOrder> = [];
+  purchaseOrderArray: Array<createOrder> = [];
   createOrder: any = {};
 
   deleted_successfully_message: string = "Deleted Successfully";
   itemList;
+  orderItemList: any;
 
   orderList: any;
   filteredOrderOptions: Observable<any>;
 
-  allProductTypeList:any; //temp
-  allProductList:any;//temp
+  allProductTypeList: any; //temp
+  allProductList: any;//temp
 
 
   dataSource: any;
@@ -74,7 +81,9 @@ export class PurchaseEntryComponent implements OnInit {
   addPurchaseEntry: FormGroup;
   constructor(private fb: FormBuilder,
     private route: Router,
-    private orderService: OrderService) { }
+    private orderService: OrderService,
+    private location:Location,
+    private appComponent: AppComponent) { }
 
   ngOnInit() {
     this.addPurchaseEntry = this.fb.group({
@@ -83,12 +92,62 @@ export class PurchaseEntryComponent implements OnInit {
       receivedDate: ['', Validators.required],
       supplierName: ['', Validators.required],
       supplierInvoiceNumber: ['', Validators.required],
+      purchaseEntrySubTotal: ["", Validators.required],
+      purchaseEntryTax: ["", Validators.required],
+      purchaseEntryTotal: ["", Validators.required],
+      purchaseEntryList: [''],
+      purchaseEntryDiscount:""
     });
     this.addPurchaseEntry.setValidators(this.customValidation());
 
     // To get all the orders list
     this.getOrderList();
+    this.getProductTypeList();
+
   }
+
+  getProductTypeList() {
+    this.orderService.productCategoryList().subscribe((data: any) => {
+      this.allProductTypeList = data.listObject;
+      console.log(this.allProductTypeList);
+
+    });
+  }
+
+  orderDetailsById(orderObj) {
+    console.log(orderObj);
+    this.addPurchaseEntry.patchValue({ orderDate: orderObj.value.orderDate, supplierName: orderObj.value.supplierName.supplierName })
+    this.orderService.orderListByOrderId(orderObj.value.orderId).subscribe((data: any) => {
+      if (data.success) {
+        this.clearFormArray(this.purchaseOrderArray)
+        console.log(data);
+        this.getOrderListDetails(data);
+        this.calculateSubTotalAmounts();
+
+        this.orderItemList = data;
+      }
+    })
+
+  }
+
+  getOrderListDetails(orderData) {
+    for (let index = 0; index < orderData.listObject.length; index++) {
+      this.createOrder = {
+        productType: orderData.listObject[index].productType.categoryName,
+        productName: orderData.listObject[index].productName.productName,
+        manufacturer: orderData.listObject[index].manufacturer,
+        packaging: orderData.listObject[index].packaging,
+        quantity: orderData.listObject[index].quantity,
+        unitPrice: orderData.listObject[index].unitPrice,
+        amount: orderData.listObject[index].amount,
+        batchNumber:"",
+        manufactureDate:"",
+        expiryDate:"",
+      };
+      this.purchaseOrderArray.push(this.createOrder);
+    }
+  }
+
 
   getOrderList() {
     this.orderService.orderList().subscribe((data: any) => {
@@ -122,34 +181,40 @@ export class PurchaseEntryComponent implements OnInit {
 
 
   // for multiple row validation starts here
-  orderDetailFlag: boolean = false;
+  purchaseOrderDetailFlag: boolean = false;
   validateOrderDetails(i: number) {
-    this.orderDetailFlag = false;
+    this.purchaseOrderDetailFlag = false;
     if (i > -1) {
-      this.productTypeRow(this.orderArray[i].productType, i);
-      this.productNameRow(this.orderArray[i].productName, i);
-      this.quantityRow(this.orderArray[i].quantity, i);
-      this.unitPriceRow(this.orderArray[i].unitPrice, i);
+      this.productTypeRow(this.purchaseOrderArray[i].productType, i);
+      this.productNameRow(this.purchaseOrderArray[i].productName, i);
+      this.quantityRow(this.purchaseOrderArray[i].quantity, i);
+      this.unitPriceRow(this.purchaseOrderArray[i].unitPrice, i);
+      this.manufactureDateRow(this.purchaseOrderArray[i].manufactureDate,i)
+      this.expiryDateRow(this.purchaseOrderArray[i].expiryDate,i);
     }
-    this.orderArray.every((object, index) => {
+    this.purchaseOrderArray.every((object, index) => {
       let productTypeRowFlag = this.productTypeRow(object.productType, index);
       let productNameFlag = this.productNameRow(object.productName, index);
       let quantityRowFlag = this.quantityRow(object.quantity, index);
       let unitPriceFlag = this.unitPriceRow(object.unitPrice, index);
+      let manufactureDateFlag= this.manufactureDateRow(object.manufactureDate,index)
+      let expiryDateFlag= this.expiryDateRow(object.expiryDate,index)
       if (
         productTypeRowFlag &&
         productNameFlag &&
         quantityRowFlag &&
-        unitPriceFlag
+        unitPriceFlag &&
+        manufactureDateFlag &&
+        expiryDateFlag
       ) {
-        this.orderDetailFlag = true;
+        this.purchaseOrderDetailFlag = true;
         return true;
       } else {
-        this.orderDetailFlag = false;
+        this.purchaseOrderDetailFlag = false;
         return false;
       }
     });
-    return this.orderDetailFlag;
+    return this.purchaseOrderDetailFlag;
   }
 
   productNameRow(productNameValue: any, i: number) {
@@ -157,9 +222,9 @@ export class PurchaseEntryComponent implements OnInit {
       console.log(productNameValue);
 
       document.getElementById("productNameMsg" + i).innerHTML = "";
-      this.orderArray[i].manufacturer =
-        productNameValue.manufacturer.manufacturerName;
-      // this.purchaseOrderArray[i].unitPrice = itemNameValue.itemUnitPrice;
+      // this.purchaseOrderArray[i].manufacturer =
+      //   productNameValue.manufacturer.manufacturerName;
+      // this.purchasepurchaseOrderArray[i].unitPrice = itemNameValue.itemUnitPrice;
       // (<HTMLInputElement>document.getElementById("itemCode" + i)).value = itemNameValue.itemCode;
       // (<HTMLInputElement>document.getElementById("unitPrice" + i)).value = itemNameValue.itemUnitPrice;
       return true;
@@ -178,8 +243,8 @@ export class PurchaseEntryComponent implements OnInit {
 
       // this.getProductListUsingCategoryId(productTypeValue.categoryId);
 
-      //this.orderArray[i].productName = productTypeValue.itemCode;
-      // this.purchaseOrderArray[i].unitPrice = itemNameValue.itemUnitPrice;
+      //this.purchaseOrderArray[i].productName = productTypeValue.itemCode;
+      // this.purchasepurchaseOrderArray[i].unitPrice = itemNameValue.itemUnitPrice;
       // (<HTMLInputElement>document.getElementById("itemCode" + i)).value = itemNameValue.itemCode;
       // (<HTMLInputElement>document.getElementById("unitPrice" + i)).value = itemNameValue.itemUnitPrice;
       return true;
@@ -201,8 +266,8 @@ export class PurchaseEntryComponent implements OnInit {
         )).value;
         let amount: any = quantityValue * unitPrice;
         // (<HTMLInputElement>document.getElementById("amount" + i)).value = amount;
-        this.orderArray[i].amount = amount;
-        // this.calculateSubTotalAmounts();
+        this.purchaseOrderArray[i].amount = amount;
+        this.calculateSubTotalAmounts();
         return true;
       } else {
         document.getElementById("quantityMsg" + i).innerHTML =
@@ -213,8 +278,8 @@ export class PurchaseEntryComponent implements OnInit {
       if (!isNullOrUndefined(document.getElementById("quantityMsg" + i))) {
         document.getElementById("quantityMsg" + i).innerHTML =
           "Please enter this field.";
-        this.orderArray[i].amount = 0;
-        // this.calculateSubTotalAmounts();
+        this.purchaseOrderArray[i].amount = 0;
+        this.calculateSubTotalAmounts();
       }
       return false;
     }
@@ -238,7 +303,123 @@ export class PurchaseEntryComponent implements OnInit {
       return false;
     }
   }
+
+  manufactureDateRow(manufactureDateValue: string, i: number) {
+    if ((!isNull(manufactureDateValue)) && (manufactureDateValue != "")) {
+      document.getElementById("manufactureDate" + i).innerHTML = "";
+      return true;
+    } else {
+      if (!isNullOrUndefined(document.getElementById("manufactureDate" + i))) {
+        document.getElementById("manufactureDate" + i).innerHTML = "Please select date field";
+      }
+      return false;
+    }
+  }
+
+  expiryDateRow(expiryDateValue: string, i: number) {
+    if ((!isNull(expiryDateValue)) && (expiryDateValue != "")) {
+      document.getElementById("expiryDate" + i).innerHTML = "";
+      return true;
+    } else {
+      if (!isNullOrUndefined(document.getElementById("expiryDate" + i))) {
+        document.getElementById("expiryDate" + i).innerHTML = "Please select date field";
+      }
+      return false;
+    }
+  }
   // for multiple row validation ends here
+
+  calculateGrossAmtByDiscount(){
+    // let discount = this.addPurchaseEntry.get("purchaseEntryDiscount").value;
+
+    let discount:any = document.getElementById('purchaseEntryDiscount');
+    console.log(discount.value);
+    
+    let subTotal = this.addPurchaseEntry.get("purchaseEntrySubTotal").value;
+
+    let discAmt= Math.round((subTotal/100)* discount.value);
+    console.log(discAmt);
+    
+    this.addPurchaseEntry.patchValue({purchaseEntryDiscount:discAmt})
+    // if(!isNullOrUndefined(discAmt)){
+    //   let totalAmt = +subTotal - + discAmt;
+    //   this.addPurchaseEntry.patchValue({ purchaseEntryTotal: totalAmt})
+    // }
+    // else {
+    //     this.addPurchaseEntry.patchValue({ purchaseEntryTotal: 0 });
+    //   }
+
+  }
+
+  calculateSubTotalAmounts() {
+    let subTotal = 0;
+    this.purchaseOrderArray.forEach((element) => {
+      subTotal += +element.amount;
+    });
+    this.addPurchaseEntry.patchValue({
+      purchaseEntrySubTotal: subTotal,
+    });
+
+    let taxRate = this.addPurchaseEntry.get("purchaseEntryTax").value;
+    if (!isNullOrUndefined(taxRate)) {
+      this.calculateTotalAmount(subTotal, taxRate);
+    } else {
+      this.addPurchaseEntry.patchValue({ purchaseEntryTax: 0 });
+      this.calculateTotalAmount(subTotal, 0);
+    }
+  }
+
+
+
+  calculateTotalAmount(subTotal, taxRate) {
+    let taxAmt = Math.round((subTotal / 100) * taxRate);
+    if (!isNullOrUndefined(taxAmt)) {
+      let totalAmt = +subTotal + +taxAmt;
+      this.addPurchaseEntry.patchValue({ purchaseEntryTotal: totalAmt });
+    } else {
+      this.addPurchaseEntry.patchValue({ purchaseEntryTotal: 0 });
+    }
+  }
+
+  addPurchaseEntryFormSubmit() {
+    if (this.purchaseOrderDetailFlag && this.addPurchaseEntry.valid) {
+      this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
+      this.addPurchaseEntry.patchValue({purchaseEntryList:this.purchaseOrderArray}) 
+      console.log(this.addPurchaseEntry);
+      
+      // this.purchaseOrderService
+      //   .purchaseOrderDetails(this.addPurchaseEntry.value)
+      //   .subscribe(
+      //     (resp: any) => {
+      //       if (resp.success) {
+      //         alert(resp.message);
+      //         this.appComponent.stopSpinner();
+      //         setTimeout(() => {
+      //           if (confirm("Do you want add more Item ?")) {
+      //             location.reload();
+      //           } else {
+      //           }
+      //         }, 500);
+      //       } else {
+      //         setTimeout(() => {
+      //           alert(resp.message);
+      //           this.appComponent.stopSpinner();
+      //         }, 1000);
+      //       }
+      //     },
+      //     (error) => {
+      //       setTimeout(() => {
+      //         alert("Error! - Something Went Wrong! Try again.");
+      //         this.appComponent.stopSpinner();
+      //       }, 1000);
+      //     }
+      //   );
+    } else {
+      alert("Please, fill the proper details.");
+    }
+  }
+
+
 
   // custom validation starts
   orderNumberInputMsg: string; orderNumber: string;
@@ -264,4 +445,18 @@ export class PurchaseEntryComponent implements OnInit {
     };
   }
   // custom validation ends
+
+
+  // To Reset Dynamic Array starts here
+  clearFormArray(purchaseOrderArray) {
+    for (let index = purchaseOrderArray.length; index >= 0; index--) {
+      purchaseOrderArray.splice(index)
+    }
+  }
+  // To Reset Dynamic Array ends here
+
+  gotoBack(){
+    this.location.back();
+  }
+
 }

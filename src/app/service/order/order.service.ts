@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 export class OrderService {
 
   private baseUrl = environment.baseUrl;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
 
   // get productCategoryList 
@@ -16,26 +16,32 @@ export class OrderService {
     return this.http.get(`${this.baseUrl}/productCategotyMaster/productCategoryList`);
   }
 
-   // get Supplier Detail by id
-   getPrductsByCategoryId(categoryId: number) {     
+  // get Supplier Detail by id
+  getPrductsByCategoryId(categoryId: number) {
     return this.http.get(
       `${this.baseUrl}/order/listProductByCategoryId/${categoryId}`
     );
   }
 
   // get All Order ID Pregenerated
-  getOrderIdAuto() {    
+  getOrderIdAuto() {
     return this.http.get(this.baseUrl + '/order/getOrderIdAuto')
   }
 
-   // Save  Order
-   saveOrderDetails(addOrderDetails: any) { 
-    return this.http.post(`${this.baseUrl}/order/addOrder`, addOrderDetails);    
+  // Save  Order
+  saveOrderDetails(addOrderDetails: any) {
+    return this.http.post(`${this.baseUrl}/order/addOrder`, addOrderDetails);
   }
 
-    // get orderList 
-    orderList() {
-      return this.http.get(`${this.baseUrl}/order/orderList`);
-    }
+  // get orderList 
+  orderList() {
+    return this.http.get(`${this.baseUrl}/order/orderList`);
+  }
+
+
+  // get orderListByOrderId by id
+  orderListByOrderId(orderId: number) {
+    return this.http.get(`${this.baseUrl}/order/orderListByOrderId/${orderId}`)
+  }
 
 }
