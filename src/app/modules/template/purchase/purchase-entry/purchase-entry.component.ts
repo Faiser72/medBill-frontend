@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { isNull, isNullOrUndefined } from 'util';
+import { PurchaseEntryService } from 'src/app/service/purchaseEntry/purchase-entry.service';
 
 
 class createOrder {
@@ -17,9 +18,9 @@ class createOrder {
   packaging: any;
   quantity: any;
   unitPrice: any;
-  batchNumber:any;
-  manufactureDate:any;
-  expiryDate:any;
+  batchNumber: any;
+  manufactureDate: any;
+  expiryDate: any;
   amount: any;
 }
 
@@ -82,8 +83,9 @@ export class PurchaseEntryComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private route: Router,
     private orderService: OrderService,
-    private location:Location,
-    private appComponent: AppComponent) { }
+    private location: Location,
+    private appComponent: AppComponent,
+    private purchaseEntryService: PurchaseEntryService) { }
 
   ngOnInit() {
     this.addPurchaseEntry = this.fb.group({
@@ -96,7 +98,8 @@ export class PurchaseEntryComponent implements OnInit {
       purchaseEntryTax: ["", Validators.required],
       purchaseEntryTotal: ["", Validators.required],
       purchaseEntryList: [''],
-      purchaseEntryDiscount:""
+      purchaseEntryDiscount: "",
+      stockList: [''],
     });
     this.addPurchaseEntry.setValidators(this.customValidation());
 
@@ -140,9 +143,9 @@ export class PurchaseEntryComponent implements OnInit {
         quantity: orderData.listObject[index].quantity,
         unitPrice: orderData.listObject[index].unitPrice,
         amount: orderData.listObject[index].amount,
-        batchNumber:"",
-        manufactureDate:"",
-        expiryDate:"",
+        batchNumber: "",
+        manufactureDate: "",
+        expiryDate: "",
       };
       this.purchaseOrderArray.push(this.createOrder);
     }
@@ -189,16 +192,16 @@ export class PurchaseEntryComponent implements OnInit {
       this.productNameRow(this.purchaseOrderArray[i].productName, i);
       this.quantityRow(this.purchaseOrderArray[i].quantity, i);
       this.unitPriceRow(this.purchaseOrderArray[i].unitPrice, i);
-      this.manufactureDateRow(this.purchaseOrderArray[i].manufactureDate,i)
-      this.expiryDateRow(this.purchaseOrderArray[i].expiryDate,i);
+      this.manufactureDateRow(this.purchaseOrderArray[i].manufactureDate, i)
+      this.expiryDateRow(this.purchaseOrderArray[i].expiryDate, i);
     }
     this.purchaseOrderArray.every((object, index) => {
       let productTypeRowFlag = this.productTypeRow(object.productType, index);
       let productNameFlag = this.productNameRow(object.productName, index);
       let quantityRowFlag = this.quantityRow(object.quantity, index);
       let unitPriceFlag = this.unitPriceRow(object.unitPrice, index);
-      let manufactureDateFlag= this.manufactureDateRow(object.manufactureDate,index)
-      let expiryDateFlag= this.expiryDateRow(object.expiryDate,index)
+      let manufactureDateFlag = this.manufactureDateRow(object.manufactureDate, index)
+      let expiryDateFlag = this.expiryDateRow(object.expiryDate, index)
       if (
         productTypeRowFlag &&
         productNameFlag &&
@@ -329,18 +332,18 @@ export class PurchaseEntryComponent implements OnInit {
   }
   // for multiple row validation ends here
 
-  calculateGrossAmtByDiscount(){
+  calculateGrossAmtByDiscount() {
     // let discount = this.addPurchaseEntry.get("purchaseEntryDiscount").value;
 
-    let discount:any = document.getElementById('purchaseEntryDiscount');
+    let discount: any = document.getElementById('purchaseEntryDiscount');
     console.log(discount.value);
-    
+
     let subTotal = this.addPurchaseEntry.get("purchaseEntrySubTotal").value;
 
-    let discAmt= Math.round((subTotal/100)* discount.value);
+    let discAmt = Math.round((subTotal / 100) * discount.value);
     console.log(discAmt);
-    
-    this.addPurchaseEntry.patchValue({purchaseEntryDiscount:discAmt})
+
+    this.addPurchaseEntry.patchValue({ purchaseEntryDiscount: discAmt })
     // if(!isNullOrUndefined(discAmt)){
     //   let totalAmt = +subTotal - + discAmt;
     //   this.addPurchaseEntry.patchValue({ purchaseEntryTotal: totalAmt})
@@ -381,39 +384,76 @@ export class PurchaseEntryComponent implements OnInit {
     }
   }
 
+  // addOrderFormubmit() {
+  //   if (this.orderDetailFlag && this.addOrderDetails.valid) {
+  //     this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
+  //     this.addOrderDetails.patchValue({orderItemList:this.orderArray}) 
+  //     this.orderService
+  //       .saveOrderDetails(this.addOrderDetails.value)
+  //       .subscribe(
+  //         (resp: any) => {
+  //           if (resp.success) {
+  //             alert(resp.message);
+  //             this.appComponent.stopSpinner();
+  //             setTimeout(() => {
+  //               if (confirm("Do you want to create more Order?")) {
+  //                 location.reload();
+  //               } else {
+  //                 //this.backToItemCategoryList();
+  //               }
+  //             }, 500);
+  //           } else {
+  //             setTimeout(() => {
+  //               alert(resp.message);
+  //               this.appComponent.stopSpinner();
+  //             }, 1000);
+  //           }
+  //         },
+  //         (error) => {
+  //           setTimeout(() => {
+  //             alert("Error! - Something Went Wrong! Try again.");
+  //             this.appComponent.stopSpinner();
+  //           }, 1000);
+  //         }
+  //       );
+  //   } else {
+  //     alert("Please, fill the proper details.");
+  //   }
+  // }
+
   addPurchaseEntryFormSubmit() {
     if (this.purchaseOrderDetailFlag && this.addPurchaseEntry.valid) {
       this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
-      this.addPurchaseEntry.patchValue({purchaseEntryList:this.purchaseOrderArray}) 
+      this.addPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
       console.log(this.addPurchaseEntry);
-      
-      // this.purchaseOrderService
-      //   .purchaseOrderDetails(this.addPurchaseEntry.value)
-      //   .subscribe(
-      //     (resp: any) => {
-      //       if (resp.success) {
-      //         alert(resp.message);
-      //         this.appComponent.stopSpinner();
-      //         setTimeout(() => {
-      //           if (confirm("Do you want add more Item ?")) {
-      //             location.reload();
-      //           } else {
-      //           }
-      //         }, 500);
-      //       } else {
-      //         setTimeout(() => {
-      //           alert(resp.message);
-      //           this.appComponent.stopSpinner();
-      //         }, 1000);
-      //       }
-      //     },
-      //     (error) => {
-      //       setTimeout(() => {
-      //         alert("Error! - Something Went Wrong! Try again.");
-      //         this.appComponent.stopSpinner();
-      //       }, 1000);
-      //     }
-      //   );
+
+      this.purchaseEntryService
+        .savePurchaseEntryDetails(this.addPurchaseEntry.value)
+        .subscribe(
+          (resp: any) => {
+            if (resp.success) {
+              alert(resp.message);
+              this.appComponent.stopSpinner();
+              setTimeout(() => {
+                if (confirm("Do you want add more Item ?")) {
+                  location.reload();
+                } else {
+                }
+              }, 500);
+            } else {
+              setTimeout(() => {
+                alert(resp.message);
+                this.appComponent.stopSpinner();
+              }, 1000);
+            }
+          },
+          (error) => {
+            setTimeout(() => {
+              alert("Error! - Something Went Wrong! Try again.");
+              this.appComponent.stopSpinner();
+            }, 1000);
+          }
+        );
     } else {
       alert("Please, fill the proper details.");
     }
@@ -455,7 +495,7 @@ export class PurchaseEntryComponent implements OnInit {
   }
   // To Reset Dynamic Array ends here
 
-  gotoBack(){
+  gotoBack() {
     this.location.back();
   }
 
