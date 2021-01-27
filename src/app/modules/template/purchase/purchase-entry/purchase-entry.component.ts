@@ -109,11 +109,11 @@ export class PurchaseEntryComponent implements OnInit {
 
   }
 
+
   getProductTypeList() {
     this.orderService.productCategoryList().subscribe((data: any) => {
       this.allProductTypeList = data.listObject;
       console.log(this.allProductTypeList);
-
     });
   }
 
@@ -136,8 +136,8 @@ export class PurchaseEntryComponent implements OnInit {
   getOrderListDetails(orderData) {
     for (let index = 0; index < orderData.listObject.length; index++) {
       this.createOrder = {
-        productType: orderData.listObject[index].productType.categoryName,
-        productName: orderData.listObject[index].productName.productName,
+        productType: orderData.listObject[index].productType,
+        productName: orderData.listObject[index].productName,
         manufacturer: orderData.listObject[index].manufacturer,
         packaging: orderData.listObject[index].packaging,
         quantity: orderData.listObject[index].quantity,
@@ -151,6 +151,20 @@ export class PurchaseEntryComponent implements OnInit {
     }
   }
 
+  public matchProductType = (product, value): boolean => {  
+    if (value) {
+      return product.categoryId === value.categoryId;
+    }
+  };
+
+  public matchProductName = (productName, value): boolean => {  
+    console.log(productName);
+    if (value) {
+      return productName.productId === value.productId;
+    }
+  };
+
+  
 
   getOrderList() {
     this.orderService.orderList().subscribe((data: any) => {
@@ -222,7 +236,6 @@ export class PurchaseEntryComponent implements OnInit {
 
   productNameRow(productNameValue: any, i: number) {
     if (productNameValue != "") {
-      console.log(productNameValue);
 
       document.getElementById("productNameMsg" + i).innerHTML = "";
       // this.purchaseOrderArray[i].manufacturer =
@@ -241,6 +254,8 @@ export class PurchaseEntryComponent implements OnInit {
   }
 
   productTypeRow(productTypeValue: any, i: number) {
+    console.log(productTypeValue);
+    
     if (productTypeValue != "") {
       document.getElementById("productTypeMsg" + i).innerHTML = "";
 
@@ -438,6 +453,7 @@ export class PurchaseEntryComponent implements OnInit {
                 if (confirm("Do you want add more Item ?")) {
                   location.reload();
                 } else {
+                  this.location.back();
                 }
               }, 500);
             } else {

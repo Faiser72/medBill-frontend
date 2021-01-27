@@ -106,23 +106,23 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <!-- <mat-select [compareWith]="matchProductType" [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateOrderDetails(i);">
+                                        <mat-select [compareWith]="matchProductType" [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateOrderDetails(i);">
                                             <mat-option value=''>Select Here</mat-option>
                                             <mat-option *ngFor="let cate of allProductTypeList" [value]="cate">
                                                 {{cate.categoryName}}</mat-option>
-                                        </mat-select> -->
-                                        <input matInput [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (input)="validateOrderDetails(i);" />
+                                        </mat-select>
+                                        <!-- <input matInput [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (input)="validateOrderDetails(i);" /> -->
                                     </mat-form-field>
                                     <p style="color: red; font-size: 15px;" id="productTypeMsg{{i}}"></p>
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <!-- <mat-select [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);">
+                                        <mat-select [compareWith]="matchProductName" [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);">
                                             <mat-option value=''>Select Here</mat-option>
                                             <mat-option *ngFor="let pro of allProductList" [value]="pro">
                                                 {{pro.productName}}</mat-option>
-                                        </mat-select> -->
-                                        <input matInput [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (input)="validateOrderDetails(i);" />
+                                        </mat-select>
+                                        <!-- <input matInput [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (input)="validateOrderDetails(i);" /> -->
                                     </mat-form-field>
                                     <p style="color: red;" id="productNameMsg{{i}}"></p>
                                 </td>
