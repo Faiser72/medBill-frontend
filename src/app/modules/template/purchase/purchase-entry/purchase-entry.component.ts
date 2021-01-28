@@ -1,3 +1,4 @@
+import { ProductMasterServiceService } from 'src/app/service/productMaster/product-master-service.service';
 import { AppComponent } from './../../../../app.component';
 import { Location } from '@angular/common';
 import { OrderService } from './../../../../service/order/order.service';
@@ -24,18 +25,6 @@ class createOrder {
   amount: any;
 }
 
-
-// "itemCode",
-//     "itemName",
-//     "itemUnitOfMeasure",
-//     "itemUnitPrice",
-//     "quanttity",
-//     "unitPrice",
-//     "batchName",
-//     "manufactureDate",
-//     "expiryDate",
-//     "totalAmount",
-
 @Component({
   selector: 'app-purchase-entry',
   templateUrl: './purchase-entry.component.html',
@@ -43,49 +32,29 @@ class createOrder {
 })
 export class PurchaseEntryComponent implements OnInit {
 
-  allSupplierName = [
-    { value: 'Om Medi Serve', viewValue: 'Local' },
-    { value: 'Hira Drug House', viewValue: 'Interstate' },
-    { value: 'Veto Drug House', viewValue: 'Interstate' },
-  ];
-
   purchaseOrderArray: Array<createOrder> = [];
   createOrder: any = {};
 
   deleted_successfully_message: string = "Deleted Successfully";
-  itemList;
+  
   orderItemList: any;
+  allPurchaseEntryList: any;
 
   orderList: any;
   filteredOrderOptions: Observable<any>;
 
-  allProductTypeList: any; //temp
-  allProductList: any;//temp
-
-
-  dataSource: any;
-  displayedColumns: string[] = [
-    "slNo",
-    "itemCode",
-    "itemName",
-    "itemUnitOfMeasure",
-    "itemUnitPrice",
-    "quanttity",
-    "unitPrice",
-    "batchName",
-    "manufactureDate",
-    "expiryDate",
-    "totalAmount",
-  ];
-
+  allProductTypeList: any;
+  allProductList: any;
 
   addPurchaseEntry: FormGroup;
+
   constructor(private fb: FormBuilder,
     private route: Router,
     private orderService: OrderService,
     private location: Location,
     private appComponent: AppComponent,
-    private purchaseEntryService: PurchaseEntryService) { }
+    private purchaseEntryService: PurchaseEntryService,
+    private productService: ProductMasterServiceService) { }
 
   ngOnInit() {
     this.addPurchaseEntry = this.fb.group({
@@ -105,10 +74,17 @@ export class PurchaseEntryComponent implements OnInit {
 
     // To get all the orders list
     this.getOrderList();
+
+    // to get all category list
     this.getProductTypeList();
 
-  }
+    // to get all product list
+    this.getProductList();
 
+    // To get Purchase entry list for unique validation of orderNumber
+    this.getPurchaseEntryList();
+
+  }
 
   getProductTypeList() {
     this.orderService.productCategoryList().subscribe((data: any) => {
@@ -117,22 +93,36 @@ export class PurchaseEntryComponent implements OnInit {
     });
   }
 
+  getProductList() {
+    this.productService.productList().subscribe((data: any) => {
+      this.allProductList = data.listObject;
+      console.log(this.allProductList);
+    });
+  }
+
+  getPurchaseEntryList() {
+    this.purchaseEntryService.getPurchaseEntryList().subscribe((data: any) => {
+      this.allPurchaseEntryList = data.listObject;
+      console.log(this.allPurchaseEntryList);
+    });
+  }
+
+  // getting order details by order id
   orderDetailsById(orderObj) {
     console.log(orderObj);
     this.addPurchaseEntry.patchValue({ orderDate: orderObj.value.orderDate, supplierName: orderObj.value.supplierName.supplierName })
     this.orderService.orderListByOrderId(orderObj.value.orderId).subscribe((data: any) => {
       if (data.success) {
         this.clearFormArray(this.purchaseOrderArray)
-        console.log(data);
         this.getOrderListDetails(data);
         this.calculateSubTotalAmounts();
-
         this.orderItemList = data;
       }
     })
 
   }
 
+  // patching order data in to purchase entry data
   getOrderListDetails(orderData) {
     for (let index = 0; index < orderData.listObject.length; index++) {
       this.createOrder = {
@@ -151,45 +141,43 @@ export class PurchaseEntryComponent implements OnInit {
     }
   }
 
-  public matchProductType = (product, value): boolean => {  
+  // for patching fk object of productType(productCategory) in add row
+  public matchProductType = (product, value): boolean => {
     if (value) {
       return product.categoryId === value.categoryId;
     }
   };
 
-  public matchProductName = (productName, value): boolean => {  
+    // for patching fk object of product in add row
+  public matchProductName = (productName, value): boolean => {
     console.log(productName);
     if (value) {
       return productName.productId === value.productId;
     }
   };
 
-  
 
+ // order autocomplete starts here
   getOrderList() {
     this.orderService.orderList().subscribe((data: any) => {
       if (data.success) {
         console.log(data);
-
         this.orderList = data['listObject'];
         this.filteredOrderOptions = this.addPurchaseEntry.get('orderNumber').valueChanges.pipe(
           startWith(''),
           map(value => typeof value === 'string' ? value : value.orderNumber),
           map(order => order ? this._filter(order) : this.orderList.slice()));
-
       } else {
         alert('No order is available')
       }
     });
   }
 
-  // order autocomplete starts here
   displayFn(order: any): string {
     return order && order.orderNumber ? order.orderNumber : '';
   }
 
   private _filter(order: string): any {
-
     const filterValue = order.toLowerCase();
     return this.orderList.filter(order => order.orderNumber.toLowerCase().indexOf(filterValue) === 0);
   }
@@ -255,7 +243,7 @@ export class PurchaseEntryComponent implements OnInit {
 
   productTypeRow(productTypeValue: any, i: number) {
     console.log(productTypeValue);
-    
+
     if (productTypeValue != "") {
       document.getElementById("productTypeMsg" + i).innerHTML = "";
 
@@ -356,8 +344,6 @@ export class PurchaseEntryComponent implements OnInit {
     let subTotal = this.addPurchaseEntry.get("purchaseEntrySubTotal").value;
 
     let discAmt = Math.round((subTotal / 100) * discount.value);
-    console.log(discAmt);
-
     this.addPurchaseEntry.patchValue({ purchaseEntryDiscount: discAmt })
     // if(!isNullOrUndefined(discAmt)){
     //   let totalAmt = +subTotal - + discAmt;
@@ -387,8 +373,6 @@ export class PurchaseEntryComponent implements OnInit {
     }
   }
 
-
-
   calculateTotalAmount(subTotal, taxRate) {
     let taxAmt = Math.round((subTotal / 100) * taxRate);
     if (!isNullOrUndefined(taxAmt)) {
@@ -399,49 +383,10 @@ export class PurchaseEntryComponent implements OnInit {
     }
   }
 
-  // addOrderFormubmit() {
-  //   if (this.orderDetailFlag && this.addOrderDetails.valid) {
-  //     this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
-  //     this.addOrderDetails.patchValue({orderItemList:this.orderArray}) 
-  //     this.orderService
-  //       .saveOrderDetails(this.addOrderDetails.value)
-  //       .subscribe(
-  //         (resp: any) => {
-  //           if (resp.success) {
-  //             alert(resp.message);
-  //             this.appComponent.stopSpinner();
-  //             setTimeout(() => {
-  //               if (confirm("Do you want to create more Order?")) {
-  //                 location.reload();
-  //               } else {
-  //                 //this.backToItemCategoryList();
-  //               }
-  //             }, 500);
-  //           } else {
-  //             setTimeout(() => {
-  //               alert(resp.message);
-  //               this.appComponent.stopSpinner();
-  //             }, 1000);
-  //           }
-  //         },
-  //         (error) => {
-  //           setTimeout(() => {
-  //             alert("Error! - Something Went Wrong! Try again.");
-  //             this.appComponent.stopSpinner();
-  //           }, 1000);
-  //         }
-  //       );
-  //   } else {
-  //     alert("Please, fill the proper details.");
-  //   }
-  // }
-
   addPurchaseEntryFormSubmit() {
     if (this.purchaseOrderDetailFlag && this.addPurchaseEntry.valid) {
       this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
       this.addPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
-      console.log(this.addPurchaseEntry);
-
       this.purchaseEntryService
         .savePurchaseEntryDetails(this.addPurchaseEntry.value)
         .subscribe(
@@ -451,6 +396,7 @@ export class PurchaseEntryComponent implements OnInit {
               this.appComponent.stopSpinner();
               setTimeout(() => {
                 if (confirm("Do you want add more Item ?")) {
+                  // add
                   location.reload();
                 } else {
                   this.location.back();
@@ -475,8 +421,6 @@ export class PurchaseEntryComponent implements OnInit {
     }
   }
 
-
-
   // custom validation starts
   orderNumberInputMsg: string; orderNumber: string;
 
@@ -485,13 +429,31 @@ export class PurchaseEntryComponent implements OnInit {
       // for orderNumber Autocomplete starts here
       const orderNumberFormGroup = formGroup.controls["orderNumber"];
       if (orderNumberFormGroup.value !== "" && orderNumberFormGroup.value !== null) {
+        console.log(orderNumberFormGroup.value);
+
         if (typeof (orderNumberFormGroup.value) !== 'object') {
           console.log(typeof (orderNumberFormGroup.value));
 
           this.orderNumberInputMsg = "Please select from the List";
           orderNumberFormGroup.setErrors({});
         }
-      } else {
+        //        for unique starts here   
+        if (orderNumberFormGroup.valid) {
+          if (!isNullOrUndefined(this.allPurchaseEntryList)) {
+            this.allPurchaseEntryList.forEach((data: any) => {
+              if (data.orderNumber.orderNumber == orderNumberFormGroup.value.orderNumber) {
+                this.orderNumber = data.orderNumber;
+                this.orderNumberInputMsg = "This Order is Purchased already";
+                orderNumberFormGroup.setErrors({});
+              }
+            });
+          }
+        }
+        // for unique ends here  
+
+      }
+      else {
+
         this.orderNumberInputMsg = "Please enter this field.";
         orderNumberFormGroup.setErrors({});
       }
@@ -516,3 +478,6 @@ export class PurchaseEntryComponent implements OnInit {
   }
 
 }
+
+
+

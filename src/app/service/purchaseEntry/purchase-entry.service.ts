@@ -15,5 +15,9 @@ export class PurchaseEntryService {
     return this.http.post(`${this.baseUrl}/purchaseEntry/addPurchaseEntry`, purchaseEntryDetails);
   }
 
+  // get listPurchaseEntry 
+  getPurchaseEntryList() {
+    return this.http.get(`${this.baseUrl}/purchaseEntry/listPurchaseEntry`);
+  }
 
 }

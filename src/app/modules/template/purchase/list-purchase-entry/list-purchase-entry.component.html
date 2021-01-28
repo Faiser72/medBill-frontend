@@ -1,49 +1,71 @@
 <br />
 <h4 class="title-header">- Purchase List -</h4>
-<div class="text-right">
+<!-- <div class="text-right">
     <button (click)="routeToAddListItem()" class="addButton btn">Add Purchase Entry</button>
+</div> -->
+<div class="row">
+    <div class="col">
+        <div class="text-left">
+            <mat-form-field appearance="outline" class="matFormField">
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search here..." />
+                <mat-icon color="primary" matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col">
+        <div class="text-right">
+            <button (click)="routeToAddListItem()" class="addButton btn">Add Purchase Entry</button>
+        </div>
+    </div>
 </div>
 <br />
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource">
         <!-- ID Column -->
         <ng-container matColumnDef="slNo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">SL NO</th>
+            <th mat-header-cell *matHeaderCellDef class="table_header">SL NO</th>
             <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
         </ng-container>
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="itemCode">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+        <!-- orderNumber Column -->
+        <ng-container matColumnDef="orderNumber">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Order ID
             </th>
-            <td mat-cell *matCellDef="let row">{{ row.itemCode }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.orderNumber.orderNumber }}</td>
         </ng-container>
 
-        <!-- Specialization Column -->
-        <ng-container matColumnDef="itemName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+        <!-- orderDate Column -->
+        <ng-container matColumnDef="orderDate">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Order Date
             </th>
-            <td mat-cell *matCellDef="let row">{{ row.itemName }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.orderNumber.orderDate }}</td>
         </ng-container>
 
-        <!-- Specialization Column -->
-        <ng-container matColumnDef="itemUnitOfMeasure">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+        <!-- receivedDate Column -->
+        <ng-container matColumnDef="receivedDate">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Received Date
             </th>
-            <td mat-cell *matCellDef="let row">{{ row.itemUnitOfMeasure }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.receivedDate }}</td>
         </ng-container>
 
-        <!-- Specialization Column -->
-        <ng-container matColumnDef="itemUnitPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+        <!-- supplierName Column -->
+        <ng-container matColumnDef="supplierName">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Supplier Name
             </th>
-            <td mat-cell *matCellDef="let row">{{ row.itemUnitPrice }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.orderNumber.supplierName.supplierName }}</td>
         </ng-container>
 
+        <!-- supplierInvoiceNumber Column -->
+        <ng-container matColumnDef="supplierInvoiceNumber">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Supplier Invoice Number
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.supplierInvoiceNumber }}</td>
+        </ng-container>
 
         <!-- Action Column -->
         <ng-container matColumnDef="action">

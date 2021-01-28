@@ -106,7 +106,7 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <mat-select [compareWith]="matchProductType" [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateOrderDetails(i);">
+                                        <mat-select [compareWith]="matchProductType" [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateOrderDetails(i);" [disabled]="true">
                                             <mat-option value=''>Select Here</mat-option>
                                             <mat-option *ngFor="let cate of allProductTypeList" [value]="cate">
                                                 {{cate.categoryName}}</mat-option>
@@ -117,7 +117,7 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <mat-select [compareWith]="matchProductName" [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);">
+                                        <mat-select [compareWith]="matchProductName" [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);" [disabled]="true">
                                             <mat-option value=''>Select Here</mat-option>
                                             <mat-option *ngFor="let pro of allProductList" [value]="pro">
                                                 {{pro.productName}}</mat-option>

@@ -1,3 +1,4 @@
+import { PurchaseEntryService } from 'src/app/service/purchaseEntry/purchase-entry.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
@@ -11,14 +12,17 @@ import { AppComponent } from 'src/app/app.component';
 export class ListPurchaseEntryComponent implements OnInit {
 
   deleted_successfully_message: string = "Deleted Successfully";
-  itemList;
+
+  purchaseDetailsList: any;
+
   dataSource: any;
   displayedColumns: string[] = [
     "slNo",
-    "itemCode",
-    "itemName",
-    "itemUnitOfMeasure",
-    "itemUnitPrice",
+    "orderNumber",
+    "orderDate",
+    "receivedDate",
+    "supplierName",
+    "supplierInvoiceNumber",
     "action"
   ];
 
@@ -28,12 +32,31 @@ export class ListPurchaseEntryComponent implements OnInit {
   constructor(
     private router: Router,
     private _snackBar: MatSnackBar,
-    private appComponent: AppComponent,) { }
+    private appComponent: AppComponent,
+    private purchaseEntryService: PurchaseEntryService) { }
 
   ngOnInit() {
-    
+    this.purchaseEntryService.getPurchaseEntryList().subscribe((data: any) => {
+      if (data.success) {
+        this.purchaseDetailsList = data['listObject'];
+        this.dataSource = new MatTableDataSource(data['listObject']);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.customFilter();
+      } else {
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort
+      }
+    });
   }
 
+  customFilter() {
+    this.dataSource.filterPredicate = (data, filter) => {
+      const dataStr = data.orderNumber.orderNumber + data.orderNumber.supplierName.supplierName + data.orderNumber.orderDate + data.receivedDate + data.supplierInvoiceNumber;
+      return dataStr.trim().toLowerCase().indexOf(filter) != -1;
+    }
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -43,7 +66,6 @@ export class ListPurchaseEntryComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   routeToAddListItem() {
     this.router.navigate(['/home/puchaseEntryHome/addPurchaseEntry'])
   }

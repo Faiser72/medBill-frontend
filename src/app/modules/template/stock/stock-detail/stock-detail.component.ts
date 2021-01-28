@@ -1,5 +1,6 @@
+import { StockService } from './../../../../service/stock/stock.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatSnackBar } from '@angular/material';
+import { MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 
@@ -11,15 +12,17 @@ import { AppComponent } from 'src/app/app.component';
 export class StockDetailComponent implements OnInit {
 
   deleted_successfully_message: string = "Deleted Successfully";
-  itemList;
+
+  stockItemDetailsList: any;
+
   dataSource: any;
   displayedColumns: string[] = [
     "slNo",
-    "itemCode",
-    "itemName",
-    "itemUnitOfMeasure",
-    "itemUnitPrice",
-    "batchName",
+    "productType",
+    "productName",
+    "manufacturer",
+    "packaging",
+    "batchNumber",
     "manufactureDate",
     "expiryDate",
     "quantity",
@@ -33,12 +36,32 @@ export class StockDetailComponent implements OnInit {
   constructor(
     private router: Router,
     private _snackBar: MatSnackBar,
-    private appComponent: AppComponent,) { }
+    private appComponent: AppComponent,
+    private stockService: StockService) { }
 
   ngOnInit() {
-    
+    this.stockService.getStockItemList().subscribe((data: any) => {
+      if (data.success) {
+        this.stockItemDetailsList = data['listObject'];
+        this.dataSource = new MatTableDataSource(data['listObject']);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.customFilter();
+      } else {
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort
+      }
+    });
   }
 
+
+  customFilter() {
+    this.dataSource.filterPredicate = (data, filter) => {
+      const dataStr = data.productType.categoryName + data.productName.productName + data.manufacturer + data.packaging + data.batchNumber + data.manufactureDate + data.expiryDate + data.quantity + data.soldQuantity + data.balanceQuantity;
+      return dataStr.trim().toLowerCase().indexOf(filter) != -1;
+    }
+  }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
