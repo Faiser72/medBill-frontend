@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PurchaseEntryComponent } from './purchase-entry/purchase-entry.component';
@@ -15,7 +16,8 @@ import { MaterialImportModuleModule } from 'src/app/shared/material-import-modul
     CommonModule,
     MaterialImportModuleModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    RouterModule
   ]
 })
 export class PurchaseModule { }

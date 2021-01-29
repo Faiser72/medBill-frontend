@@ -1,7 +1,7 @@
 import { PurchaseEntryService } from 'src/app/service/purchaseEntry/purchase-entry.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 
 @Component({
@@ -70,4 +70,12 @@ export class ListPurchaseEntryComponent implements OnInit {
     this.router.navigate(['/home/puchaseEntryHome/addPurchaseEntry'])
   }
 
+  routeToEditPurchaseEntry(purchaseEntryDetails: any) {
+    console.log(purchaseEntryDetails);
+    
+    let navigationExtras: NavigationExtras = {
+      queryParams: { purchaseEntryId: purchaseEntryDetails.purchaseEntryId }
+    };
+    this.router.navigate(["/home/puchaseEntryHome/editPurchaseEntry"], navigationExtras);
+  }
 }

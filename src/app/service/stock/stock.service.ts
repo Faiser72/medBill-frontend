@@ -18,4 +18,9 @@ export class StockService {
   getStockItemList() {
     return this.http.get(`${this.baseUrl}/stock/listAllStockItems`);
   }
+
+  // get list of data except this id for validate unique in (edit)
+  getStockListExceptOne(stockId: number) {
+    return this.http.get(`${this.baseUrl}/stock/getStockListExceptOne/${stockId}`);
+  }
 }

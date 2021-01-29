@@ -1,7 +1,8 @@
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { AppComponent } from 'src/app/app.component';
@@ -33,8 +34,8 @@ export class UpdatePurchaseEntryComponent implements OnInit {
   createOrder: any = {};
 
   deleted_successfully_message: string = "Deleted Successfully";
-  
-  orderItemList: any;
+
+  purchaseItemList: any;
   allPurchaseEntryList: any;
 
   orderList: any;
@@ -43,18 +44,20 @@ export class UpdatePurchaseEntryComponent implements OnInit {
   allProductTypeList: any;
   allProductList: any;
 
-  addPurchaseEntry: FormGroup;
+  editPurchaseEntry: FormGroup;
+  purchaseEntryId: any;
 
   constructor(private fb: FormBuilder,
-    private route: Router,
+    private Router: Router,
     private orderService: OrderService,
     private location: Location,
+    private route: ActivatedRoute,
     private appComponent: AppComponent,
     private purchaseEntryService: PurchaseEntryService,
     private productService: ProductMasterServiceService) { }
 
   ngOnInit() {
-    this.addPurchaseEntry = this.fb.group({
+    this.editPurchaseEntry = this.fb.group({
       orderNumber: ['', Validators.required],
       orderDate: ['', Validators.required],
       receivedDate: ['', Validators.required],
@@ -67,7 +70,12 @@ export class UpdatePurchaseEntryComponent implements OnInit {
       purchaseEntryDiscount: "",
       stockList: [''],
     });
-    this.addPurchaseEntry.setValidators(this.customValidation());
+    this.editPurchaseEntry.setValidators(this.customValidation());
+
+    this.route.queryParams.subscribe((data) => {
+      this.purchaseEntryId = data.purchaseEntryId;
+    });
+
 
     // To get all the orders list
     this.getOrderList();
@@ -79,8 +87,12 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     this.getProductList();
 
     // To get Purchase entry list for unique validation of orderNumber
-    this.getPurchaseEntryList();
+    // this.getPurchaseEntryList();
 
+    this.getAndPatchPurchaseEntryObject(this.purchaseEntryId);
+
+    // To get Purchase entry list except one for unique validation of orderNumber
+    this.getPurchaseEntryListExceptThisId(this.purchaseEntryId);
   }
 
   getProductTypeList() {
@@ -97,30 +109,48 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     });
   }
 
-  getPurchaseEntryList() {
-    this.purchaseEntryService.getPurchaseEntryList().subscribe((data: any) => {
+  // getPurchaseEntryList() {
+  //   this.purchaseEntryService.getPurchaseEntryList().subscribe((data: any) => {
+  //     this.allPurchaseEntryList = data.listObject;
+  //     console.log(this.allPurchaseEntryList);
+  //   });
+  // }
+
+  getPurchaseEntryListExceptThisId(purchaseEntryId) {
+    this.purchaseEntryService.getPurchaseEntryListExceptOne(purchaseEntryId).subscribe((data: any) => {
       this.allPurchaseEntryList = data.listObject;
-      console.log(this.allPurchaseEntryList);
-    });
+    })
   }
 
   // getting order details by order id
-  orderDetailsById(orderObj) {
-    console.log(orderObj);
-    this.addPurchaseEntry.patchValue({ orderDate: orderObj.value.orderDate, supplierName: orderObj.value.supplierName.supplierName })
-    this.orderService.orderListByOrderId(orderObj.value.orderId).subscribe((data: any) => {
-      if (data.success) {
-        this.clearFormArray(this.purchaseOrderArray)
-        this.getOrderListDetails(data);
-        this.calculateSubTotalAmounts();
-        this.orderItemList = data;
-      }
+  getAndPatchPurchaseEntryObject(purchaseEntryId) {
+    this.purchaseEntryService.getPurchaseEntryDetailsById(purchaseEntryId).subscribe((data: any) => {
+      this.editPurchaseEntry.patchValue(data.object)
+      this.editPurchaseEntry.patchValue({ orderDate: data.object.orderNumber.orderDate, supplierName: data.object.orderNumber.supplierName.supplierName })
+
+      this.purchaseEntryService.getPurchaseItemListByOrderId(purchaseEntryId).subscribe((data: any) => {
+        if (data.success) {
+          this.patchPurchaseEntryItemListDetails(data);
+          this.calculateSubTotalAmounts();
+          this.purchaseItemList = data;
+        }
+      })
     })
+    // console.log(orderObj);
+    // this.editPurchaseEntry.patchValue({ orderDate: orderObj.value.orderDate, supplierName: orderObj.value.supplierName.supplierName })
+    // this.orderService.orderListByOrderId(orderObj.value.orderId).subscribe((data: any) => {
+    //   if (data.success) {
+    //     this.clearFormArray(this.purchaseOrderArray)
+    //     this.getOrderListDetails(data);
+    //     this.calculateSubTotalAmounts();
+    //     this.purchaseItemList = data;
+    //   }
+    // })
 
   }
 
   // patching order data in to purchase entry data
-  getOrderListDetails(orderData) {
+  patchPurchaseEntryItemListDetails(orderData) {
     for (let index = 0; index < orderData.listObject.length; index++) {
       this.createOrder = {
         productType: orderData.listObject[index].productType,
@@ -130,9 +160,9 @@ export class UpdatePurchaseEntryComponent implements OnInit {
         quantity: orderData.listObject[index].quantity,
         unitPrice: orderData.listObject[index].unitPrice,
         amount: orderData.listObject[index].amount,
-        batchNumber: "",
-        manufactureDate: "",
-        expiryDate: "",
+        batchNumber:  orderData.listObject[index].batchNumber,
+        manufactureDate:  orderData.listObject[index].manufactureDate,
+        expiryDate:  orderData.listObject[index].expiryDate,
       };
       this.purchaseOrderArray.push(this.createOrder);
     }
@@ -145,7 +175,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     }
   };
 
-    // for patching fk object of product in add row
+  // for patching fk object of product in add row
   public matchProductName = (productName, value): boolean => {
     console.log(productName);
     if (value) {
@@ -154,13 +184,13 @@ export class UpdatePurchaseEntryComponent implements OnInit {
   };
 
 
- // order autocomplete starts here
+  // order autocomplete starts here
   getOrderList() {
     this.orderService.orderList().subscribe((data: any) => {
       if (data.success) {
         console.log(data);
         this.orderList = data['listObject'];
-        this.filteredOrderOptions = this.addPurchaseEntry.get('orderNumber').valueChanges.pipe(
+        this.filteredOrderOptions = this.editPurchaseEntry.get('orderNumber').valueChanges.pipe(
           startWith(''),
           map(value => typeof value === 'string' ? value : value.orderNumber),
           map(order => order ? this._filter(order) : this.orderList.slice()));
@@ -333,21 +363,21 @@ export class UpdatePurchaseEntryComponent implements OnInit {
   // for multiple row validation ends here
 
   calculateGrossAmtByDiscount() {
-    // let discount = this.addPurchaseEntry.get("purchaseEntryDiscount").value;
+    // let discount = this.editPurchaseEntry.get("purchaseEntryDiscount").value;
 
     let discount: any = document.getElementById('purchaseEntryDiscount');
     console.log(discount.value);
 
-    let subTotal = this.addPurchaseEntry.get("purchaseEntrySubTotal").value;
+    let subTotal = this.editPurchaseEntry.get("purchaseEntrySubTotal").value;
 
     let discAmt = Math.round((subTotal / 100) * discount.value);
-    this.addPurchaseEntry.patchValue({ purchaseEntryDiscount: discAmt })
+    this.editPurchaseEntry.patchValue({ purchaseEntryDiscount: discAmt })
     // if(!isNullOrUndefined(discAmt)){
     //   let totalAmt = +subTotal - + discAmt;
-    //   this.addPurchaseEntry.patchValue({ purchaseEntryTotal: totalAmt})
+    //   this.editPurchaseEntry.patchValue({ purchaseEntryTotal: totalAmt})
     // }
     // else {
-    //     this.addPurchaseEntry.patchValue({ purchaseEntryTotal: 0 });
+    //     this.editPurchaseEntry.patchValue({ purchaseEntryTotal: 0 });
     //   }
 
   }
@@ -357,15 +387,15 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     this.purchaseOrderArray.forEach((element) => {
       subTotal += +element.amount;
     });
-    this.addPurchaseEntry.patchValue({
+    this.editPurchaseEntry.patchValue({
       purchaseEntrySubTotal: subTotal,
     });
 
-    let taxRate = this.addPurchaseEntry.get("purchaseEntryTax").value;
+    let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
     if (!isNullOrUndefined(taxRate)) {
       this.calculateTotalAmount(subTotal, taxRate);
     } else {
-      this.addPurchaseEntry.patchValue({ purchaseEntryTax: 0 });
+      this.editPurchaseEntry.patchValue({ purchaseEntryTax: 0 });
       this.calculateTotalAmount(subTotal, 0);
     }
   }
@@ -374,18 +404,18 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     let taxAmt = Math.round((subTotal / 100) * taxRate);
     if (!isNullOrUndefined(taxAmt)) {
       let totalAmt = +subTotal + +taxAmt;
-      this.addPurchaseEntry.patchValue({ purchaseEntryTotal: totalAmt });
+      this.editPurchaseEntry.patchValue({ purchaseEntryTotal: totalAmt });
     } else {
-      this.addPurchaseEntry.patchValue({ purchaseEntryTotal: 0 });
+      this.editPurchaseEntry.patchValue({ purchaseEntryTotal: 0 });
     }
   }
 
-  addPurchaseEntryFormSubmit() {
-    if (this.purchaseOrderDetailFlag && this.addPurchaseEntry.valid) {
+  editPurchaseEntryFormSubmit() {
+    if (this.purchaseOrderDetailFlag && this.editPurchaseEntry.valid) {
       this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
-      this.addPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
+      this.editPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
       this.purchaseEntryService
-        .savePurchaseEntryDetails(this.addPurchaseEntry.value)
+        .savePurchaseEntryDetails(this.editPurchaseEntry.value)
         .subscribe(
           (resp: any) => {
             if (resp.success) {

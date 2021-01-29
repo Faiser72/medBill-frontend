@@ -396,8 +396,9 @@ export class PurchaseEntryComponent implements OnInit {
               this.appComponent.stopSpinner();
               setTimeout(() => {
                 if (confirm("Do you want add more Item ?")) {
-                  // add
-                  location.reload();
+                  this.addPurchaseEntry.reset();
+                  this.clearFormArray(this.purchaseOrderArray)
+                  // location.reload();
                 } else {
                   this.location.back();
                 }

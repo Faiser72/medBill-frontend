@@ -4,29 +4,29 @@
             <h4 class="text-center main-bg pt-3 mt-1">- Edit Purchase Entry -</h4>
         </div>
         <mat-divider class="mx-5"></mat-divider>
-        <form action="" class="form-group customhover" [formGroup]="addPurchaseEntry" (ngSubmit)="addPurchaseEntryFormSubmit()">
+        <form action="" class="form-group customhover" [formGroup]="editPurchaseEntry" (ngSubmit)="editPurchaseEntryFormSubmit()">
             <div class="container mt-5">
                 <div class="row">
                     <div class="col-md-6">
                         <!-- <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Order ID<sup class="text-danger">*</sup></mat-label>
                             <input matInput placeholder="Ex. 3320012" value="" formControlName="orderNumber" />
-                            <mat-error *ngIf="addPurchaseEntry.get('orderNumber').hasError('required')">
+                            <mat-error *ngIf="editPurchaseEntry.get('orderNumber').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
                         </mat-form-field> -->
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Order ID<sup class="text-danger">*</sup></mat-label>
                             <input type="text" matInput formControlName="orderNumber" [matAutocomplete]="autos">
-                            <mat-autocomplete #autos="matAutocomplete" [displayWith]="displayFn" (optionSelected)="orderDetailsById($event.option)">
+                            <mat-autocomplete #autos="matAutocomplete" [displayWith]="displayFn">
                                 <mat-option *ngFor="let order of filteredOrderOptions | async" [value]="order">
                                     {{order.orderNumber}}
                                 </mat-option>
                             </mat-autocomplete>
-                            <mat-error *ngIf="addPurchaseEntry.get('orderNumber').hasError('required')">
+                            <mat-error *ngIf="editPurchaseEntry.get('orderNumber').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
-                            <mat-error *ngIf="addPurchaseEntry.get('orderNumber').invalid">
+                            <mat-error *ngIf="editPurchaseEntry.get('orderNumber').invalid">
                                 <b>{{orderNumberInputMsg}}</b>
                             </mat-error>
 
@@ -36,7 +36,7 @@
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Order Date<sup class="text-danger">*</sup></mat-label>
                             <input matInput placeholder="Ex. 7/2/1995" formControlName="orderDate" type="date" readonly />
-                            <mat-error *ngIf="addPurchaseEntry.get('orderDate').hasError('required')">
+                            <mat-error *ngIf="editPurchaseEntry.get('orderDate').hasError('required')">
                                 Required
                             </mat-error>
                         </mat-form-field>
@@ -47,7 +47,7 @@
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Received Date<sup class="text-danger">*</sup></mat-label>
                             <input matInput placeholder="Ex. 7/2/1995" formControlName="receivedDate" type="date" />
-                            <mat-error *ngIf="addPurchaseEntry.get('receivedDate').hasError('required')">
+                            <mat-error *ngIf="editPurchaseEntry.get('receivedDate').hasError('required')">
                                 Required
                             </mat-error>
                         </mat-form-field>
@@ -62,7 +62,7 @@
                                 </mat-option>
                             </mat-select> -->
                             <input matInput placeholder="Ex. supplier1" formControlName="supplierName" readonly />
-                            <mat-error *ngIf="addPurchaseEntry.get('supplierName').hasError('required')">
+                            <mat-error *ngIf="editPurchaseEntry.get('supplierName').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
                         </mat-form-field>
@@ -71,7 +71,7 @@
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Supplier Invoice Number<sup class="text-danger">*</sup></mat-label>
                             <input matInput placeholder="Ex. 3320012" value="" formControlName="supplierInvoiceNumber" />
-                            <mat-error *ngIf="addPurchaseEntry.get('supplierInvoiceNumber').hasError('required')">
+                            <mat-error *ngIf="editPurchaseEntry.get('supplierInvoiceNumber').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
                         </mat-form-field>
@@ -226,7 +226,7 @@
 
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12 d-flex justify-content-around">
-                    <button type="submit" mat-raised-button color="primary" [disabled]='(addPurchaseEntry.invalid) || (!purchaseOrderDetailFlag)'>
+                    <button type="submit" mat-raised-button color="primary" [disabled]='(editPurchaseEntry.invalid) || (!purchaseOrderDetailFlag)'>
                         <mat-icon class="mr-2">save</mat-icon>Save
                     </button>
                     <button type="button" mat-raised-button color="accent" (click)="gotoBack()">

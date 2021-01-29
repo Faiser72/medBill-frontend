@@ -20,4 +20,18 @@ export class PurchaseEntryService {
     return this.http.get(`${this.baseUrl}/purchaseEntry/listPurchaseEntry`);
   }
 
+  // getPurchaseEntryItemListByPurchaseEntryId by id
+  getPurchaseItemListByOrderId(purchaseEntryId: number) {
+    return this.http.get(`${this.baseUrl}/purchaseEntry/getPurchaseEntryItemListByPurchaseId/${purchaseEntryId}`)
+  }
+
+  // getPurchaseEntryDetailsById by id
+  getPurchaseEntryDetailsById(purchaseEntryId: number) {
+    return this.http.get(`${this.baseUrl}/purchaseEntry/getPurchaseEntryDetailsById/${purchaseEntryId}`)
+  }
+
+  // get list of data except this id for validate unique in (edit)
+  getPurchaseEntryListExceptOne(purchaseEntryId: number) {
+    return this.http.get(`${this.baseUrl}/purchaseEntry/getPurchaseEntryListExceptOne/${purchaseEntryId}`);
+  }
 }
