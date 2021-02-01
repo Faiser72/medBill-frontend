@@ -36,7 +36,7 @@ export class PurchaseEntryComponent implements OnInit {
   createOrder: any = {};
 
   deleted_successfully_message: string = "Deleted Successfully";
-  
+
   orderItemList: any;
   allPurchaseEntryList: any;
 
@@ -69,6 +69,7 @@ export class PurchaseEntryComponent implements OnInit {
       purchaseEntryList: [''],
       purchaseEntryDiscount: "",
       stockList: [''],
+      purchaseEntryDiscountInPercentage: "",
     });
     this.addPurchaseEntry.setValidators(this.customValidation());
 
@@ -148,7 +149,7 @@ export class PurchaseEntryComponent implements OnInit {
     }
   };
 
-    // for patching fk object of product in add row
+  // for patching fk object of product in add row
   public matchProductName = (productName, value): boolean => {
     console.log(productName);
     if (value) {
@@ -157,7 +158,7 @@ export class PurchaseEntryComponent implements OnInit {
   };
 
 
- // order autocomplete starts here
+  // order autocomplete starts here
   getOrderList() {
     this.orderService.orderList().subscribe((data: any) => {
       if (data.success) {

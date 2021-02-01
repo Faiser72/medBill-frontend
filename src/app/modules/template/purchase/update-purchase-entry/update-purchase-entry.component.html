@@ -106,7 +106,7 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <mat-select [compareWith]="matchProductType" [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateOrderDetails(i);" [disabled]="true">
+                                        <mat-select [compareWith]="matchProductType" [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateOrderDetails(i);">
                                             <mat-option value=''>Select Here</mat-option>
                                             <mat-option *ngFor="let cate of allProductTypeList" [value]="cate">
                                                 {{cate.categoryName}}</mat-option>
@@ -117,7 +117,7 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <mat-select [compareWith]="matchProductName" [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);" [disabled]="true">
+                                        <mat-select [compareWith]="matchProductName" [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);">
                                             <mat-option value=''>Select Here</mat-option>
                                             <mat-option *ngFor="let pro of allProductList" [value]="pro">
                                                 {{pro.productName}}</mat-option>
@@ -207,7 +207,7 @@
                         </div>
                         <div class="row">
                             <label class="lab">Discount (In %)</label>
-                            <input type="text" class="form-control" id="purchaseEntryDiscount" #purchaseEntryDiscount (input)="calculateGrossAmtByDiscount()">
+                            <input type="text" class="form-control" id="purchaseEntryDiscount" formControlName="purchaseEntryDiscountInPercentage" #purchaseEntryDiscount (input)="calculateGrossAmtByDiscount()">
                         </div>
                         <div class="row mt-2">
                             <label class="lab">Tax (In %)</label>
@@ -227,7 +227,7 @@
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12 d-flex justify-content-around">
                     <button type="submit" mat-raised-button color="primary" [disabled]='(editPurchaseEntry.invalid) || (!purchaseOrderDetailFlag)'>
-                        <mat-icon class="mr-2">save</mat-icon>Save
+                        <mat-icon class="mr-2">save</mat-icon>Update
                     </button>
                     <button type="button" mat-raised-button color="accent" (click)="gotoBack()">
                         <mat-icon class="mr-2">360</mat-icon>Back

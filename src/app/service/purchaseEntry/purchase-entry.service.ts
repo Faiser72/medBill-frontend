@@ -34,4 +34,9 @@ export class PurchaseEntryService {
   getPurchaseEntryListExceptOne(purchaseEntryId: number) {
     return this.http.get(`${this.baseUrl}/purchaseEntry/getPurchaseEntryListExceptOne/${purchaseEntryId}`);
   }
+
+  // updatePurchaseEntryDetails Master
+  updatePurchaseEntryDetails(purchaseEntryDetails: any) {
+    return this.http.put(`${this.baseUrl}/purchaseEntry/updatePurchaseEntryDetails`, purchaseEntryDetails);
+  }
 }

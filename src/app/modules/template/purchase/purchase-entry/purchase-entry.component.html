@@ -207,7 +207,7 @@
                         </div>
                         <div class="row">
                             <label class="lab">Discount (In %)</label>
-                            <input type="text" class="form-control" id="purchaseEntryDiscount" #purchaseEntryDiscount (input)="calculateGrossAmtByDiscount()">
+                            <input type="text" class="form-control" id="purchaseEntryDiscount" formControlName="purchaseEntryDiscountInPercentage" #purchaseEntryDiscount (input)="calculateGrossAmtByDiscount()">
                         </div>
                         <div class="row mt-2">
                             <label class="lab">Tax (In %)</label>

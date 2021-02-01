@@ -22,6 +22,8 @@ class createOrder {
   manufactureDate: any;
   expiryDate: any;
   amount: any;
+  purchaseEntryId:any;
+  purchaseEntryItemId:any;
 }
 @Component({
   selector: 'app-update-purchase-entry',
@@ -69,6 +71,8 @@ export class UpdatePurchaseEntryComponent implements OnInit {
       purchaseEntryList: [''],
       purchaseEntryDiscount: "",
       stockList: [''],
+      purchaseEntryDiscountInPercentage: "",
+      purchaseEntryId:""
     });
     this.editPurchaseEntry.setValidators(this.customValidation());
 
@@ -151,6 +155,8 @@ export class UpdatePurchaseEntryComponent implements OnInit {
 
   // patching order data in to purchase entry data
   patchPurchaseEntryItemListDetails(orderData) {
+    console.log(orderData);
+    
     for (let index = 0; index < orderData.listObject.length; index++) {
       this.createOrder = {
         productType: orderData.listObject[index].productType,
@@ -160,11 +166,14 @@ export class UpdatePurchaseEntryComponent implements OnInit {
         quantity: orderData.listObject[index].quantity,
         unitPrice: orderData.listObject[index].unitPrice,
         amount: orderData.listObject[index].amount,
-        batchNumber:  orderData.listObject[index].batchNumber,
-        manufactureDate:  orderData.listObject[index].manufactureDate,
-        expiryDate:  orderData.listObject[index].expiryDate,
+        batchNumber: orderData.listObject[index].batchNumber,
+        manufactureDate: orderData.listObject[index].manufactureDate,
+        expiryDate: orderData.listObject[index].expiryDate,
+        purchaseEntryId:orderData.listObject[index].purchaseEntryId,
+        purchaseEntryItemId:orderData.listObject[index].purchaseEntryItemId
       };
       this.purchaseOrderArray.push(this.createOrder);
+      this.purchaseOrderDetailFlag = true;
     }
   }
 
@@ -414,8 +423,10 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     if (this.purchaseOrderDetailFlag && this.editPurchaseEntry.valid) {
       this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
       this.editPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
+      console.log(this.editPurchaseEntry.value);
+      
       this.purchaseEntryService
-        .savePurchaseEntryDetails(this.editPurchaseEntry.value)
+        .updatePurchaseEntryDetails(this.editPurchaseEntry.value)
         .subscribe(
           (resp: any) => {
             if (resp.success) {
