@@ -398,6 +398,7 @@ export class PurchaseEntryComponent implements OnInit {
               setTimeout(() => {
                 if (confirm("Do you want add more Item ?")) {
                   this.addPurchaseEntry.reset();
+                  this.getOrderList();
                   this.clearFormArray(this.purchaseOrderArray)
                   // location.reload();
                 } else {

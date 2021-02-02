@@ -22,8 +22,8 @@ class createOrder {
   manufactureDate: any;
   expiryDate: any;
   amount: any;
-  purchaseEntryId:any;
-  purchaseEntryItemId:any;
+  purchaseEntryId: any;
+  purchaseEntryItemId: any;
 }
 @Component({
   selector: 'app-update-purchase-entry',
@@ -72,7 +72,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
       purchaseEntryDiscount: "",
       stockList: [''],
       purchaseEntryDiscountInPercentage: "",
-      purchaseEntryId:""
+      purchaseEntryId: ""
     });
     this.editPurchaseEntry.setValidators(this.customValidation());
 
@@ -156,7 +156,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
   // patching order data in to purchase entry data
   patchPurchaseEntryItemListDetails(orderData) {
     console.log(orderData);
-    
+
     for (let index = 0; index < orderData.listObject.length; index++) {
       this.createOrder = {
         productType: orderData.listObject[index].productType,
@@ -169,8 +169,8 @@ export class UpdatePurchaseEntryComponent implements OnInit {
         batchNumber: orderData.listObject[index].batchNumber,
         manufactureDate: orderData.listObject[index].manufactureDate,
         expiryDate: orderData.listObject[index].expiryDate,
-        purchaseEntryId:orderData.listObject[index].purchaseEntryId,
-        purchaseEntryItemId:orderData.listObject[index].purchaseEntryItemId
+        purchaseEntryId: orderData.listObject[index].purchaseEntryId,
+        purchaseEntryItemId: orderData.listObject[index].purchaseEntryItemId
       };
       this.purchaseOrderArray.push(this.createOrder);
       this.purchaseOrderDetailFlag = true;
@@ -423,8 +423,6 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     if (this.purchaseOrderDetailFlag && this.editPurchaseEntry.valid) {
       this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
       this.editPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
-      console.log(this.editPurchaseEntry.value);
-      
       this.purchaseEntryService
         .updatePurchaseEntryDetails(this.editPurchaseEntry.value)
         .subscribe(
@@ -433,12 +431,13 @@ export class UpdatePurchaseEntryComponent implements OnInit {
               alert(resp.message);
               this.appComponent.stopSpinner();
               setTimeout(() => {
-                if (confirm("Do you want add more Item ?")) {
-                  // add
-                  location.reload();
-                } else {
-                  this.location.back();
-                }
+                // if (confirm("Do you want add more Item ?")) {
+                //   // add
+                //   location.reload();
+                // } else {
+                //   this.location.back();
+                // }
+                this.location.back();
               }, 500);
             } else {
               setTimeout(() => {
