@@ -72,10 +72,34 @@ export class ListPurchaseEntryComponent implements OnInit {
 
   routeToEditPurchaseEntry(purchaseEntryDetails: any) {
     console.log(purchaseEntryDetails);
-    
+
     let navigationExtras: NavigationExtras = {
       queryParams: { purchaseEntryId: purchaseEntryDetails.purchaseEntryId }
     };
     this.router.navigate(["/home/puchaseEntryHome/editPurchaseEntry"], navigationExtras);
   }
+
+  deletePurchaseEntry(purchaseEntryDetails) {
+    // console.log(purchaseEntryDetails);
+    // this.purchaseEntryService.deletePurchaseAndStock(purchaseEntryDetails.purchaseEntryId).subscribe((response:any)=>{
+    //   alert(response.message)
+    //   console.log(response);
+    // })
+    if (confirm(`Are you sure to delete this PurchaseEntry ?`)) {
+      let index = this.purchaseDetailsList.findIndex((data: any) => data.purchaseEntryId === purchaseEntryDetails.purchaseEntryId);
+      if ((purchaseEntryDetails.purchaseEntryId > 0) && (index > -1)) {
+        this.purchaseEntryService.deletePurchaseAndStock(purchaseEntryDetails.purchaseEntryId).subscribe((resp: any) => {
+          if (resp.success) {
+            this.purchaseDetailsList.splice(index, 1);
+            this.dataSource = new MatTableDataSource(this.purchaseDetailsList);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            this.customFilter();
+          }
+          this._snackBar.open(purchaseEntryDetails.orderNumber.orderNumber, resp.message, { duration: 2500 });
+        });
+      }
+    }
+  }
+
 }
