@@ -76,6 +76,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     });
     this.editPurchaseEntry.setValidators(this.customValidation());
 
+    this.validateOrderDetails(-1);
     this.route.queryParams.subscribe((data) => {
       this.purchaseEntryId = data.purchaseEntryId;
     });

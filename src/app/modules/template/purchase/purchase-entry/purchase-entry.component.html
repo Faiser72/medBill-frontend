@@ -156,19 +156,19 @@
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
                                         <input matInput [(ngModel)]="createOrder.batchNumber" [ngModelOptions]="{standalone: true}" id="batchNumber{{i}}" (input)="validateOrderDetails(i);" />
                                     </mat-form-field>
-                                    <p style="color: red;" id="batchNumber{{i}}"></p>
+                                    <p style="color: red;" id="batchNumberMsg{{i}}"></p>
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
                                         <input matInput type="date" [(ngModel)]="createOrder.manufactureDate" [ngModelOptions]="{standalone: true}" id="manufactureDate{{i}}" (input)="validateOrderDetails(i);" />
                                     </mat-form-field>
-                                    <p style="color: red;" id="manufactureDate{{i}}"></p>
+                                    <p style="color: red;" id="manufactureDateMsg{{i}}"></p>
                                 </td>
                                 <td style="width: 20%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
                                         <input matInput type="date" [(ngModel)]="createOrder.expiryDate" [ngModelOptions]="{standalone: true}" id="expiryDate{{i}}" (input)="validateOrderDetails(i);" />
                                     </mat-form-field>
-                                    <p style="color: red;" id="expiryDate{{i}}"></p>
+                                    <p style="color: red;" id="expiryDateMsg{{i}}"></p>
                                 </td>
 
                                 <td style="width: 15%;">

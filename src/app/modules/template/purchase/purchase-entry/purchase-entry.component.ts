@@ -73,6 +73,7 @@ export class PurchaseEntryComponent implements OnInit {
     });
     this.addPurchaseEntry.setValidators(this.customValidation());
 
+
     // To get all the orders list
     this.getOrderList();
 
@@ -139,6 +140,7 @@ export class PurchaseEntryComponent implements OnInit {
         expiryDate: "",
       };
       this.purchaseOrderArray.push(this.createOrder);
+      // this.validateOrderDetails(index);      
     }
   }
 
@@ -197,21 +199,25 @@ export class PurchaseEntryComponent implements OnInit {
       this.unitPriceRow(this.purchaseOrderArray[i].unitPrice, i);
       this.manufactureDateRow(this.purchaseOrderArray[i].manufactureDate, i)
       this.expiryDateRow(this.purchaseOrderArray[i].expiryDate, i);
+      this.batchNumberRow(this.purchaseOrderArray[i].expiryDate,i);
     }
     this.purchaseOrderArray.every((object, index) => {
       let productTypeRowFlag = this.productTypeRow(object.productType, index);
       let productNameFlag = this.productNameRow(object.productName, index);
       let quantityRowFlag = this.quantityRow(object.quantity, index);
       let unitPriceFlag = this.unitPriceRow(object.unitPrice, index);
-      let manufactureDateFlag = this.manufactureDateRow(object.manufactureDate, index)
-      let expiryDateFlag = this.expiryDateRow(object.expiryDate, index)
+      let manufactureDateFlag = this.manufactureDateRow(object.manufactureDate, index);
+      let expiryDateFlag = this.expiryDateRow(object.expiryDate, index);
+      let batchNumberFlag = this.batchNumberRow(object.batchNumber, index);
+
       if (
         productTypeRowFlag &&
         productNameFlag &&
         quantityRowFlag &&
         unitPriceFlag &&
         manufactureDateFlag &&
-        expiryDateFlag
+        expiryDateFlag &&
+        batchNumberFlag
       ) {
         this.purchaseOrderDetailFlag = true;
         return true;
@@ -305,6 +311,25 @@ export class PurchaseEntryComponent implements OnInit {
     } else {
       if (!isNullOrUndefined(document.getElementById("unitPriceMsg" + i))) {
         document.getElementById("unitPriceMsg" + i).innerHTML =
+          "Please enter this field.";
+      }
+      return false;
+    }
+  }
+
+  batchNumberRow(batchNumberValue:any,i:number){
+    if (batchNumberValue != "") {
+      if (batchNumberValue.match(/^[0-9]+$/)) {
+        document.getElementById("batchNumberMsg" + i).innerHTML = "";
+        return true;
+      } else {
+        document.getElementById("batchNumberMsg" + i).innerHTML =
+          "Please enter only digits.";
+        return false;
+      }
+    } else {
+      if (!isNullOrUndefined(document.getElementById("batchNumberMsg" + i))) {
+        document.getElementById("batchNumberMsg" + i).innerHTML =
           "Please enter this field.";
       }
       return false;
