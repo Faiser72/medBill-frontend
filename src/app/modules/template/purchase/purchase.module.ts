@@ -7,11 +7,12 @@ import { UpdatePurchaseEntryComponent } from './update-purchase-entry/update-pur
 import { PurchaseEntryHomeComponent } from './purchase-entry-home/purchase-entry-home.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MaterialImportModuleModule } from 'src/app/shared/material-import-module/material-import-module.module';
+import { PurchaseReturnsComponent } from './purchase-returns/purchase-returns.component';
 
 
 
 @NgModule({
-  declarations: [PurchaseEntryComponent, ListPurchaseEntryComponent, UpdatePurchaseEntryComponent],
+  declarations: [PurchaseEntryComponent, ListPurchaseEntryComponent, UpdatePurchaseEntryComponent, PurchaseReturnsComponent],
   imports: [
     CommonModule,
     MaterialImportModuleModule,

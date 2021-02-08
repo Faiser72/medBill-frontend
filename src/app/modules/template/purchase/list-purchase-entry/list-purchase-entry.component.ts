@@ -79,6 +79,15 @@ export class ListPurchaseEntryComponent implements OnInit {
     this.router.navigate(["/home/puchaseEntryHome/editPurchaseEntry"], navigationExtras);
   }
 
+  routeToPurchaseReturns(purchaseEntryDetails: any) {
+    console.log(purchaseEntryDetails);
+
+    let navigationExtras: NavigationExtras = {
+      queryParams: { purchaseEntryId: purchaseEntryDetails.purchaseEntryId }
+    };
+    this.router.navigate(["/home/puchaseEntryHome/returnPurchaseEntry"], navigationExtras);
+  }
+
   deletePurchaseEntry(purchaseEntryDetails) {
     // console.log(purchaseEntryDetails);
     // this.purchaseEntryService.deletePurchaseAndStock(purchaseEntryDetails.purchaseEntryId).subscribe((response:any)=>{

@@ -1,0 +1,251 @@
+<div class="container-fluid mt-3 p-0">
+    <div class="card shadow-lg">
+        <div class="card-title">
+            <h4 class="text-center main-bg pt-3 mt-1">- Purchase Returns -</h4>
+        </div>
+        <mat-divider class="mx-5"></mat-divider>
+        <form action="" class="form-group customhover" [formGroup]="editPurchaseEntry" (ngSubmit)="editPurchaseEntryFormSubmit()">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Order ID<sup class="text-danger">*</sup></mat-label>
+                            <input matInput placeholder="Ex. 3320012" value="" formControlName="orderNumber" />
+                            <mat-error *ngIf="editPurchaseEntry.get('orderNumber').hasError('required')">
+                                <b>Required</b>
+                            </mat-error>
+                        </mat-form-field> -->
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Order ID<sup class="text-danger">*</sup></mat-label>
+                            <input type="text" matInput formControlName="orderNumber" [matAutocomplete]="autos">
+                            <mat-autocomplete #autos="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let order of filteredOrderOptions | async" [value]="order">
+                                    {{order.orderNumber}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="editPurchaseEntry.get('orderNumber').hasError('required')">
+                                <b>Required</b>
+                            </mat-error>
+                            <mat-error *ngIf="editPurchaseEntry.get('orderNumber').invalid">
+                                <b>{{orderNumberInputMsg}}</b>
+                            </mat-error>
+
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Order Date<sup class="text-danger">*</sup></mat-label>
+                            <input matInput placeholder="Ex. 7/2/1995" formControlName="orderDate" type="date" readonly />
+                            <mat-error *ngIf="editPurchaseEntry.get('orderDate').hasError('required')">
+                                Required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Received Date<sup class="text-danger">*</sup></mat-label>
+                            <input matInput placeholder="Ex. 7/2/1995" formControlName="receivedDate" type="date" />
+                            <mat-error *ngIf="editPurchaseEntry.get('receivedDate').hasError('required')">
+                                Required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Supplier Name<sup class="text-danger">*</sup></mat-label>
+                            <!-- <mat-select formControlName="supplierName">
+                                <mat-option value=''>Select Here</mat-option>
+                                <mat-option *ngFor="let cus of allSupplierName" [value]="cus">
+                                    {{cus.value}}
+                                </mat-option>
+                            </mat-select> -->
+                            <input matInput placeholder="Ex. supplier1" formControlName="supplierName" readonly />
+                            <mat-error *ngIf="editPurchaseEntry.get('supplierName').hasError('required')">
+                                <b>Required</b>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="field-full-width" appearance="outline">
+                            <mat-label>Supplier Invoice Number<sup class="text-danger">*</sup></mat-label>
+                            <input matInput placeholder="Ex. 3320012" value="" formControlName="supplierInvoiceNumber" />
+                            <mat-error *ngIf="editPurchaseEntry.get('supplierInvoiceNumber').hasError('required')">
+                                <b>Required</b>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-around ml-5 mr-5">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <!-- Dynamic Row Starts here -->
+                    <table class="table table-bordered mt-5 tablecss text-center shadow-lg table-responsive" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">Sl.no</th>
+                                <th style="width: 20%;">Product Type</th>
+                                <th style="width: 10%;">Product Name</th>
+                                <th style="width: 10%;">Manufacturer</th>
+                                <th style="width: 10%;">Packaging</th>
+                                <th style="width: 10%;">Quantity</th>
+                                <th style="width: 20%;">Unit Price</th>
+                                <th style="width: 10%;">Batch Number</th>
+                                <th style="width: 10%;">Manufacture Date</th>
+                                <th style="width: 20%;">Expiry Date</th>
+                                <th style="width: 20%;">Total</th>
+                                <!-- <th style="width: 5%;">Action</th> -->
+                                <th>
+                                    <mat-checkbox class="example-margin" (change)="onChange($event)"></mat-checkbox>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let createOrder of purchaseOrderArray; let i = index;">
+                                <td style="width: 5%;">
+                                    {{i+1}}.
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <mat-select [compareWith]="matchProductType" [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateOrderDetails(i);" [disabled]="true">
+                                            <mat-option value=''>Select Here</mat-option>
+                                            <mat-option *ngFor="let cate of allProductTypeList" [value]="cate">
+                                                {{cate.categoryName}}</mat-option>
+                                        </mat-select>
+                                        <!-- <input matInput [(ngModel)]="createOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (input)="validateOrderDetails(i);" /> -->
+                                    </mat-form-field>
+                                    <p style="color: red; font-size: 15px;" id="productTypeMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <mat-select [compareWith]="matchProductName" [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);" [disabled]="true">
+                                            <mat-option value=''>Select Here</mat-option>
+                                            <mat-option *ngFor="let pro of allProductList" [value]="pro">
+                                                {{pro.productName}}</mat-option>
+                                        </mat-select>
+                                        <!-- <input matInput [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (input)="validateOrderDetails(i);" /> -->
+                                    </mat-form-field>
+                                    <p style="color: red;" id="productNameMsg{{i}}"></p>
+                                </td>
+
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.manufacturer" [ngModelOptions]="{standalone: true}" id="manufacturer{{i}}" (input)="validateOrderDetails(i);" readonly />
+                                    </mat-form-field>
+                                    <p style="color: red; font-size: 15px;" id="manufacturerMsg{{i}}"></p>
+                                </td>
+
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.packaging" [ngModelOptions]="{standalone: true}" id="packaging{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red; font-size: 15px;" id="packagingMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.quantity" [ngModelOptions]="{standalone: true}" id="quantity{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="quantityMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.unitPrice" [ngModelOptions]="{standalone: true}" id="unitPrice{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="unitPriceMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.batchNumber" [ngModelOptions]="{standalone: true}" id="batchNumber{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="batchNumber{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <input matInput type="date" [(ngModel)]="createOrder.manufactureDate" [ngModelOptions]="{standalone: true}" id="manufactureDate{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="manufactureDate{{i}}"></p>
+                                </td>
+                                <td style="width: 20%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <input matInput type="date" [(ngModel)]="createOrder.expiryDate" [ngModelOptions]="{standalone: true}" id="expiryDate{{i}}" (input)="validateOrderDetails(i);" />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="expiryDate{{i}}"></p>
+                                </td>
+
+                                <td style="width: 15%;">
+                                    <mat-form-field class="field-dynamicArray" appearance="outline">
+                                        <input matInput [(ngModel)]="createOrder.amount" [ngModelOptions]="{standalone: true}" id="amount{{i}}" (input)="validateOrderDetails(i);" readonly />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="amountMsg{{i}}"></p>
+                                </td>
+
+                                <!-- <td (click)="addRow()" class="text-center" style="width: 5%;"> -->
+                                <!-- <i class="fa fa-plus fa-1x  text-light"></i> -->
+                                <!-- <mat-icon class="rowAddIcon" title="Add" color="primary">add</mat-icon>
+                                </td> -->
+                                <!-- <span  > -->
+                                <!-- <td (click)="deleteRow(i)" class=" text-center" *ngIf='i!=0' style="width: 5%;">
+                                    <i class="fa fa-trash fa-1x  text-light"></i>
+                                    <mat-icon class="rowDeleteIcon" title="Delete" color="accent">delete</mat-icon>
+                                </td> -->
+                                <td>
+                                    <mat-checkbox class="example-margin" name="checks[]" id=checkss{{i}} [checked]="true"></mat-checkbox>
+                                </td>
+                                <!-- </span> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Dynamic Row ends here -->
+                </div>
+            </div>
+
+            <div class="container mt-5 mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="lab">Sub Total</label>
+                            <input type="text" class="form-control" formControlName="purchaseEntrySubTotal" id="purchaseEntrySubTotal" #purchaseEntrySubTotal readonly>
+                        </div>
+                        <div class="row">
+                            <label class="lab">Discount (In %)</label>
+                            <input type="text" class="form-control" id="purchaseEntryDiscount" formControlName="purchaseEntryDiscountInPercentage" #purchaseEntryDiscount (input)="calculateGrossAmtByDiscount()">
+                        </div>
+                        <div class="row mt-2">
+                            <label class="lab">Tax (In %)</label>
+                            <input type="text" class="form-control" formControlName="purchaseEntryTax" id="purchaseEntryTax" #purchaseEntryTax (input)="calculateTotalAmount(purchaseEntrySubTotal.value,purchaseEntryTax.value);">
+                        </div>
+                        <div class="row mt-2">
+                            <label class="lab">Total</label>
+                            <input type="text" class="form-control" formControlName="purchaseEntryTotal" id="purchaseEntryTotal" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-around mt-4 ml-5 mr-5 mb-5">
+                <div class="col-lg-2 col-md-6 col-sm-12">
+
+                </div>
+                <div class="col-lg-8 col-md-6 col-sm-12 d-flex justify-content-around">
+                    <button type="submit" mat-raised-button color="primary" [disabled]='(editPurchaseEntry.invalid) || (!purchaseOrderDetailFlag)'>
+                        <mat-icon class="mr-2">save</mat-icon>Update
+                    </button>
+                    <button type="button" mat-raised-button color="accent" (click)="gotoBack()">
+                        <mat-icon class="mr-2">360</mat-icon>Back
+                    </button>
+                    <!-- <button mat-raised-button color="primary" (click)='routeToLabTest()'>
+                        <mat-icon class="mr-2">save</mat-icon>Lab Test
+                    </button> -->
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

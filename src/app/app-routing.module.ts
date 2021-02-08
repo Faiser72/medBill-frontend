@@ -1,3 +1,4 @@
+import { PurchaseReturnsComponent } from './modules/template/purchase/purchase-returns/purchase-returns.component';
 import { ListproductmasterComponent } from './modules/master/productmaster/listproductmaster/listproductmaster.component';
 import { EditproductmasterComponent } from './modules/master/productmaster/editproductmaster/editproductmaster.component';
 import { AddproductmasterComponent } from './modules/master/productmaster/addproductmaster/addproductmaster.component';
@@ -100,6 +101,8 @@ const routes: Routes = [
           { path: "addPurchaseEntry", component: PurchaseEntryComponent },
           { path: "listPurchaseEntry", component: ListPurchaseEntryComponent },
           { path: "editPurchaseEntry", component: UpdatePurchaseEntryComponent },
+          { path: "returnPurchaseEntry", component: PurchaseReturnsComponent },
+
         ],
       },
       {
