@@ -191,7 +191,7 @@
                                     <mat-icon class="rowDeleteIcon" title="Delete" color="accent">delete</mat-icon>
                                 </td> -->
                                 <td>
-                                    <mat-checkbox class="example-margin" name="checks[]" id=checkss{{i}} [checked]="true"></mat-checkbox>
+                                    <mat-checkbox class="example-margin" name="checks[]" id="returnFlag{{i}}" [checked]=isAllchecked (change)="individualCheckBoxChange($event,createOrder,i)"></mat-checkbox>
                                 </td>
                                 <!-- </span> -->
                             </tr>

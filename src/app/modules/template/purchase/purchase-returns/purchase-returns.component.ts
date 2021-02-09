@@ -24,6 +24,7 @@ class createOrder {
   amount: any;
   purchaseEntryId: any;
   purchaseEntryItemId: any;
+  returnFlag: any;
 }
 
 @Component({
@@ -171,7 +172,8 @@ export class PurchaseReturnsComponent implements OnInit {
         manufactureDate: orderData.listObject[index].manufactureDate,
         expiryDate: orderData.listObject[index].expiryDate,
         purchaseEntryId: orderData.listObject[index].purchaseEntryId,
-        purchaseEntryItemId: orderData.listObject[index].purchaseEntryItemId
+        purchaseEntryItemId: orderData.listObject[index].purchaseEntryItemId,
+        returnFlag: orderData.listObject[index].returnFlag
       };
       this.purchaseOrderArray.push(this.createOrder);
       this.purchaseOrderDetailFlag = true;
@@ -230,31 +232,62 @@ export class PurchaseReturnsComponent implements OnInit {
   }
   // order autocomplete ends here
 
-  onChange(event){
-console.log(event.checked);
-if(event.checked){
-  // var checkboxes = document.getElementsByName('checks[]');
-  // console.log(checkboxes);
-  
-  // checkboxes.checked=event.checked;
-  // for(var i in checkboxes)  
-  // var index:any=i;
-  // if(index%2!=0){
-  //   console.log(index, "abc");
+  isAllchecked: boolean = false;
+  onChange(event) {
+    console.log(event.checked);
+    if (event.checked) {
+      this.isAllchecked = true;
+    }
+    else {
+      this.isAllchecked = false;
+    }
+  }
+
+  // temp = 0;
+  individualCheckBoxChange(event, createOrder, i) {
+
+    let temp:any;
+    if (createOrder.amount != 0) {
+      temp=createOrder.amount;
+      console.log(temp,'temp');
+    }
     
-  //    checkboxes[i].checked = event.checked;
-  // }
-  // console.log(i);
-  
-  var checkboxes = document.getElementById('checkss0')
-  console.log(checkboxes);
-  // checkboxes.checked=event.checked;
-  
-  // checkboxes.checked = event.checked;
-}
+   
+    
+    console.log(createOrder);
+    
+    if (event.checked) {
+      console.log(createOrder);
+      let totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal - +createOrder.amount
+      console.log("returnTotal", totalAfterReturn);
+      this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn })
+
+      let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
+      this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
+      console.log(i);
+
+      this.purchaseOrderArray[i].amount = 0;
+      console.log(this.purchaseOrderArray[i].amount);
+      
 
 
+    }
+    else {
+      let totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal + +createOrder.amount
+      console.log("returnTotal", totalAfterReturn);
+      this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn })
+      let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
+      this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
+      this.purchaseOrderArray[i].amount = temp;
+      console.log(temp,'tempsss');
+      
 
+
+      // this.purchaseOrderArray[i].amount.push(createOrder.amount)
+      // this.purchaseOrderArray.splice(i, 0, item);
+      // this.purchaseOrderArray.push(this.createOrder);
+
+    }
   }
 
 
