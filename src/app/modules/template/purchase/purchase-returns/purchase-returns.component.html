@@ -17,7 +17,7 @@
                         </mat-form-field> -->
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Order ID<sup class="text-danger">*</sup></mat-label>
-                            <input type="text" matInput formControlName="orderNumber" [matAutocomplete]="autos">
+                            <input type="text" matInput formControlName="orderNumber" [matAutocomplete]="autos" readonly>
                             <mat-autocomplete #autos="matAutocomplete" [displayWith]="displayFn">
                                 <mat-option *ngFor="let order of filteredOrderOptions | async" [value]="order">
                                     {{order.orderNumber}}
@@ -46,7 +46,7 @@
                     <div class="col-md-4">
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Received Date<sup class="text-danger">*</sup></mat-label>
-                            <input matInput placeholder="Ex. 7/2/1995" formControlName="receivedDate" type="date" />
+                            <input matInput placeholder="Ex. 7/2/1995" formControlName="receivedDate" type="date" readonly />
                             <mat-error *ngIf="editPurchaseEntry.get('receivedDate').hasError('required')">
                                 Required
                             </mat-error>
@@ -70,7 +70,7 @@
                     <div class="col-md-4">
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Supplier Invoice Number<sup class="text-danger">*</sup></mat-label>
-                            <input matInput placeholder="Ex. 3320012" value="" formControlName="supplierInvoiceNumber" />
+                            <input matInput placeholder="Ex. 3320012" value="" formControlName="supplierInvoiceNumber" readonly/>
                             <mat-error *ngIf="editPurchaseEntry.get('supplierInvoiceNumber').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
@@ -139,7 +139,7 @@
 
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <input matInput [(ngModel)]="createOrder.packaging" [ngModelOptions]="{standalone: true}" id="packaging{{i}}" (input)="validateOrderDetails(i);" />
+                                        <input matInput [(ngModel)]="createOrder.packaging" [ngModelOptions]="{standalone: true}" id="packaging{{i}}" (input)="validateOrderDetails(i);" readonly />
                                     </mat-form-field>
                                     <p style="color: red; font-size: 15px;" id="packagingMsg{{i}}"></p>
                                 </td>
@@ -151,25 +151,25 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <input matInput [(ngModel)]="createOrder.unitPrice" [ngModelOptions]="{standalone: true}" id="unitPrice{{i}}" (input)="validateOrderDetails(i);" />
+                                        <input matInput [(ngModel)]="createOrder.unitPrice" [ngModelOptions]="{standalone: true}" id="unitPrice{{i}}" (input)="validateOrderDetails(i);" readonly />
                                     </mat-form-field>
                                     <p style="color: red;" id="unitPriceMsg{{i}}"></p>
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <input matInput [(ngModel)]="createOrder.batchNumber" [ngModelOptions]="{standalone: true}" id="batchNumber{{i}}" (input)="validateOrderDetails(i);" />
+                                        <input matInput [(ngModel)]="createOrder.batchNumber" [ngModelOptions]="{standalone: true}" id="batchNumber{{i}}" (input)="validateOrderDetails(i);" readonly />
                                     </mat-form-field>
                                     <p style="color: red;" id="batchNumber{{i}}"></p>
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <input matInput type="date" [(ngModel)]="createOrder.manufactureDate" [ngModelOptions]="{standalone: true}" id="manufactureDate{{i}}" (input)="validateOrderDetails(i);" />
+                                        <input matInput type="date" [(ngModel)]="createOrder.manufactureDate" [ngModelOptions]="{standalone: true}" id="manufactureDate{{i}}" (input)="validateOrderDetails(i);" readonly />
                                     </mat-form-field>
                                     <p style="color: red;" id="manufactureDate{{i}}"></p>
                                 </td>
                                 <td style="width: 20%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <input matInput type="date" [(ngModel)]="createOrder.expiryDate" [ngModelOptions]="{standalone: true}" id="expiryDate{{i}}" (input)="validateOrderDetails(i);" />
+                                        <input matInput type="date" [(ngModel)]="createOrder.expiryDate" [ngModelOptions]="{standalone: true}" id="expiryDate{{i}}" (input)="validateOrderDetails(i);" readonly />
                                     </mat-form-field>
                                     <p style="color: red;" id="expiryDate{{i}}"></p>
                                 </td>
@@ -191,7 +191,7 @@
                                     <mat-icon class="rowDeleteIcon" title="Delete" color="accent">delete</mat-icon>
                                 </td> -->
                                 <td>
-                                    <mat-checkbox class="example-margin" name="checks[]" id="returnFlag{{i}}" [checked]=isAllchecked (change)="individualCheckBoxChange($event,createOrder,i)"></mat-checkbox>
+                                    <mat-checkbox [(ngModel)]="createOrder.returnFlag" [ngModelOptions]="{standalone: true}" class="example-margin" name="checks[]" id="returnFlag{{i}}" [checked]=isAllchecked (change)="individualCheckBoxChange($event,createOrder,i)"></mat-checkbox>
                                 </td>
                                 <!-- </span> -->
                             </tr>
@@ -213,11 +213,11 @@
                         </div>
                         <div class="row">
                             <label class="lab">Discount (In %)</label>
-                            <input type="text" class="form-control" id="purchaseEntryDiscount" formControlName="purchaseEntryDiscountInPercentage" #purchaseEntryDiscount (input)="calculateGrossAmtByDiscount()">
+                            <input type="text" class="form-control" id="purchaseEntryDiscount" formControlName="purchaseEntryDiscountInPercentage" #purchaseEntryDiscount (input)="calculateGrossAmtByDiscount()" readonly>
                         </div>
                         <div class="row mt-2">
                             <label class="lab">Tax (In %)</label>
-                            <input type="text" class="form-control" formControlName="purchaseEntryTax" id="purchaseEntryTax" #purchaseEntryTax (input)="calculateTotalAmount(purchaseEntrySubTotal.value,purchaseEntryTax.value);">
+                            <input type="text" class="form-control" formControlName="purchaseEntryTax" id="purchaseEntryTax" #purchaseEntryTax (input)="calculateTotalAmount(purchaseEntrySubTotal.value,purchaseEntryTax.value);" readonly>
                         </div>
                         <div class="row mt-2">
                             <label class="lab">Total</label>

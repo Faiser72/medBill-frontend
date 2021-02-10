@@ -244,6 +244,7 @@ export class PurchaseReturnsComponent implements OnInit {
   }
 
   // temp = 0;
+  totalAfterReturn:any;
   individualCheckBoxChange(event, createOrder, i) {
 
     let temp:any;
@@ -258,16 +259,16 @@ export class PurchaseReturnsComponent implements OnInit {
     
     if (event.checked) {
       console.log(createOrder);
-      let totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal - +createOrder.amount
-      console.log("returnTotal", totalAfterReturn);
-      this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn })
+      this.totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal - +createOrder.amount
+      console.log("returnTotal", this.totalAfterReturn);
+      this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: this.totalAfterReturn })
 
-      let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
+      // let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
       this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
       console.log(i);
 
-      this.purchaseOrderArray[i].amount = 0;
-      console.log(this.purchaseOrderArray[i].amount);
+      // this.purchaseOrderArray[i].amount = 0;
+      // console.log(this.purchaseOrderArray[i].amount);
       
 
 
@@ -278,8 +279,8 @@ export class PurchaseReturnsComponent implements OnInit {
       this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn })
       let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
       this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
-      this.purchaseOrderArray[i].amount = temp;
-      console.log(temp,'tempsss');
+      // this.purchaseOrderArray[i].amount = temp;
+      // console.log(temp,'tempsss');
       
 
 
