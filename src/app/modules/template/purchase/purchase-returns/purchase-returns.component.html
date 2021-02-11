@@ -191,7 +191,7 @@
                                     <mat-icon class="rowDeleteIcon" title="Delete" color="accent">delete</mat-icon>
                                 </td> -->
                                 <td>
-                                    <mat-checkbox [(ngModel)]="createOrder.returnFlag" [ngModelOptions]="{standalone: true}" class="example-margin" name="checks[]" id="returnFlag{{i}}" [checked]=isAllchecked (change)="individualCheckBoxChange($event,createOrder,i)"></mat-checkbox>
+                                    <mat-checkbox [(ngModel)]="createOrder.returnFlag" value='' [ngModelOptions]="{standalone: true}" class="example-margin" name="checks[]" id="returnFlag{{i}}" [checked]=isAllchecked (change)="individualCheckBoxChange($event,createOrder,i)"></mat-checkbox>
                                 </td>
                                 <!-- </span> -->
                             </tr>
