@@ -242,12 +242,18 @@ export class PurchaseReturnsComponent implements OnInit {
       this.isAllchecked = true;
       for (var i = 0; i <= this.purchaseOrderArray.length; i++) {
         this.purchaseOrderArray[i].returnFlag = true;
+        this.totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal - +this.purchaseOrderArray[i].amount;
+        this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: this.totalAfterReturn });
+        this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
       }
     }
     else {
       this.isAllchecked = false;
       for (var i = 0; i <= this.purchaseOrderArray.length; i++) {
         this.purchaseOrderArray[i].returnFlag = false;
+        let totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal + +this.purchaseOrderArray[i].amount;
+        this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn });
+        this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
       }
     }
   }
@@ -276,9 +282,6 @@ export class PurchaseReturnsComponent implements OnInit {
 
       // this.purchaseOrderArray[i].amount = 0;
       // console.log(this.purchaseOrderArray[i].amount);
-
-
-
     }
     else {
       let totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal + +createOrder.amount
