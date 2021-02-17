@@ -76,7 +76,8 @@ export class PurchaseReturnsComponent implements OnInit {
       purchaseEntryDiscount: "",
       stockList: [''],
       purchaseEntryDiscountInPercentage: "",
-      purchaseEntryId: ""
+      purchaseEntryId: "",
+      returnFlag: ""
     });
     this.editPurchaseEntry.setValidators(this.customValidation());
     this.isAllchecked = false;
@@ -141,7 +142,7 @@ export class PurchaseReturnsComponent implements OnInit {
       this.purchaseEntryService.getPurchaseItemListByOrderId(purchaseEntryId).subscribe((data: any) => {
         if (data.success) {
           this.patchPurchaseEntryItemListDetails(data);
-          this.calculateSubTotalAmounts();
+          // this.calculateSubTotalAmounts();
           this.purchaseItemList = data;
         }
       })
@@ -159,9 +160,12 @@ export class PurchaseReturnsComponent implements OnInit {
 
   }
 
+  validateReturn:any=[];
+
   // patching order data in to purchase entry data
   patchPurchaseEntryItemListDetails(orderData) {
     console.log(orderData);
+    this.validateReturn.length=orderData.listObject.length;
 
     for (let index = 0; index < orderData.listObject.length; index++) {
       this.createOrder = {
@@ -181,6 +185,7 @@ export class PurchaseReturnsComponent implements OnInit {
       };
       this.purchaseOrderArray.push(this.createOrder);
       this.purchaseOrderDetailFlag = true;
+      this.validateReturn[index]=orderData.listObject[index].returnFlag;
     }
   }
 
@@ -242,26 +247,29 @@ export class PurchaseReturnsComponent implements OnInit {
       this.isAllchecked = true;
       for (var i = 0; i <= this.purchaseOrderArray.length; i++) {
         this.purchaseOrderArray[i].returnFlag = true;
-        this.totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal - +this.purchaseOrderArray[i].amount;
+        this.totalAfterReturn = +this.editPurchaseEntry.value.purchaseEntrySubTotal - +this.purchaseOrderArray[i].amount;
         this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: this.totalAfterReturn });
         this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
+        this.validateReturn[i]=true;
       }
     }
     else {
       this.isAllchecked = false;
       for (var i = 0; i <= this.purchaseOrderArray.length; i++) {
         this.purchaseOrderArray[i].returnFlag = false;
-        let totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal + +this.purchaseOrderArray[i].amount;
+        let totalAfterReturn = +this.editPurchaseEntry.value.purchaseEntrySubTotal + +this.purchaseOrderArray[i].amount;
         this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn });
         this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
+        this.validateReturn[i]=false;
       }
     }
   }
 
   // temp = 0;
   totalAfterReturn: any;
-  individualCheckBoxChange(event, createOrder, i) {
 
+
+  individualCheckBoxChange(event, createOrder, i) {
     let temp: any;
     if (createOrder.amount != 0) {
       temp = createOrder.amount;
@@ -275,6 +283,7 @@ export class PurchaseReturnsComponent implements OnInit {
       this.totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal - +createOrder.amount
       console.log("returnTotal", this.totalAfterReturn);
       this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: this.totalAfterReturn })
+      this.validateReturn[i]=true;
 
       // let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
       this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
@@ -284,11 +293,13 @@ export class PurchaseReturnsComponent implements OnInit {
       // console.log(this.purchaseOrderArray[i].amount);
     }
     else {
-      let totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal + +createOrder.amount
+      let totalAfterReturn = +this.editPurchaseEntry.value.purchaseEntrySubTotal + +createOrder.amount
       console.log("returnTotal", totalAfterReturn);
       this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn })
       let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
       this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
+      this.validateReturn[i]=false;
+
       // this.purchaseOrderArray[i].amount = temp;
       // console.log(temp,'tempsss');
 
@@ -391,6 +402,10 @@ export class PurchaseReturnsComponent implements OnInit {
         // (<HTMLInputElement>document.getElementById("amount" + i)).value = amount;
         this.purchaseOrderArray[i].amount = amount;
         this.calculateSubTotalAmounts();
+
+        // if(!document.getElementById("returnFlag" + i)){
+        //   this.calculateSubTotalAmounts();
+        // }
         return true;
       } else {
         document.getElementById("quantityMsg" + i).innerHTML =
@@ -402,6 +417,9 @@ export class PurchaseReturnsComponent implements OnInit {
         document.getElementById("quantityMsg" + i).innerHTML =
           "Please enter this field.";
         this.purchaseOrderArray[i].amount = 0;
+        // if(!document.getElementById("returnFlag" + i)){
+        //   this.calculateSubTotalAmounts();
+        // }
         this.calculateSubTotalAmounts();
       }
       return false;
@@ -472,6 +490,9 @@ export class PurchaseReturnsComponent implements OnInit {
 
   }
 
+  // calculateSubTotalAmounts(){
+
+  // }
   calculateSubTotalAmounts() {
     let subTotal = 0;
     this.purchaseOrderArray.forEach((element) => {
@@ -500,50 +521,51 @@ export class PurchaseReturnsComponent implements OnInit {
     }
   }
 
-  // editPurchaseEntryFormSubmit() {
-  //   if (this.purchaseOrderDetailFlag && this.editPurchaseEntry.valid) {
-  //     this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
-  //     this.editPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
-  //     this.purchaseEntryService
-  //       .updatePurchaseEntryDetails(this.editPurchaseEntry.value)
-  //       .subscribe(
-  //         (resp: any) => {
-  //           if (resp.success) {
-  //             alert(resp.message);
-  //             this.appComponent.stopSpinner();
-  //             setTimeout(() => {
-  //               // if (confirm("Do you want add more Item ?")) {
-  //               //   // add
-  //               //   location.reload();
-  //               // } else {
-  //               //   this.location.back();
-  //               // }
-  //               this.location.back();
-  //             }, 500);
-  //           } else {
-  //             setTimeout(() => {
-  //               alert(resp.message);
-  //               this.appComponent.stopSpinner();
-  //             }, 1000);
-  //           }
-  //         },
-  //         (error) => {
-  //           setTimeout(() => {
-  //             alert("Error! - Something Went Wrong! Try again.");
-  //             this.appComponent.stopSpinner();
-  //           }, 1000);
-  //         }
-  //       );
-  //   } else {
-  //     alert("Please, fill the proper details.");
-  //   }
-  // }
-
   editPurchaseEntryFormSubmit() {
-    this.editPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
-    console.log(this.editPurchaseEntry.value);
-
+    if (this.purchaseOrderDetailFlag && this.editPurchaseEntry.valid) {
+      this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
+      this.editPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
+      this.purchaseEntryService
+        .returnPurchaseEntryDetails(this.editPurchaseEntry.value)
+        .subscribe(
+          (resp: any) => {
+            if (resp.success) {
+              console.log(this.editPurchaseEntry.value);
+              alert(resp.message);
+              this.appComponent.stopSpinner();
+              setTimeout(() => {
+                // if (confirm("Do you want add more Item ?")) {
+                //   // add
+                //   location.reload();
+                // } else {
+                //   this.location.back();
+                // }
+                this.location.back();
+              }, 500);
+            } else {
+              setTimeout(() => {
+                alert(resp.message);
+                this.appComponent.stopSpinner();
+              }, 1000);
+            }
+          },
+          (error) => {
+            setTimeout(() => {
+              alert("Error! - Something Went Wrong! Try again.");
+              this.appComponent.stopSpinner();
+            }, 1000);
+          }
+        );
+    } else {
+      alert("Please, fill the proper details.");
+    }
   }
+
+  // editPurchaseEntryFormSubmit() {
+  //   this.editPurchaseEntry.patchValue({ purchaseEntryList: this.purchaseOrderArray, stockList: this.purchaseOrderArray })
+  //   console.log(this.editPurchaseEntry.value);
+
+  // }
 
   // custom validation starts
   orderNumberInputMsg: string; orderNumber: string;

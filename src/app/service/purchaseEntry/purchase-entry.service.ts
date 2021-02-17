@@ -40,6 +40,11 @@ export class PurchaseEntryService {
     return this.http.put(`${this.baseUrl}/purchaseEntry/updatePurchaseEntryDetails`, purchaseEntryDetails);
   }
 
+  // returnPurchaseEntryDetails Master
+  returnPurchaseEntryDetails(purchaseEntryDetails: any) {
+    return this.http.put(`${this.baseUrl}/purchaseEntry/returnPurchaseEntryDetails`, purchaseEntryDetails);
+  }
+
   // deletePurchaseAndStock Master
   deletePurchaseAndStock(purchaseEntryId: any) {
     return this.http.put(`${this.baseUrl}/purchaseEntry/deletePurchaseAndStock`, null, { params: { purchaseEntryId: purchaseEntryId } });

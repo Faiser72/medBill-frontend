@@ -70,7 +70,7 @@
                     <div class="col-md-4">
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Supplier Invoice Number<sup class="text-danger">*</sup></mat-label>
-                            <input matInput placeholder="Ex. 3320012" value="" formControlName="supplierInvoiceNumber" readonly/>
+                            <input matInput placeholder="Ex. 3320012" value="" formControlName="supplierInvoiceNumber" readonly />
                             <mat-error *ngIf="editPurchaseEntry.get('supplierInvoiceNumber').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
@@ -145,7 +145,7 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dynamicArray" appearance="outline">
-                                        <input matInput [(ngModel)]="createOrder.quantity" [ngModelOptions]="{standalone: true}" id="quantity{{i}}" (input)="validateOrderDetails(i);" />
+                                        <input matInput [(ngModel)]="createOrder.quantity" [ngModelOptions]="{standalone: true}" id="quantity{{i}}" (input)="validateOrderDetails(i);" readonly='{{validateReturn[i]}}' />
                                     </mat-form-field>
                                     <p style="color: red;" id="quantityMsg{{i}}"></p>
                                 </td>
