@@ -202,8 +202,7 @@
                     </div>
                     <div class="col-lg-9">
                         <mat-label class="main-bg-2 pb-3">Mode Of Payment : </mat-label>
-
-                        <mat-radio-group aria-label="Select an option" class="ml-3">
+                        <mat-radio-group aria-label="Select an option" class="ml-3" (change)="paymentModeChange($event)" formControlName="paymentMode">
                             <mat-radio-button value="cash">Cash</mat-radio-button>
                             <mat-radio-button value="card">Card</mat-radio-button>
                             <mat-radio-button value="upi">UPI</mat-radio-button>
@@ -212,6 +211,100 @@
                         </mat-radio-group>
                     </div>
                 </div>
+
+                <!-- check starts here -->
+                <div *ngIf='pMode=="check"'>
+                    <div class="row d-flex justify-content-around mx-auto">
+                        <div class="col">
+                            <mat-form-field class="field-full-width" appearance="outline">
+                                <mat-label>Check No.<sup class="text-danger">*</sup></mat-label>
+                                <input matInput placeholder="Ex. 896748" formControlName="checkNo" />
+                                <mat-error *ngIf="addPurchaseEntry.get('checkNo').hasError('required')">
+                                    <b>Required</b>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="field-full-width" appearance="outline">
+                                <mat-label>Date<sup class="text-danger">*</sup></mat-label>
+                                <input matInput placeholder="Ex. 7/2/1995" formControlName="checkDate" type="date" />
+                                <mat-error *ngIf="addPurchaseEntry.get('checkDate').hasError('required')">
+                                    Required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-around mx-auto">
+                        <div class="col">
+                            <mat-form-field class="field-full-width" appearance="outline">
+                                <mat-label>Bank<sup class="text-danger">*</sup></mat-label>
+                                <input matInput placeholder="Ex. HDFC" formControlName="checkBank" />
+                                <mat-error *ngIf="addPurchaseEntry.get('checkBank').hasError('required')">
+                                    <b>Required</b>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="field-full-width" appearance="outline">
+                                <mat-label>Branch<sup class="text-danger">*</sup></mat-label>
+                                <input matInput placeholder="Ex. Banashankri" formControlName="checkBranch" />
+                                <mat-error *ngIf="addPurchaseEntry.get('checkBranch').hasError('required')">
+                                    <b>Required</b>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <!-- check ends here -->
+
+                <!-- dd starts here -->
+                <div *ngIf='pMode=="dd"'>
+                    <div class="row d-flex justify-content-around mx-auto">
+                        <div class="col">
+                            <mat-form-field class="field-full-width" appearance="outline">
+                                <mat-label>DD No.<sup class="text-danger">*</sup></mat-label>
+                                <input matInput placeholder="Ex. 896748" formControlName="ddNo" />
+                                <mat-error *ngIf="addPurchaseEntry.get('ddNo').hasError('required')">
+                                    <b>Required</b>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="field-full-width" appearance="outline">
+                                <mat-label>Date<sup class="text-danger">*</sup></mat-label>
+                                <input matInput placeholder="Ex. 7/2/1995" formControlName="ddDate" type="date" />
+                                <mat-error *ngIf="addPurchaseEntry.get('ddDate').hasError('required')">
+                                    Required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-around mx-auto">
+                        <div class="col">
+                            <mat-form-field class="field-full-width" appearance="outline">
+                                <mat-label>Bank<sup class="text-danger">*</sup></mat-label>
+                                <input matInput placeholder="Ex. HDFC" formControlName="ddBank" />
+                                <mat-error *ngIf="addPurchaseEntry.get('ddBank').hasError('required')">
+                                    <b>Required</b>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="field-full-width" appearance="outline">
+                                <mat-label>Branch<sup class="text-danger">*</sup></mat-label>
+                                <input matInput placeholder="Ex. Banashankri" formControlName="ddBranch" />
+                                <mat-error *ngIf="addPurchaseEntry.get('ddBranch').hasError('required')">
+                                    <b>Required</b>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <!-- dd ends here -->
+
+
                 <div class="row mt-4">
                     <div class="col-md-6">
 

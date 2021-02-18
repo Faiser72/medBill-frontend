@@ -163,7 +163,7 @@ export class CreateOrderComponent implements OnInit {
   productTypeRow(productTypeValue: any, i: number) {
     if (productTypeValue != "") {
       document.getElementById("productTypeMsg" + i).innerHTML = "";
-      this.getProductListUsingCategoryId(productTypeValue.categoryId);
+      this.getProductListUsingCategoryId(productTypeValue.categoryId, i);
       //this.orderArray[i].productName = productTypeValue.itemCode;
       // this.purchaseOrderArray[i].unitPrice = itemNameValue.itemUnitPrice;
       // (<HTMLInputElement>document.getElementById("itemCode" + i)).value = itemNameValue.itemCode;
@@ -235,9 +235,11 @@ export class CreateOrderComponent implements OnInit {
     });
   }
 
-  getProductListUsingCategoryId(id: any) {
+  allProductLists:any=[];
+  getProductListUsingCategoryId(id: any, i) {
     this.orderService.getPrductsByCategoryId(id).subscribe((data: any) => {
-      this.allProductList = data.listObject;
+      // this.allProductList = data.listObject;
+      this.allProductLists[i]=data.listObject; 
     });
   }
 

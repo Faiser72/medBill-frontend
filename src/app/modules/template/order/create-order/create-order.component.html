@@ -78,7 +78,8 @@
                                     <mat-form-field class="field-dosage" appearance="outline">
                                         <mat-select [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);">
                                             <mat-option value=''>Select Here</mat-option>
-                                            <mat-option *ngFor="let pro of allProductList" [value]="pro">
+                                            <!-- <mat-option *ngFor="let pro of allProductList" [value]="pro"> -->
+                                            <mat-option *ngFor="let pro of allProductLists[i]" [value]="pro">
                                                 {{pro.productName}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>

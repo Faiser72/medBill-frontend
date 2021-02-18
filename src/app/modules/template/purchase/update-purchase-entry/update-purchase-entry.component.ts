@@ -49,6 +49,9 @@ export class UpdatePurchaseEntryComponent implements OnInit {
   editPurchaseEntry: FormGroup;
   purchaseEntryId: any;
 
+  pMode: any;
+
+  
   constructor(private fb: FormBuilder,
     private Router: Router,
     private orderService: OrderService,
@@ -72,7 +75,16 @@ export class UpdatePurchaseEntryComponent implements OnInit {
       purchaseEntryDiscount: "",
       stockList: [''],
       purchaseEntryDiscountInPercentage: "",
-      purchaseEntryId: ""
+      purchaseEntryId: "",
+      paymentMode: [null, Validators.required],
+      checkNo: [null, [Validators.pattern(/^[0-9 ]*$/)]],
+      checkDate: [null],
+      checkBank: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      checkBranch: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      ddNo: [null, [Validators.pattern(/^[0-9 ]*$/)]],
+      ddDate: [null],
+      ddBank: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      ddBranch: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
     });
     this.editPurchaseEntry.setValidators(this.customValidation());
 
@@ -131,6 +143,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
   getAndPatchPurchaseEntryObject(purchaseEntryId) {
     this.purchaseEntryService.getPurchaseEntryDetailsById(purchaseEntryId).subscribe((data: any) => {
       this.editPurchaseEntry.patchValue(data.object)
+      this.pMode=data.object.paymentMode;
       this.editPurchaseEntry.patchValue({ orderDate: data.object.orderNumber.orderDate, supplierName: data.object.orderNumber.supplierName.supplierName })
 
       this.purchaseEntryService.getPurchaseItemListByOrderId(purchaseEntryId).subscribe((data: any) => {
@@ -152,6 +165,37 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     //   }
     // })
 
+  }
+
+  paymentModeChange(mode) {
+    this.pMode = mode.value;
+    if (mode.value == "cash") {
+      console.log('inside cash');
+      
+      this.editPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null, ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
+    }
+    else if (mode.value == "card") {
+      console.log('inside card');
+
+      this.editPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null, ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
+    }
+    else if (mode.value == "upi") {
+      console.log('inside upi');
+
+      this.editPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null, ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
+    }
+    else if (mode.value == "check") {
+      console.log('inside check');
+
+      this.editPurchaseEntry.patchValue({ ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
+    }
+    else if (mode.value == "dd") {
+      console.log('inside dd');
+
+      this.editPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null });
+
+    }
+    console.log(this.pMode);
   }
 
   // patching order data in to purchase entry data

@@ -12,24 +12,33 @@
                 <form class="form-group customhover" [formGroup]="currentStocksReportForm">
                     <mat-form-field class="master-full-width" appearance="outline">
                         <mat-label>Product Category</mat-label>
-                        <input matInput placeholder="Enter Category Name" formControlName="categoryName">
+                        <!-- <input matInput placeholder="Enter Category Name" formControlName="categoryName"> -->
+                        <input type="text" matInput formControlName="categoryName" [matAutocomplete]="autos">
+                        <mat-autocomplete #autos="matAutocomplete" [displayWith]="displayFn" (optionSelected)="getProductByCategory($event.option)">
+                            <mat-option *ngFor="let category of filteredOrderOptions | async" [value]="category">
+                                {{category.categoryName}}
+                            </mat-option>
+                        </mat-autocomplete>
                     </mat-form-field>
                     <p style="color: red;" *ngIf="currentStocksReportForm.get('categoryName') && currentStocksReportForm.get('categoryName').touched && currentStocksReportForm.get('categoryName').invalid">
                         {{categoryNameInputMsg}}</p>
 
                     <mat-form-field class="master-full-width" appearance="outline">
                         <mat-label>Product Name</mat-label>
-                        <input matInput placeholder="Enter Category Name" formControlName="productName">
+                        <!-- <input matInput placeholder="Enter Category Name" formControlName="productName"> -->
+                        <input type="text" matInput formControlName="productName" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayProductFn">
+                            <mat-option *ngFor="let category of filteredPoductOptions | async" [value]="category">
+                                {{category.productName}}
+                            </mat-option>
+                        </mat-autocomplete>
                     </mat-form-field>
                     <p style="color: red;" *ngIf="currentStocksReportForm.get('productName') && currentStocksReportForm.get('productName').touched && currentStocksReportForm.get('productName').invalid">
-                        Please enter this field</p>
+                        {{productNameInputMsg}}</p>
 
                     <div class="text-center mt-4">
-                        <button [disabled]="currentStocksReportForm.invalid" mat-raised-button *ngIf="!btnFlag" class="mb-2 mr-3 submit-btn" color="primary" type="submit" (click)="saveCategoryDetails(); reportShowHide()">
+                        <button [disabled]="currentStocksReportForm.invalid" mat-raised-button class="mb-2 mr-3 submit-btn" color="primary" type="submit" (click)="saveCategoryDetails(); reportShowHide()">
                             <mat-icon class="mr-2">save</mat-icon>Generate Report
-                        </button>
-                        <button type="reset" class="mb-2 reset-btn" mat-raised-button color="warn" *ngIf="btnFlag" (click)="customReset()">
-                            <mat-icon class="mr-2">cancel</mat-icon>Cancel
                         </button>
                     </div>
                 </form>

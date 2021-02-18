@@ -70,6 +70,16 @@ export class PurchaseEntryComponent implements OnInit {
       purchaseEntryDiscount: "",
       stockList: [''],
       purchaseEntryDiscountInPercentage: "",
+      paymentMode: [null, Validators.required],
+      checkNo: [null, [Validators.pattern(/^[0-9 ]*$/)]],
+      checkDate: [null],
+      checkBank: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      checkBranch: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      ddNo: [null, [Validators.pattern(/^[0-9 ]*$/)]],
+      ddDate: [null],
+      ddBank: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      ddBranch: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+
     });
     this.addPurchaseEntry.setValidators(this.customValidation());
 
@@ -107,6 +117,37 @@ export class PurchaseEntryComponent implements OnInit {
       this.allPurchaseEntryList = data.listObject;
       console.log(this.allPurchaseEntryList);
     });
+  }
+  pMode: any;
+  paymentModeChange(mode) {
+    this.pMode = mode.value;
+    if (mode.value == "cash") {
+      console.log('inside cash');
+      
+      this.addPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null, ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
+    }
+    else if (mode.value == "card") {
+      console.log('inside card');
+
+      this.addPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null, ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
+    }
+    else if (mode.value == "upi") {
+      console.log('inside upi');
+
+      this.addPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null, ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
+    }
+    else if (mode.value == "check") {
+      console.log('inside check');
+
+      this.addPurchaseEntry.patchValue({ ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
+    }
+    else if (mode.value == "dd") {
+      console.log('inside dd');
+
+      this.addPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null });
+
+    }
+    console.log(this.pMode);
   }
 
   // getting order details by order id
@@ -199,7 +240,7 @@ export class PurchaseEntryComponent implements OnInit {
       this.unitPriceRow(this.purchaseOrderArray[i].unitPrice, i);
       this.manufactureDateRow(this.purchaseOrderArray[i].manufactureDate, i)
       this.expiryDateRow(this.purchaseOrderArray[i].expiryDate, i);
-      this.batchNumberRow(this.purchaseOrderArray[i].expiryDate,i);
+      this.batchNumberRow(this.purchaseOrderArray[i].expiryDate, i);
     }
     this.purchaseOrderArray.every((object, index) => {
       let productTypeRowFlag = this.productTypeRow(object.productType, index);
@@ -317,7 +358,7 @@ export class PurchaseEntryComponent implements OnInit {
     }
   }
 
-  batchNumberRow(batchNumberValue:any,i:number){
+  batchNumberRow(batchNumberValue: any, i: number) {
     if (batchNumberValue != "") {
       if (batchNumberValue.match(/^[0-9]+$/)) {
         document.getElementById("batchNumberMsg" + i).innerHTML = "";
