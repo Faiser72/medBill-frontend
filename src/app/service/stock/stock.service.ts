@@ -23,4 +23,8 @@ export class StockService {
   getStockListExceptOne(stockId: number) {
     return this.http.get(`${this.baseUrl}/stock/getStockListExceptOne/${stockId}`);
   }
+
+  getStockItemListByProductId(productId: number) {
+    return this.http.get(`${this.baseUrl}/stock/getStockItemListByProductId/${productId}`);
+  }
 }

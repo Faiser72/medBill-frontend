@@ -50,4 +50,7 @@ export class PurchaseEntryService {
     return this.http.put(`${this.baseUrl}/purchaseEntry/deletePurchaseAndStock`, null, { params: { purchaseEntryId: purchaseEntryId } });
   }
 
+  getAllPurchaseEntryListBtwnDatesAndPayment(fromDate: string, toDate: string, paymentMode: string) {
+    return this.http.get(`${this.baseUrl}/purchaseEntry/getAllPurchaseEntryListBtwnDatesAndPayment/${fromDate}/${toDate}/${paymentMode}`)
+  }
 }

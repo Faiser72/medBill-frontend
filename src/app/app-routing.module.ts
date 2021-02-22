@@ -1,3 +1,4 @@
+import { PurchaseReportByPaymentModeComponent } from './modules/reports/purchase-report-by-payment-mode/purchase-report-by-payment-mode.component';
 import { PurchaseReturnsComponent } from './modules/template/purchase/purchase-returns/purchase-returns.component';
 import { ListproductmasterComponent } from './modules/master/productmaster/listproductmaster/listproductmaster.component';
 import { EditproductmasterComponent } from './modules/master/productmaster/editproductmaster/editproductmaster.component';
@@ -83,6 +84,7 @@ const routes: Routes = [
       { path: "currentStocksAgingReport", component: CurrentStocksAndAgingComponent },
       { path: "orderReport", component: OrderReportsComponent },
       { path: "salesByProductReport", component: SalesByProductComponent },
+      { path: "purchaseReport", component: PurchaseReportByPaymentModeComponent },
 
       { path: "stockDetails", component: StockDetailComponent },
       {

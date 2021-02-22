@@ -1,7 +1,8 @@
+import { StockService } from './../../../service/stock/stock.service';
 import { OrderService } from './../../../service/order/order.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import { MatPaginator, MatSort, MatSnackBar } from '@angular/material';
+import { MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -18,19 +19,22 @@ export class CurrentStocksAndAgingComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  pagination: boolean = true;
+
   dataSource: any;
   currentStocksReportForm: FormGroup;
   isShow: boolean = false;
+  today: any;
 
   searchValue: string = null;
   displayedColumns: string[] = [
     "slNo",
-    "categoryName",
+    "productType",
     "productName",
-    "batch",
+    "batchNumber",
     "packaging",
     "quantity",
-    "manufacturedDate",
+    "manufactureDate",
     "expiryDate",
     "elapsedDays",
     // "action"
@@ -43,12 +47,25 @@ export class CurrentStocksAndAgingComponent implements OnInit {
   filteredOrderOptions: Observable<any>;
   filteredPoductOptions: Observable<any>;
   productList: any;
+  stockReport: any;
+
+  diffDays: any = [];
 
   constructor(private fb: FormBuilder,
     private _snackBar: MatSnackBar,
     private router: Router,
     private productCategoryService: ProductCategoryMasterService,
-    private orderService: OrderService) {
+    private orderService: OrderService,
+    private stockService: StockService) {
+
+    // for Current starts
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    this.today = yyyy + '-' + mm + '-' + dd;
+    // for Current ends
     this.currentStocksReportFormBuilder();
   }
 
@@ -103,7 +120,6 @@ export class CurrentStocksAndAgingComponent implements OnInit {
         alert("There is no products for this Category");
       }
     })
-
   }
 
   displayProductFn(productName: any): string {
@@ -132,7 +148,44 @@ export class CurrentStocksAndAgingComponent implements OnInit {
   }
 
   saveCategoryDetails() {
+    console.log(this.currentStocksReportForm.value);
+    this.stockService.getStockItemListByProductId(this.currentStocksReportForm.value.productName.productId).subscribe((data: any) => {
+      if (data.success) {
+        let todayDate = new Date(this.today);
+        let expDate = [];
+        let diff = []
 
+        for (var i = 0; i < data.listObject.length; i++) {
+          expDate[i] = new Date(data.listObject[i].expiryDate); //converting string to date
+          diff[i] = expDate[i].getTime() - todayDate.getTime(); //converting string to date
+          if (diff[i] / (1000 * 3600 * 24) > 0) {
+            this.diffDays[i] = diff[i] / (1000 * 3600 * 24);
+          }
+          else {
+            this.diffDays[i] = "Expired"
+          }
+          // diff[i] = Math.abs(expDate[i].getTime() - todayDate.getTime());
+          // this.diffDays[i] = Math.ceil(diff[i] / (1000 * 3600 * 24));          
+          // this.diffDays[i]=diff[i] / (1000 * 3600 * 24);
+        }
+        // var diff = Math.abs(expDate.getTime() - todayDate.getTime());
+        // this.diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+        // this.displayedColumns[0].elapsedDays
+        this.stockReport = data.listObject;
+        this.dataSource = new MatTableDataSource(data['listObject']);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.pagination = false;
+        this.customFilter();
+      }
+      else {
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.pagination = true;
+        alert('No Data Found')
+      }
+    })
   }
 
   reportShowHide() {
@@ -149,8 +202,6 @@ export class CurrentStocksAndAgingComponent implements OnInit {
       if (categoryNameFormGroup.value !== "" && categoryNameFormGroup.value !== null) {
         console.log(categoryNameFormGroup.value);
         if (typeof (categoryNameFormGroup.value) !== 'object') {
-          console.log(typeof (categoryNameFormGroup.value));
-
           this.categoryNameInputMsg = "Please select from the List";
           categoryNameFormGroup.setErrors({});
         }
@@ -166,8 +217,6 @@ export class CurrentStocksAndAgingComponent implements OnInit {
       if (productNameFormGroup.value !== "" && productNameFormGroup.value !== null) {
         console.log(productNameFormGroup.value);
         if (typeof (productNameFormGroup.value) !== 'object') {
-          console.log(typeof (productNameFormGroup.value));
-
           this.productNameInputMsg = "Please select from the List";
           productNameFormGroup.setErrors({});
         }
@@ -185,18 +234,15 @@ export class CurrentStocksAndAgingComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
-
 
   customReset() {
     this.currentStocksReportForm.reset();
     this.ngOnInit();
     this.searchValue = null;
   }
-
 
 }
