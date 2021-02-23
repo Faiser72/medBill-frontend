@@ -53,4 +53,12 @@ export class PurchaseEntryService {
   getAllPurchaseEntryListBtwnDatesAndPayment(fromDate: string, toDate: string, paymentMode: string) {
     return this.http.get(`${this.baseUrl}/purchaseEntry/getAllPurchaseEntryListBtwnDatesAndPayment/${fromDate}/${toDate}/${paymentMode}`)
   }
+
+  listAllReturnPurchaseEntry() {
+    return this.http.get(`${this.baseUrl}/purchaseEntry/listAllReturnPurchaseEntry`);
+  }
+
+  listAllPurchaseEntryItem() {
+    return this.http.get(`${this.baseUrl}/purchaseEntry/listAllPurchaseEntryItem`);
+  }
 }

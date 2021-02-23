@@ -1,0 +1,85 @@
+.title-header {
+    text-align: center;
+    color: var(--main-font-4-color);
+}
+
+.outline-0 {
+    outline: 0;
+}
+
+.addButton {
+    background-color: var(--main-font-3-color);
+    color: lightyellow;
+    outline: 0px;
+}
+
+.title-header {
+    text-align: center;
+    color: var(--main-font-4-color);
+}
+
+.outline-0 {
+    outline: 0;
+}
+
+.addButton {
+    background-color: var(--main-font-3-color);
+    color: lightyellow;
+    outline: 0px;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    text-align: center;
+    font-size: 14px;
+    width: 60%;
+}
+
+.table_header {
+    text-align: center;
+    font-size: 15px;
+    color: var(--main-font-4-color);
+}
+
+td {
+    text-align: center;
+}
+
+.action-btn {
+    border-radius: 16px;
+    min-width: 20px !important;
+    display: inline;
+    padding: 2px;
+    /* margin: 5px; */
+}
+
+.action-link {
+    font-weight: 500;
+    font-size: 8px;
+    margin: 5px;
+    color: var(--main-font-3-color);
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    color: var(--main-font-4-color);
+    /* background-color: var(--main-bg-2-color); */
+}
+
+.edit-btn,
+.delete-btn {
+    font-size: 20px;
+}
+
+.row-style {
+    border-left: 3px solid rgba(0, 0, 0, 0);
+    cursor: pointer;
+}
+
+.row-style:hover {
+    border-left: 3px solid var(--main-bg-2-color);
+    background-color: inherit;
+}

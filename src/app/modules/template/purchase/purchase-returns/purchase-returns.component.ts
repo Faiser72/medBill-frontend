@@ -77,7 +77,8 @@ export class PurchaseReturnsComponent implements OnInit {
       stockList: [''],
       purchaseEntryDiscountInPercentage: "",
       purchaseEntryId: "",
-      returnFlag: ""
+      returnFlag: "",
+      reasonForReturn: ["", Validators.required],
     });
     this.editPurchaseEntry.setValidators(this.customValidation());
     this.isAllchecked = false;

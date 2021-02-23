@@ -1,0 +1,105 @@
+<br />
+<h4 class="title-header">- Purchase Return Report -</h4>
+<br />
+<div class="row">
+    <div class="col">
+        <div class="text-left">
+            <mat-form-field appearance="outline" class="matFormField">
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search here..." />
+                <mat-icon color="primary" matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col">
+
+    </div>
+</div>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+        <!-- ID Column -->
+        <ng-container matColumnDef="slNo">
+            <th mat-header-cell *matHeaderCellDef class="table_header">SL NO</th>
+            <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
+        </ng-container>
+
+        <!-- productType Column -->
+        <ng-container matColumnDef="productType">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Product Type
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.productType.categoryName }}</td>
+        </ng-container>
+
+        <!-- productName Column -->
+        <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Product Name
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.productName.productName }}</td>
+        </ng-container>
+
+        <!-- batchNumber Column -->
+        <ng-container matColumnDef="batchNumber">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Batch Number
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.batchNumber }}</td>
+        </ng-container>
+
+        <!-- recievedDate Column -->
+        <ng-container matColumnDef="receivedDate">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Received Date
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.purchaseEntryId.receivedDate }}</td>
+        </ng-container>
+
+        <!-- quantity Column -->
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Quantity
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.quantity }}</td>
+        </ng-container>
+
+        <!-- returnDate Column -->
+        <ng-container matColumnDef="returnDate">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Return Date
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.returnDate }}</td>
+        </ng-container>
+
+
+
+        <!-- reasonForReturn Column -->
+        <ng-container matColumnDef="reasonForReturn">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Reason For Return
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.purchaseEntryId.reasonForReturn }}</td>
+        </ng-container>
+
+        <!-- supplierName Column -->
+        <ng-container matColumnDef="supplierName">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Supplier Name
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.purchaseEntryId.orderNumber.supplierName.supplierName }}</td>
+        </ng-container>
+
+        <!-- orderId Column -->
+        <ng-container matColumnDef="orderNumber">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Order Number
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.purchaseEntryId.orderNumber.orderNumber }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr class="row-style" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+<br />

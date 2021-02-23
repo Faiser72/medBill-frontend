@@ -47,6 +47,7 @@ export class PurchaseEntryComponent implements OnInit {
   allProductList: any;
 
   addPurchaseEntry: FormGroup;
+  purchaseEntryItemList: any;
 
   constructor(private fb: FormBuilder,
     private route: Router,
@@ -73,15 +74,21 @@ export class PurchaseEntryComponent implements OnInit {
       paymentMode: [null, Validators.required],
       checkNo: [null, [Validators.pattern(/^[0-9 ]*$/)]],
       checkDate: [null],
-      checkBank: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      checkBank: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
       checkBranch: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
       ddNo: [null, [Validators.pattern(/^[0-9 ]*$/)]],
       ddDate: [null],
-      ddBank: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
-      ddBranch: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      ddBank: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      ddBranch: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
 
     });
     this.addPurchaseEntry.setValidators(this.customValidation());
+
+    this.purchaseEntryService.listAllPurchaseEntryItem().subscribe((data: any) => {
+      this.purchaseEntryItemList = data.listObject;
+      console.log(this.purchaseEntryItemList);
+
+    })
 
 
     // To get all the orders list
@@ -123,7 +130,7 @@ export class PurchaseEntryComponent implements OnInit {
     this.pMode = mode.value;
     if (mode.value == "cash") {
       console.log('inside cash');
-      
+
       this.addPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null, ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
     }
     else if (mode.value == "card") {
@@ -361,6 +368,22 @@ export class PurchaseEntryComponent implements OnInit {
   batchNumberRow(batchNumberValue: any, i: number) {
     if (batchNumberValue != "") {
       if (batchNumberValue.match(/^[0-9]+$/)) {
+        console.log(batchNumberValue);
+        // for unique validation starts here
+        // if(batchNumberValue==this.purchaseEntryItemList.batchNumber)
+        // for (var x = 0; x <= this.purchaseEntryItemList.length; x++) {
+        //   if (batchNumberValue == this.purchaseEntryItemList[x].batchNumber) {
+        //     document.getElementById("batchNumberMsg" + i).innerHTML =
+        //       "this batch number is present already.";
+        //     return false;
+        //   }
+        //   else {
+        //     document.getElementById("batchNumberMsg" + i).innerHTML = "";
+        //     return true;
+        //   }
+        // }
+        // for unique validation ends here
+
         document.getElementById("batchNumberMsg" + i).innerHTML = "";
         return true;
       } else {

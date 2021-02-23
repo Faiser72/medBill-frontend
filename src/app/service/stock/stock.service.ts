@@ -27,4 +27,8 @@ export class StockService {
   getStockItemListByProductId(productId: number) {
     return this.http.get(`${this.baseUrl}/stock/getStockItemListByProductId/${productId}`);
   }
+
+  getAllNearByExpiryProducts(fromDate: string, toDate: string) {
+    return this.http.get(`${this.baseUrl}/stock/getAllNearByExpiryProducts/${fromDate}/${toDate}`)
+  }
 }

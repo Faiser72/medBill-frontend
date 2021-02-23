@@ -8,11 +8,13 @@ import { SalesByProductComponent } from './sales-by-product/sales-by-product.com
 import { CurrentStocksAndAgingComponent } from './current-stocks-and-aging/current-stocks-and-aging.component';
 import { OrderReportsComponent } from './order-reports/order-reports.component';
 import { PurchaseReportByPaymentModeComponent } from './purchase-report-by-payment-mode/purchase-report-by-payment-mode.component';
+import { PurchaseReturnReportComponent } from './purchase-return-report/purchase-return-report.component';
+import { ExpiryIntimationComponent } from './expiry-intimation/expiry-intimation.component';
 
 
 
 @NgModule({
-  declarations: [SalesByProductComponent, CurrentStocksAndAgingComponent, OrderReportsComponent, PurchaseReportByPaymentModeComponent],
+  declarations: [SalesByProductComponent, CurrentStocksAndAgingComponent, OrderReportsComponent, PurchaseReportByPaymentModeComponent, PurchaseReturnReportComponent, ExpiryIntimationComponent],
   imports: [
     CommonModule,
     MaterialImportModuleModule,

@@ -71,6 +71,12 @@ export class CurrentStocksAndAgingComponent implements OnInit {
 
   ngOnInit() {
     this.getProductCategoryList();
+
+   
+    let todayDate = new Date(this.today);
+    // this.addDays(todayDate,2)
+     console.log(this.addDays(todayDate,30));
+    
   }
 
   //   getProductCategoryList(){
@@ -147,6 +153,18 @@ export class CurrentStocksAndAgingComponent implements OnInit {
     this.currentStocksReportForm.setValidators(this.customValidation());
   }
 
+  addDays(date: Date, days: number): Date {
+    date.setDate(date.getDate() + days);
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = date.getFullYear();
+
+    let newDate = yyyy + '-' + mm + '-' + dd;
+    console.log(newDate);
+    
+    return date;
+}
+
   saveCategoryDetails() {
     console.log(this.currentStocksReportForm.value);
     this.stockService.getStockItemListByProductId(this.currentStocksReportForm.value.productName.productId).subscribe((data: any) => {
@@ -154,6 +172,8 @@ export class CurrentStocksAndAgingComponent implements OnInit {
         let todayDate = new Date(this.today);
         let expDate = [];
         let diff = []
+
+
 
         for (var i = 0; i < data.listObject.length; i++) {
           expDate[i] = new Date(data.listObject[i].expiryDate); //converting string to date

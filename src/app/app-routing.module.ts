@@ -1,3 +1,5 @@
+import { ExpiryIntimationComponent } from './modules/reports/expiry-intimation/expiry-intimation.component';
+import { PurchaseReturnReportComponent } from './modules/reports/purchase-return-report/purchase-return-report.component';
 import { PurchaseReportByPaymentModeComponent } from './modules/reports/purchase-report-by-payment-mode/purchase-report-by-payment-mode.component';
 import { PurchaseReturnsComponent } from './modules/template/purchase/purchase-returns/purchase-returns.component';
 import { ListproductmasterComponent } from './modules/master/productmaster/listproductmaster/listproductmaster.component';
@@ -85,6 +87,9 @@ const routes: Routes = [
       { path: "orderReport", component: OrderReportsComponent },
       { path: "salesByProductReport", component: SalesByProductComponent },
       { path: "purchaseReport", component: PurchaseReportByPaymentModeComponent },
+      { path: "purchaseReturnReport", component: PurchaseReturnReportComponent },
+      { path: "expiryIntimation", component: ExpiryIntimationComponent },
+
 
       { path: "stockDetails", component: StockDetailComponent },
       {
