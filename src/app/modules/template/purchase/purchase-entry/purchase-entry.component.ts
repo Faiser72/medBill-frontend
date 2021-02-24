@@ -86,7 +86,7 @@ export class PurchaseEntryComponent implements OnInit {
 
     this.purchaseEntryService.listAllPurchaseEntryItem().subscribe((data: any) => {
       this.purchaseEntryItemList = data.listObject;
-      console.log(this.purchaseEntryItemList);
+      console.log(this.purchaseEntryItemList.length);
 
     })
 
@@ -235,7 +235,7 @@ export class PurchaseEntryComponent implements OnInit {
   // order autocomplete ends here
 
 
-
+  batchNumberFlag: boolean;
   // for multiple row validation starts here
   purchaseOrderDetailFlag: boolean = false;
   validateOrderDetails(i: number) {
@@ -247,7 +247,7 @@ export class PurchaseEntryComponent implements OnInit {
       this.unitPriceRow(this.purchaseOrderArray[i].unitPrice, i);
       this.manufactureDateRow(this.purchaseOrderArray[i].manufactureDate, i)
       this.expiryDateRow(this.purchaseOrderArray[i].expiryDate, i);
-      this.batchNumberRow(this.purchaseOrderArray[i].expiryDate, i);
+      this.batchNumberRow(this.purchaseOrderArray[i].batchNumber, i);
     }
     this.purchaseOrderArray.every((object, index) => {
       let productTypeRowFlag = this.productTypeRow(object.productType, index);
@@ -365,23 +365,42 @@ export class PurchaseEntryComponent implements OnInit {
     }
   }
 
+  batchNumberValidationArray: any = [];
   batchNumberRow(batchNumberValue: any, i: number) {
     if (batchNumberValue != "") {
       if (batchNumberValue.match(/^[0-9]+$/)) {
-        console.log(batchNumberValue);
+        this.batchNumberValidationArray[i] = batchNumberValue;
         // for unique validation starts here
         // if(batchNumberValue==this.purchaseEntryItemList.batchNumber)
-        // for (var x = 0; x <= this.purchaseEntryItemList.length; x++) {
-        //   if (batchNumberValue == this.purchaseEntryItemList[x].batchNumber) {
-        //     document.getElementById("batchNumberMsg" + i).innerHTML =
-        //       "this batch number is present already.";
-        //     return false;
-        //   }
-        //   else {
-        //     document.getElementById("batchNumberMsg" + i).innerHTML = "";
-        //     return true;
-        //   }
-        // }
+        for (var x = 0; x <= this.purchaseEntryItemList.length; x++) {
+
+          // if (x != i) {
+          //   if (batchNumberValue == this.batchNumberValidationArray[x]) {
+          //     document.getElementById("batchNumberMsg" + i).innerHTML =
+          //       "this batch number is present already in this array";
+          //     return false;
+          //   }
+          //   else {
+          //     document.getElementById("batchNumberMsg" + i).innerHTML = "";
+          //     return true;
+          //   }
+          // }
+          console.log(this.purchaseEntryItemList[x].batchNumber);
+
+
+          if (batchNumberValue == this.purchaseEntryItemList[x].batchNumber) {
+            document.getElementById("batchNumberMsg" + i).innerHTML =
+              "this batch number is present already.";
+            // this.batchNumberFlag=false
+            return false;
+          }
+          else {
+            document.getElementById("batchNumberMsg" + i).innerHTML = "";
+            // this.batchNumberFlag=false
+
+            return true;
+          }
+        }
         // for unique validation ends here
 
         document.getElementById("batchNumberMsg" + i).innerHTML = "";
@@ -399,6 +418,38 @@ export class PurchaseEntryComponent implements OnInit {
       return false;
     }
   }
+
+  // batchValidation(i) {
+  // // for unique validation starts here
+  // // if(batchNumberValue==this.purchaseEntryItemList.batchNumber)
+  // for (var x = 0; x <= this.purchaseEntryItemList.length; x++) {
+
+  //   // if(x!=i){
+  //   //   if(batchNumberValue == this.batchNumberValidationArray[x]){
+  //   //     document.getElementById("batchNumberMsg" + i).innerHTML =
+  //   //     "this batch number is present already in this array";
+  //   //   return false;
+  //   //   }
+  //   //   else {
+  //   //     document.getElementById("batchNumberMsg" + i).innerHTML = "";
+  //   //     return true;
+  //   //   }
+  //   // }
+
+  //   if (batchNumberValue == this.purchaseEntryItemList[x].batchNumber) {
+  //     document.getElementById("batchNumberMsg" + i).innerHTML =
+  //       "this batch number is present already.";
+  //     return false;
+  //   }
+  //   else {
+  //     document.getElementById("batchNumberMsg" + i).innerHTML = "";
+  //     return true;
+  //   }
+  // }
+  // // for unique validation ends here
+  // }
+
+
 
   manufactureDateRow(manufactureDateValue: string, i: number) {
     if ((!isNull(manufactureDateValue)) && (manufactureDateValue != "")) {

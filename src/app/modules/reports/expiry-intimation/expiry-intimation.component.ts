@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
-import { PurchaseEntryService } from 'src/app/service/purchaseEntry/purchase-entry.service';
+import { subscribeOn } from 'rxjs/operators';
 
 @Component({
   selector: 'app-expiry-intimation',
@@ -31,14 +31,14 @@ export class ExpiryIntimationComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   today: any;
-  todayPlus30:any;
+  todayPlus30: any;
 
   constructor(
     private router: Router,
     private _snackBar: MatSnackBar,
     private appComponent: AppComponent,
-    private purchaseEntryService: StockService) { 
-      // for Current starts
+    private stockService: StockService) {
+    // for Current starts
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -48,15 +48,19 @@ export class ExpiryIntimationComponent implements OnInit {
     // for Current ends
 
     let todayDate = new Date(this.today);
-    this.addDays(todayDate,30) // calling method to add days
+    this.addDays(todayDate, 30) // calling method to add days
     //  console.log(this.addDays(todayDate,30));
-    }
+  }
 
   ngOnInit() {
     console.log(this.today, "today");
-    console.log(this.todayPlus30,"todatPlus30");
+    console.log(this.todayPlus30, "todatPlus30");
 
-    this.purchaseEntryService.getAllNearByExpiryProducts(this.today,this.todayPlus30).subscribe((data: any) => {
+    this.getStocks();
+  }
+
+  getStocks() {
+    this.stockService.getAllNearByExpiryProducts(this.today, this.todayPlus30).subscribe((data: any) => {
       if (data.success) {
         console.log(data.listObject);
         this.purchaseItemDetailsList = data['listObject'];
@@ -80,15 +84,25 @@ export class ExpiryIntimationComponent implements OnInit {
     this.todayPlus30 = yyyy + '-' + mm + '-' + dd;
     console.log(this.todayPlus30);
     return date;
-}
-
-returnProduct(productDetails){
-  if (confirm("Do you want to return this product ?")) {
-    console.log(productDetails);
-  } else {
-    // this.location.back();
   }
-}
+
+  returnProduct(productDetails) {
+    if (confirm("Do you want to return this product ?")) {
+      console.log(productDetails.stockItemId);
+      this.stockService.returnNearByexpiryStock(productDetails.stockItemId).subscribe((data: any) => {
+        if (data.success) {
+          alert("successfully returned");
+          this.getStocks();
+        }
+        else {
+          alert("something went wrong")
+        }
+      })
+
+    } else {
+      // this.location.back();
+    }
+  }
   customFilter() {
     this.dataSource.filterPredicate = (data, filter) => {
       const dataStr = data.productType.categoryName + data.productName.productName + data.manufacturer + data.packaging + data.batchNumber + data.manufactureDate + data.expiryDate + data.quantity + data.soldQuantity + data.balanceQuantity + data.stockId.orderNumber.orderNumber + data.stockId.orderNumber.supplierName.supplierName + data.expiryDate;

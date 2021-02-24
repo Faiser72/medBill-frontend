@@ -31,4 +31,9 @@ export class StockService {
   getAllNearByExpiryProducts(fromDate: string, toDate: string) {
     return this.http.get(`${this.baseUrl}/stock/getAllNearByExpiryProducts/${fromDate}/${toDate}`)
   }
+
+  returnNearByexpiryStock(stockItemId: any) {
+    return this.http.put(`${this.baseUrl}/stock/returnNearByexpiryStock`, null, { params: { stockItemId: stockItemId } });
+  }
+
 }
