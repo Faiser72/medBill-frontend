@@ -51,7 +51,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
 
   pMode: any;
 
-  
+
   constructor(private fb: FormBuilder,
     private Router: Router,
     private orderService: OrderService,
@@ -79,12 +79,12 @@ export class UpdatePurchaseEntryComponent implements OnInit {
       paymentMode: [null, Validators.required],
       checkNo: [null, [Validators.pattern(/^[0-9 ]*$/)]],
       checkDate: [null],
-      checkBank: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      checkBank: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
       checkBranch: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
       ddNo: [null, [Validators.pattern(/^[0-9 ]*$/)]],
       ddDate: [null],
-      ddBank: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
-      ddBranch: [null, [ Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      ddBank: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
+      ddBranch: [null, [Validators.pattern(/^[a-zA-Z0-9 ]*$/)]],
     });
     this.editPurchaseEntry.setValidators(this.customValidation());
 
@@ -143,7 +143,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
   getAndPatchPurchaseEntryObject(purchaseEntryId) {
     this.purchaseEntryService.getPurchaseEntryDetailsById(purchaseEntryId).subscribe((data: any) => {
       this.editPurchaseEntry.patchValue(data.object)
-      this.pMode=data.object.paymentMode;
+      this.pMode = data.object.paymentMode;
       this.editPurchaseEntry.patchValue({ orderDate: data.object.orderNumber.orderDate, supplierName: data.object.orderNumber.supplierName.supplierName })
 
       this.purchaseEntryService.getPurchaseItemListByOrderId(purchaseEntryId).subscribe((data: any) => {
@@ -171,7 +171,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
     this.pMode = mode.value;
     if (mode.value == "cash") {
       console.log('inside cash');
-      
+
       this.editPurchaseEntry.patchValue({ checkNo: null, checkDate: null, checkBank: null, checkBranch: null, ddNo: null, ddDate: null, ddBank: null, ddBranch: null });
     }
     else if (mode.value == "card") {
@@ -505,6 +505,7 @@ export class UpdatePurchaseEntryComponent implements OnInit {
 
   // custom validation starts
   orderNumberInputMsg: string; orderNumber: string;
+  supplierInvoiceNumberInputMsg: string; supplierInvoiceNumber: string;
 
   customValidation(): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors => {
@@ -540,6 +541,31 @@ export class UpdatePurchaseEntryComponent implements OnInit {
         orderNumberFormGroup.setErrors({});
       }
       // for orderNumber Autocomplete ends here
+
+      // for invoice number unique starts here
+      const supplierInvoiceNumberFormGroup = formGroup.controls["supplierInvoiceNumber"];
+      if (supplierInvoiceNumberFormGroup.value !== "" && supplierInvoiceNumberFormGroup.value !== null) {
+        if (supplierInvoiceNumberFormGroup.valid) {
+          if (!isNullOrUndefined(this.allPurchaseEntryList)) {
+            this.allPurchaseEntryList.forEach((data: any) => {
+              if (data.supplierInvoiceNumber == supplierInvoiceNumberFormGroup.value) {
+                this.supplierInvoiceNumber = data.mobileNo;
+                this.supplierInvoiceNumberInputMsg = "This Invoice Number is registered already";
+                supplierInvoiceNumberFormGroup.setErrors({});
+              }
+            });
+          }
+        } else {
+          if (this.supplierInvoiceNumber == supplierInvoiceNumberFormGroup.value) {
+            this.supplierInvoiceNumberInputMsg = "This Invoice number is registered already";
+          } else {
+            this.supplierInvoiceNumberInputMsg = 'Please enter this field.';
+          }
+        }
+      } else {
+        this.supplierInvoiceNumberInputMsg = "Please enter this field.";
+      }
+      // for invoice number unique ends here
 
       return;
     };

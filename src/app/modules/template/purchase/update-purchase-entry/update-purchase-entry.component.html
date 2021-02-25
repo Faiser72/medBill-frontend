@@ -74,6 +74,9 @@
                             <mat-error *ngIf="editPurchaseEntry.get('supplierInvoiceNumber').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
+                            <mat-error *ngIf="editPurchaseEntry.get('supplierInvoiceNumber').invalid">
+                                <b>{{supplierInvoiceNumberInputMsg}}</b>
+                            </mat-error>
                         </mat-form-field>
                     </div>
                 </div>

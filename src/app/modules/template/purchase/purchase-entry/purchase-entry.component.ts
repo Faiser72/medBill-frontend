@@ -87,7 +87,6 @@ export class PurchaseEntryComponent implements OnInit {
     this.purchaseEntryService.listAllPurchaseEntryItem().subscribe((data: any) => {
       this.purchaseEntryItemList = data.listObject;
       console.log(this.purchaseEntryItemList.length);
-
     })
 
 
@@ -566,6 +565,7 @@ export class PurchaseEntryComponent implements OnInit {
 
   // custom validation starts
   orderNumberInputMsg: string; orderNumber: string;
+  supplierInvoiceNumberInputMsg: string; supplierInvoiceNumber: string;
 
   customValidation(): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors => {
@@ -601,6 +601,31 @@ export class PurchaseEntryComponent implements OnInit {
         orderNumberFormGroup.setErrors({});
       }
       // for orderNumber Autocomplete ends here
+
+      // for invoice number unique starts here
+      const supplierInvoiceNumberFormGroup = formGroup.controls["supplierInvoiceNumber"];
+      if (supplierInvoiceNumberFormGroup.value !== "" && supplierInvoiceNumberFormGroup.value !== null) {
+        if (supplierInvoiceNumberFormGroup.valid) {
+          if (!isNullOrUndefined(this.allPurchaseEntryList)) {
+            this.allPurchaseEntryList.forEach((data: any) => {
+              if (data.supplierInvoiceNumber == supplierInvoiceNumberFormGroup.value) {
+                this.supplierInvoiceNumber = data.mobileNo;
+                this.supplierInvoiceNumberInputMsg = "This Invoice Number is registered already";
+                supplierInvoiceNumberFormGroup.setErrors({});
+              }
+            });
+          }
+        } else {
+          if (this.supplierInvoiceNumber == supplierInvoiceNumberFormGroup.value) {
+            this.supplierInvoiceNumberInputMsg = "This Invoice number is registered already";
+          } else {
+            this.supplierInvoiceNumberInputMsg = 'Please enter this field.';
+          }
+        }
+      } else {
+        this.supplierInvoiceNumberInputMsg = "Please enter this field.";
+      }
+      // for invoice number unique ends here
 
       return;
     };

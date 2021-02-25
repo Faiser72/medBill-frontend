@@ -53,7 +53,9 @@
     </a>
 
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/stockDetails">
+        <span matBadge="{{noOfStocks}}" matBadgeOverlap="false">
         <mat-icon color="primary">important_devices</mat-icon>Stock
+    </span>
     </a>
 
     <span>
@@ -72,16 +74,18 @@
             <mat-icon color="primary"><i class="fa fa-first-order" aria-hidden="true"></i></mat-icon>Order Report
         </a>
         <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/salesByProductReport">
-            <mat-icon color="primary"><i class="fa fa-product-hunt" aria-hidden="true"></i></mat-icon>Sales By Product
+            <mat-icon color="primary">view_list</mat-icon>Sales By Product
         </a>
         <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/purchaseReport">
             <mat-icon color="primary"><i class="fa fa-product-hunt" aria-hidden="true"></i></mat-icon>Purchase Report
         </a>
         <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/purchaseReturnReport">
-            <mat-icon color="primary"><i class="fa fa-product-hunt" aria-hidden="true"></i></mat-icon>Purchase Return Report
+            <mat-icon color="primary">chrome_reader_mode</mat-icon>Purchase Return Report
         </a>
         <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/expiryIntimation">
+            <span matBadge="{{noOfProductsExpireInNext30Days}}" matBadgeOverlap="false">
             <mat-icon color="primary"><i class="fa fa-product-hunt" aria-hidden="true"></i></mat-icon>Expiry Intimation
+        </span>
         </a>
 
     </div>
