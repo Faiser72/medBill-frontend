@@ -5,43 +5,43 @@
 </div>
 <br />
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource">
         <!-- ID Column -->
         <ng-container matColumnDef="slNo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">SL NO</th>
+            <th mat-header-cell *matHeaderCellDef class="table_header">SL NO</th>
             <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
         </ng-container>
 
         <!-- Name Column -->
-        <ng-container matColumnDef="itemCode">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                Product Type
+        <ng-container matColumnDef="customerName">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Customer Name
             </th>
-            <td mat-cell *matCellDef="let row">{{ row.itemCode }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.customerName }}</td>
         </ng-container>
 
         <!-- Specialization Column -->
-        <ng-container matColumnDef="itemName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                Invoice Number
-            </th>
-            <td mat-cell *matCellDef="let row">{{ row.itemName }}</td>
-        </ng-container>
-
-        <!-- Specialization Column -->
-        <ng-container matColumnDef="itemUnitOfMeasure">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+        <ng-container matColumnDef="doctorName">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
                 Doctor Name
             </th>
-            <td mat-cell *matCellDef="let row">{{ row.itemUnitOfMeasure }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.doctorName }}</td>
         </ng-container>
 
         <!-- Specialization Column -->
-        <ng-container matColumnDef="itemUnitPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                Grand Total
+        <ng-container matColumnDef="salesDate">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Sales Date
             </th>
-            <td mat-cell *matCellDef="let row">{{ row.itemUnitPrice }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.salesDate }}</td>
+        </ng-container>
+
+        <!-- Specialization Column -->
+        <ng-container matColumnDef="totalNetAmount">
+            <th mat-header-cell *matHeaderCellDef class="table_header">
+                Total Net Amount
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.totalNetAmount }}</td>
         </ng-container>
 
 
@@ -50,15 +50,13 @@
             <th mat-header-cell *matHeaderCellDef class="table_header">Action</th>
             <td mat-cell *matCellDef="let row">
                 <div class="action-btn">
-                    <a class="action-link">
-                        <mat-icon class="edit-btn" title="Edit">edit</mat-icon>
-                    </a>
+                    <button mat-raised-button color="primary" class="m-2" (click)="routeToUpdateSalesOrder(this.row)">Edit</button>
                 </div>
-                <span style="color: #3f51b5;">|</span>
                 <div class="action-btn">
-                    <a class="action-link">
-                        <mat-icon class="delete-btn" title="Delete">delete_forever</mat-icon>
-                    </a>
+                    <button mat-raised-button color="primary" class="m-2" (click)="routeToDeleteItemCategory(this.row)">Delete</button>
+                </div>
+                <div class="action-btn">
+                    <button mat-raised-button color="primary" class="m-2" (click)="routeToCancelSalesOrder(this.row.salesOrderId,this.row)">Cancel Sales Order</button>
                 </div>
             </td>
         </ng-container>

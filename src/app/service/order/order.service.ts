@@ -44,4 +44,60 @@ export class OrderService {
     return this.http.get(`${this.baseUrl}/order/orderListByOrderId/${orderId}`)
   }
 
+
+  // get orderListByOrderId by id
+  orderByOrderId(orderId: number) {
+    return this.http.get(`${this.baseUrl}/order/orderByOrderId/${orderId}`)
+  }
+
+
+  // get All Order List
+  getorderList() {
+    return this.http.get(`${this.baseUrl}/order/orderList`);
+  }
+
+  // delete Order
+  deleteOrderDetails(orderId: any) {
+    return this.http.put(`${this.baseUrl}/order/deleteOrder`, null, { params: { "orderId": orderId } });
+  }
+
+  // Cancel Order
+  cancelOrderDetails(orderId: any) {
+    return this.http.put(`${this.baseUrl}/order/cancelOrder`, null, { params: { "orderId": orderId } });
+  }
+
+  // get All Deleted Order List
+  getDeletedOrderList() {
+    return this.http.get(`${this.baseUrl}/order/getAllDeletedOrders`);
+  }
+
+  // Undo Order
+  undoDeletedOrder(orderId: any) {
+    return this.http.put(`${this.baseUrl}/order/undoDeletedOrder`, null, { params: { "orderId": orderId } });
+  }
+
+  // get All Cancelled Order List
+  getCancelledOrderList() {
+    return this.http.get(`${this.baseUrl}/order/getAllCanceledOrders`);
+  }
+
+  // Undo Order
+  undoCancelledOrder(orderId: any) {
+    return this.http.put(`${this.baseUrl}/order/undoCanceledOrder`, null, { params: { "orderId": orderId } });
+  }
+
+  // Update Order Details
+  updateOrderDetails(orderDetails: any) {
+    return this.http.put(`${this.baseUrl}/order/updateOrderDetails`, orderDetails);
+  }
+
+  //delete Item From the Order List
+  deleteOrderItemItem(orderItemId: any) {
+    return this.http.put(`${this.baseUrl}/order/deleteOrderItem`, null, { params: { "orderItemId": orderItemId } });
+  }
+
+  getAllOrderListBtwnDates(fromDate: string, toDate: string) {
+    return this.http.get(`${this.baseUrl}/order/getAllOrderListBtwnDates/${fromDate}/${toDate}`)
+  }
+
 }

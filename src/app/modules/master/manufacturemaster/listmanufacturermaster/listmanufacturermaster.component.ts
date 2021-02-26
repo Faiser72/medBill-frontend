@@ -10,7 +10,7 @@ import { NavigationExtras, Router } from '@angular/router';
 })
 export class ListmanufacturermasterComponent implements OnInit {
 
-  manufacturerDetailsList:any;
+  manufacturerDetailsList: any;
 
   dataSource: any;
   displayedColumns: string[] = [

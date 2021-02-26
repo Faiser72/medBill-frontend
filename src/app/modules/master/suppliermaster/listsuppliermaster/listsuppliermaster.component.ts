@@ -31,7 +31,7 @@ export class ListsuppliermasterComponent implements OnInit {
     private router: Router,
     private _snackBar: MatSnackBar,
     private appComponent: AppComponent,
-    private supplierMasterService : SupplierMasterService,) { }
+    private supplierMasterService: SupplierMasterService,) { }
 
   ngOnInit() {
     this.supplierMasterService.getAllSupplierList().subscribe((data: any) => {
@@ -62,7 +62,7 @@ export class ListsuppliermasterComponent implements OnInit {
 
   routeToDeleteSupplier(supplierDetails) {
     if (confirm(`Are you sure to delete this Supplier ?`)) {
-      let index = this.supplierList.findIndex((data: any) => data.supplierId === supplierDetails.supplierId);      
+      let index = this.supplierList.findIndex((data: any) => data.supplierId === supplierDetails.supplierId);
       if ((supplierDetails.supplierId > 0) && (index > -1)) {
         this.supplierMasterService.deleteSupplier(supplierDetails.supplierId).subscribe((resp: any) => {
           if (resp.success) {
@@ -79,7 +79,7 @@ export class ListsuppliermasterComponent implements OnInit {
   }
 
 
-  routeToUpdateSupplier(supplierListDetail) {    
+  routeToUpdateSupplier(supplierListDetail) {
     let navigationExtras: NavigationExtras = {
       queryParams: { supplierId: supplierListDetail.supplierId }
     };

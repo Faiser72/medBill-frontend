@@ -19,23 +19,23 @@ export class SidebarComponent implements OnInit {
 
   today: any;
   todayPlus30: any;
-  noOfProductsExpireInNext30Days:any;
+  noOfProductsExpireInNext30Days: any;
   noOfStocks: any;
 
   constructor(private router: Router,
-    private stockService:StockService) {
-     // for Current starts
-     var today = new Date();
-     var dd = String(today.getDate()).padStart(2, '0');
-     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-     var yyyy = today.getFullYear();
- 
-     this.today = yyyy + '-' + mm + '-' + dd;
-     // for Current ends
- 
-     let todayDate = new Date(this.today);
-     this.addDays(todayDate, 30) // calling method to add days
-     //  console.log(this.addDays(todayDate,30));
+    private stockService: StockService) {
+    // for Current starts
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    this.today = yyyy + '-' + mm + '-' + dd;
+    // for Current ends
+
+    let todayDate = new Date(this.today);
+    this.addDays(todayDate, 30) // calling method to add days
+    //  console.log(this.addDays(todayDate,30));
   }
 
   ngOnInit() {
@@ -48,15 +48,15 @@ export class SidebarComponent implements OnInit {
     this.stockService.getAllNearByExpiryProducts(this.today, this.todayPlus30).subscribe((data: any) => {
       if (data.success) {
         console.log(data.listObject);
-        this.noOfProductsExpireInNext30Days=data.listObject.length;
+        this.noOfProductsExpireInNext30Days = data.listObject.length;
       }
     });
   }
 
-  getStocks(){
-    this.stockService.getStockItemList().subscribe((data:any)=>{
-      if(data.success){
-        this.noOfStocks=data.listObject.length;
+  getStocks() {
+    this.stockService.getStockItemList().subscribe((data: any) => {
+      if (data.success) {
+        this.noOfStocks = data.listObject.length;
       }
     })
   }
@@ -76,8 +76,7 @@ export class SidebarComponent implements OnInit {
   showOrderSubmenu: boolean = false;
   showMasterSubmenu: boolean = false;
   showReportSubmenu: boolean = false;
-
-
+  showSalesOrderSubmenu: boolean = false;
 
   toggleOrderSubmenu(submenu: string) {
     let element = document.getElementById(submenu);
@@ -100,6 +99,16 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleReportSubmenu(submenu: string) {
+    let element = document.getElementById(submenu);
+    if (element.style.display == '' || element.style.display == 'none') {
+      element.style.display = 'block';
+    }
+    else {
+      element.style.display = 'none';
+    }
+  }
+
+  toggleSalesOrderSubmenu(submenu: string) {
     let element = document.getElementById(submenu);
     if (element.style.display == '' || element.style.display == 'none') {
       element.style.display = 'block';

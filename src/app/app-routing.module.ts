@@ -1,3 +1,4 @@
+import { SalesReportByPaymentModeComponent } from './modules/reports/sales-report-by-payment-mode/sales-report-by-payment-mode.component';
 import { ExpiryIntimationComponent } from './modules/reports/expiry-intimation/expiry-intimation.component';
 import { PurchaseReturnReportComponent } from './modules/reports/purchase-return-report/purchase-return-report.component';
 import { PurchaseReportByPaymentModeComponent } from './modules/reports/purchase-report-by-payment-mode/purchase-report-by-payment-mode.component';
@@ -36,6 +37,11 @@ import { SalesHomeComponent } from './modules/template/sales/sales-home/sales-ho
 import { UpdateSalesComponent } from './modules/template/sales/update-sales/update-sales.component';
 import { StockDetailComponent } from './modules/template/stock/stock-detail/stock-detail.component';
 import { LoginComponent } from './modules/login/login/login.component';
+import { CancelOrderComponent } from './modules/template/order/cancel-order/cancel-order.component';
+import { DeletedOrderComponent } from './modules/template/order/deleted-order/deleted-order.component';
+import { CanceledSalesOrdersComponent } from './modules/template/sales/canceled-sales-orders/canceled-sales-orders.component';
+import { DeletedSalesOrdersComponent } from './modules/template/sales/deleted-sales-orders/deleted-sales-orders.component';
+import { ReturnSalesComponent } from './modules/template/sales/return-sales/return-sales.component';
 
 
 const routes: Routes = [
@@ -89,6 +95,7 @@ const routes: Routes = [
       { path: "purchaseReport", component: PurchaseReportByPaymentModeComponent },
       { path: "purchaseReturnReport", component: PurchaseReturnReportComponent },
       { path: "expiryIntimation", component: ExpiryIntimationComponent },
+      { path: "salesReportByPayment", component: SalesReportByPaymentModeComponent },
 
 
       { path: "stockDetails", component: StockDetailComponent },
@@ -99,6 +106,8 @@ const routes: Routes = [
           { path: "addOrder", component: CreateOrderComponent },
           { path: "listOrder", component: ListOrderComponent },
           { path: "editOrder", component: UpdateOrderComponent },
+          { path: "deletedOrders", component: DeletedOrderComponent },
+          { path: "canceledOrders", component: CancelOrderComponent },
         ],
       },
       {
@@ -119,6 +128,9 @@ const routes: Routes = [
           { path: "addSales", component: AddSalesComponent },
           { path: "listSales", component: ListsalesComponent },
           { path: "editSales", component: UpdateSalesComponent },
+          { path: "returnSales", component: ReturnSalesComponent },
+          { path: "deletedSalesOrders", component: DeletedSalesOrdersComponent },
+          { path: "canceledSalesOrders", component: CanceledSalesOrdersComponent },
         ],
       },
 

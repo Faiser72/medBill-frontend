@@ -11,24 +11,23 @@
             <div class="card w-50 d-flex justify-content-center border-0 mx-auto cardss">
                 <form class="form-group customhover" [formGroup]="orderReportForm">
                     <mat-form-field class="master-full-width" appearance="outline">
-                        <mat-label>Start Date</mat-label>
-                        <input matInput type="date" placeholder="Ex. 7/7/2020" color="primary" formControlName="startDate" />
+                        <mat-label>From Date</mat-label>
+                        <!-- <input matInput placeholder="Enter Category Name" formControlName="categoryName"> -->
+                        <input matInput type="date" placeholder="Ex. 7/7/2020" color="primary" formControlName="fromDate" />
                     </mat-form-field>
-                    <p style="color: red;" *ngIf="orderReportForm.get('startDate') && orderReportForm.get('startDate').touched && orderReportForm.get('startDate').invalid">
-                        Please Select this field</p>
+                    <p style="color: red;" *ngIf="orderReportForm.get('fromDate') && orderReportForm.get('fromDate').touched && orderReportForm.get('fromDate').invalid">
+                        Plase Select from date</p>
 
                     <mat-form-field class="master-full-width" appearance="outline">
-                        <mat-label>End Date</mat-label>
-                        <input matInput type="date" placeholder="Ex. 7/7/2021" color="primary" formControlName="endDate" /> </mat-form-field>
-                    <p style="color: red;" *ngIf="orderReportForm.get('endDate') && orderReportForm.get('endDate').touched && orderReportForm.get('endDate').invalid">
-                        Please Select this field</p>
-
+                        <mat-label>To Date</mat-label>
+                        <!-- <input matInput placeholder="Enter Category Name" formControlName="productName"> -->
+                        <input matInput type="date" placeholder="Ex. 8/8/2020" color="primary" formControlName="toDate" />
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="orderReportForm.get('toDate') && orderReportForm.get('toDate').touched && orderReportForm.get('toDate').invalid">
+                        {{toDateInputMsg}}</p>
                     <div class="text-center mt-4">
-                        <button [disabled]="orderReportForm.invalid" mat-raised-button *ngIf="!btnFlag" class="mb-2 mr-3 submit-btn" color="primary" type="submit" (click)="saveCategoryDetails(); reportShowHide()">
+                        <button [disabled]="orderReportForm.invalid" mat-raised-button class="mb-2 mr-3 submit-btn" color="primary" type="submit" (click)="saveCategoryDetails(); reportShowHide()">
                             <mat-icon class="mr-2">save</mat-icon>Generate Report
-                        </button>
-                        <button type="reset" class="mb-2 reset-btn" mat-raised-button color="warn" *ngIf="btnFlag" (click)="customReset()">
-                            <mat-icon class="mr-2">cancel</mat-icon>Cancel
                         </button>
                     </div>
                 </form>
@@ -40,56 +39,64 @@
 <!-- <router-outlet></router-outlet> -->
 
 <br />
-<div *ngIf="isShow">
+<div [hidden]='pagination'>
 
-    <h4 class="title-header">- Order Report -</h4>
+    <h4 class="title-header">- Order List -</h4>
 
     <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" matSort>
+        <table mat-table [dataSource]="dataSource" *ngIf='orderList?.length>0'>
             <!-- ID Column -->
             <ng-container matColumnDef="slNo">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">Sl.no</th>
+                <th mat-header-cell *matHeaderCellDef class="table_header">Sl.no</th>
                 <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
+            </ng-container>
+
+            <!-- orderNumber Column -->
+            <ng-container matColumnDef="orderNumber">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    Order ID
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.orderNumber }}</td>
             </ng-container>
 
             <!-- orderDate Column -->
             <ng-container matColumnDef="orderDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
                     Order Date
                 </th>
                 <td mat-cell *matCellDef="let row">{{ row.orderDate }}</td>
             </ng-container>
 
-            <!-- orderId Column -->
-            <ng-container matColumnDef="orderId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                    Order Id
+            <!-- batch Column -->
+            <ng-container matColumnDef="orderGrandTotal">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    Order Grand Total
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.orderId }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.orderGrandTotal }}</td>
             </ng-container>
 
             <!-- supplierName Column -->
             <ng-container matColumnDef="supplierName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                    Supplier Name
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    supplierName
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.supplierName }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.supplierName.supplierName }}</td>
             </ng-container>
 
-            <!-- orderStates Column -->
-            <ng-container matColumnDef="orderStates">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                    Order States
+            <!-- contactPersonName Column -->
+            <ng-container matColumnDef="contactPersonName">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    Contact Person Name
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.orderStates }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.supplierName.contactPersonName }}</td>
             </ng-container>
 
-            <!-- orderRecieved Column -->
-            <ng-container matColumnDef="orderRecieved">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                    Order Recieved
+            <!-- contactPersonNumber Column -->
+            <ng-container matColumnDef="contactPersonNumber">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    Contact Person Number
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.orderRecieved }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.supplierName.contactPersonNumber }}</td>
             </ng-container>
 
             <!-- Action Column -->
@@ -114,7 +121,7 @@
             <tr class="row-style" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
 
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        <mat-paginator [hidden]='pagination' [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
 </div>
 

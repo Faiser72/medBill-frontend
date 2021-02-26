@@ -1,0 +1,141 @@
+.mat-form-field {
+    margin-top: 16px;
+}
+
+* {
+    border-radius: 0px;
+}
+
+.main-bg {
+    color: var(--main-font-4-color);
+}
+
+.main-bg-2 {
+    color: var(--main-font-3-color);
+}
+
+.card {
+    background: inherit;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    font-size: 12px;
+}
+
+.field-full-width {
+    width: 100%;
+    font-size: 12px;
+}
+
+.upload-photo,
+.reset-btn {
+    border-radius: 4px;
+    padding: 5px 40px 5px 40px;
+    background-color: var(--main-bg-2-color);
+    color: var(--main-font-1-color);
+    outline: 0;
+}
+
+.profile-holder:hover {
+    cursor: pointer;
+}
+
+mat-datepicker-toggle {
+    outline-style: none;
+}
+
+.mat-radio-button~.mat-radio-button {
+    margin-left: 16px;
+}
+
+.time {
+    // padding: 5px 0;
+    font-size: 1.5em;
+    padding-left: 50%;
+    // width: 100px;
+}
+
+button {
+    outline: none;
+}
+
+.uploadOne {
+    border: 3px solid black !important;
+}
+
+.cardPatient {
+    border: 3px solid black;
+}
+
+.registerImage {
+    width: 30%;
+}
+
+.mainCard {
+    padding-top: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.line {
+    border: 1px solid black !important;
+}
+
+.CustomLabel {
+    font-weight: 500;
+}
+
+mat-label {
+    font-weight: 500 !important;
+}
+
+button {
+    outline: none;
+}
+
+.header-text p {
+    color: var(--main-font-3-color);
+}
+
+.tablecss {
+    border: 1px solid #20054b;
+}
+
+.tablecss th {
+    color: var(--main-font-3-color);
+}
+
+.tablecss td {
+    color: var(--main-font-4-color);
+}
+
+.rowAddIcon {
+    // color: green;
+    cursor: pointer;
+    font-size: xx-large
+}
+
+.rowDeleteIcon {
+    // color:red;
+    cursor: pointer;
+    font-size: xx-large
+}
+
+.profile-holder:hover {
+    cursor: pointer;
+}
+
+mat-datepicker-toggle {
+    outline-style: none;
+}
+
+.lab {
+    font-weight: bold;
+}
+
+.form-control {
+    border: 1px solid black !important;
+}

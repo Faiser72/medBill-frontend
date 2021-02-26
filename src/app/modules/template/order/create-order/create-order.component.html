@@ -76,7 +76,7 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dosage" appearance="outline">
-                                        <mat-select [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);">
+                                        <mat-select [compareWith]="matchProductName" [(ngModel)]="createOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateOrderDetails(i);">
                                             <mat-option value=''>Select Here</mat-option>
                                             <!-- <mat-option *ngFor="let pro of allProductList" [value]="pro"> -->
                                             <mat-option *ngFor="let pro of allProductLists[i]" [value]="pro">
@@ -88,7 +88,7 @@
 
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dosage" appearance="outline">
-                                        <input matInput [(ngModel)]="createOrder.manufacturer" [ngModelOptions]="{standalone: true}" id="manufacturer{{i}}" (input)="validateOrderDetails(i);" readonly/>
+                                        <input matInput [(ngModel)]="createOrder.manufacturer" [ngModelOptions]="{standalone: true}" id="manufacturer{{i}}" (input)="validateOrderDetails(i);" readonly />
                                     </mat-form-field>
                                     <p style="color: red; font-size: 15px;" id="manufacturerMsg{{i}}"></p>
                                 </td>
@@ -115,7 +115,7 @@
 
                                 <td style="width: 15%;">
                                     <mat-form-field class="field-drugName" appearance="outline">
-                                        <input matInput [(ngModel)]="createOrder.amount" [ngModelOptions]="{standalone: true}" id="amount{{i}}" (input)="validateOrderDetails(i);" readonly/>
+                                        <input matInput [(ngModel)]="createOrder.amount" [ngModelOptions]="{standalone: true}" id="amount{{i}}" (input)="validateOrderDetails(i);" readonly />
                                     </mat-form-field>
                                     <p style="color: red;" id="amountMsg{{i}}"></p>
                                 </td>
@@ -161,9 +161,6 @@
                     </button>
                     <button type="button" mat-raised-button color="accent" class="w-25">
                         <mat-icon class="mr-2">360</mat-icon>Back
-                    </button>
-                    <button mat-raised-button color="primary" class="w-25">
-                        <mat-icon class="mr-2">save</mat-icon>Print
                     </button>
                 </div>
                 <div class="col-lg-2 col-md-6 col-sm-12">

@@ -9,13 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  noOfProducts:any;
+  noOfProducts: any;
   today: any;
   todayPlus30: any;
-  noOfProductsExpireInNext30Days:any;
-  nearByExpiryStockDetails:any;
-  constructor(private stockService:StockService,
-    private route:Router) {
+  noOfProductsExpireInNext30Days: any;
+  nearByExpiryStockDetails: any;
+  constructor(private stockService: StockService,
+    private route: Router) {
     // for Current starts
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -28,10 +28,10 @@ export class DashboardComponent implements OnInit {
     let todayDate = new Date(this.today);
     this.addDays(todayDate, 30) // calling method to add days
     //  console.log(this.addDays(todayDate,30));
-   }
+  }
 
   ngOnInit() {
-    navigator.geolocation.getCurrentPosition((position)=>{
+    navigator.geolocation.getCurrentPosition((position) => {
       console.log(`lat:${position.coords.latitude}, lon:${position.coords.longitude}`);
     })
 
@@ -40,10 +40,10 @@ export class DashboardComponent implements OnInit {
     this.getStocks();
   }
 
-  getStockList(){
-    this.stockService.getStockItemList().subscribe((data:any)=>{
-      if(data.success){
-        this.noOfProducts=data.listObject.length;
+  getStockList() {
+    this.stockService.getStockItemList().subscribe((data: any) => {
+      if (data.success) {
+        this.noOfProducts = data.listObject.length;
       }
     })
   }
@@ -52,8 +52,8 @@ export class DashboardComponent implements OnInit {
     this.stockService.getAllNearByExpiryProducts(this.today, this.todayPlus30).subscribe((data: any) => {
       if (data.success) {
         console.log(data.listObject);
-        this.noOfProductsExpireInNext30Days=data.listObject.length;
-        this.nearByExpiryStockDetails=data.listObject;
+        this.noOfProductsExpireInNext30Days = data.listObject.length;
+        this.nearByExpiryStockDetails = data.listObject;
         console.log(this.nearByExpiryStockDetails);
       }
     });
@@ -68,8 +68,8 @@ export class DashboardComponent implements OnInit {
     console.log(this.todayPlus30);
     return date;
   }
-  
-  routeToExpiryIntimation(){
+
+  routeToExpiryIntimation() {
     this.route.navigate(['/home/expiryIntimation'])
   }
 }

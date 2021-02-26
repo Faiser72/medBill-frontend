@@ -7,7 +7,7 @@ import { environment } from "src/environments/environment";
 })
 export class SupplierMasterService {
   private baseUrl = environment.baseUrl;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // add supplier
   saveSupplierMaster(supplierMaster: any) {

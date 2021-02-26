@@ -42,6 +42,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 @NgModule({
   declarations: [],
@@ -90,7 +91,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     OverlayModule,
     PortalModule,
     ScrollingModule,
-    MatOptionModule
+    MatOptionModule,
+    MatTableExporterModule
   ],
   exports: [
     A11yModule,
@@ -137,7 +139,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     OverlayModule,
     PortalModule,
     ScrollingModule,
-    MatOptionModule
+    MatOptionModule,
+    MatTableExporterModule
   ]
 })
 export class MaterialImportModuleModule { }

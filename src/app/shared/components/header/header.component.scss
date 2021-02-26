@@ -1,44 +1,37 @@
 ul li {
-  list-style: none;
+    list-style: none;
 }
 
 .theme-list {
-  outline   : 0;
-  width     : 150px;
-  text-align: center;
+    outline: 0;
+    width: 150px;
+    text-align: center;
 }
 
 .person-icon {
-  padding: 0px !important;
+    padding: 0px !important;
 }
 
 button {
-  outline: none;
+    outline: none;
 }
 
 .header_background {
-  background: -webkit-linear-gradient(top, #32AEB1 0%, #137779 100%);
-
-  // background-color: #32AEB1;
-
-  .fontpopup {
-    color   : var(--main-font-3-color);
-    // color: #32AEB1;
-  }
-
-  /* For Dialog box starts*/
-  .dialog-title {
-    color: var(--main-bg-3-color);
-  }
-
-  .dialog-text {
-    color: var(--main-bg-1-color);
-  }
-
-  /* For Dialog box ends*/
-
-  mat-dialog-content h4 {
-    color: var(--main-bg-3-color);
-  }
-
+    background: -webkit-linear-gradient(top, #32AEB1 0%, #137779 100%);
+    // background-color: #32AEB1;
+    .fontpopup {
+        color: var(--main-font-3-color);
+        // color: #32AEB1;
+    }
+    /* For Dialog box starts*/
+    .dialog-title {
+        color: var(--main-bg-3-color);
+    }
+    .dialog-text {
+        color: var(--main-bg-1-color);
+    }
+    /* For Dialog box ends*/
+    mat-dialog-content h4 {
+        color: var(--main-bg-3-color);
+    }
 }

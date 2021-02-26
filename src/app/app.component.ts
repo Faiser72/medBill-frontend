@@ -13,12 +13,12 @@ export class AppComponent {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
-    private spiner:NgxSpinnerService
+    private spiner: NgxSpinnerService
   ) { }
 
-  text:string;
+  text: string;
   startSpinner(text: string) {
-    this.text =text;
+    this.text = text;
     this.spiner.show();
   }
   stopSpinner() {

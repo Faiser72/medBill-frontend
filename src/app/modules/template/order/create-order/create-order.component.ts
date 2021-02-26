@@ -35,7 +35,7 @@ export class CreateOrderComponent implements OnInit {
     private fb: FormBuilder,
     private router: ActivatedRoute,
     private orderService: OrderService,
-    private supplierMasterService :SupplierMasterService,
+    private supplierMasterService: SupplierMasterService,
     private appComponent: AppComponent
   ) {
     this.addOrderDetailsFormBuilder();
@@ -60,16 +60,14 @@ export class CreateOrderComponent implements OnInit {
     this.getAllSupplierNames();
   }
 
-  getorderIdAuto(){
+  getorderIdAuto() {
     this.orderService.getOrderIdAuto().subscribe((data: any) => {
-      this.addOrderDetails.patchValue({orderNumber:data.object})
+      this.addOrderDetails.patchValue({ orderNumber: data.object })
     });
   }
-  getAllSupplierNames(){
+  getAllSupplierNames() {
     this.supplierMasterService.getAllSupplierList().subscribe((data: any) => {
       this.allSupplierName = data.listObject;
-      console.log( this.allSupplierName );
-      
     });
   }
 
@@ -89,11 +87,26 @@ export class CreateOrderComponent implements OnInit {
     });
   }
 
+  allProductLists: any = [];
+
+  getProductListUsingCategoryId(id: any, i) {
+    this.orderService.getPrductsByCategoryId(id).subscribe((data: any) => {
+      this.allProductLists[i] = data.listObject;
+    });
+  }
+
+
   getProductTypeList() {
     this.orderService.productCategoryList().subscribe((data: any) => {
       this.allProductTypeList = data.listObject;
     });
   }
+
+  public matchProductName = (productName, value): boolean => {
+    if (value) {
+      return productName.productId === value.productId;
+    }
+  };
 
   addRow() {
     this.createOrder = {
@@ -142,7 +155,6 @@ export class CreateOrderComponent implements OnInit {
 
   productNameRow(productNameValue: any, i: number) {
     if (productNameValue != "") {
-      console.log(productNameValue);
 
       document.getElementById("productNameMsg" + i).innerHTML = "";
       this.orderArray[i].manufacturer =
@@ -235,13 +247,6 @@ export class CreateOrderComponent implements OnInit {
     });
   }
 
-  allProductLists:any=[];
-  getProductListUsingCategoryId(id: any, i) {
-    this.orderService.getPrductsByCategoryId(id).subscribe((data: any) => {
-      // this.allProductList = data.listObject;
-      this.allProductLists[i]=data.listObject; 
-    });
-  }
 
   deleteRow(index: any) {
     if (this.orderArray.length == 1) {
@@ -301,7 +306,7 @@ export class CreateOrderComponent implements OnInit {
   addOrderFormubmit() {
     if (this.orderDetailFlag && this.addOrderDetails.valid) {
       this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
-      this.addOrderDetails.patchValue({orderItemList:this.orderArray}) 
+      this.addOrderDetails.patchValue({ orderItemList: this.orderArray })
       this.orderService
         .saveOrderDetails(this.addOrderDetails.value)
         .subscribe(

@@ -1,161 +1,211 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AppComponent } from 'src/app/app.component';
-import { isNullOrUndefined } from 'util';
-declare var $:any;
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { Router, ActivatedRoute } from "@angular/router";
+import { AppComponent } from "src/app/app.component";
+import { SalesOrderService } from "src/app/service/salesOrder/sales-order.service";
+import { StockService } from "src/app/service/stock/stock.service";
+import { isNullOrUndefined } from "util";
+declare var $: any;
 
 class salesOrder {
-  itemName: any;
-  itemCode: any;
+  productType: any;
+  productName: any;
+  manufacturer: any;
   quantity: any;
   unitPrice: any;
+  batchNumber: any;
+  manufactureDate: any;
+  expiryDate: any;
   amount: any;
-  remarks: any;
+  stockItemId: any;
 }
 @Component({
-  selector: 'app-add-sales',
-  templateUrl: './add-sales.component.html',
-  styleUrls: ['./add-sales.component.scss']
+  selector: "app-add-sales",
+  templateUrl: "./add-sales.component.html",
+  styleUrls: ["./add-sales.component.scss"],
 })
 export class AddSalesComponent implements OnInit {
-
-  
-  allItemList: any;
-  allVendorList: any;
-  allCustomerList:any;
   salesOrderArray: Array<salesOrder> = [];
   salesOrder: any = {};
-  addSalesQuotation: FormGroup;
-  taxList: any;
-  isgstTypeValue:boolean=false;
-  isgstTypeValueinterstate:boolean=false;
-
-  GSTType = [
-    { value: 'local', viewValue: 'Local' },
-    { value: 'interState', viewValue: 'Interstate' },
-  ];
+  addSalesOrder: FormGroup;
+  stockList: any;
+  // allProductList: any;
+  remainingQuantity: any;
 
   constructor(
     private route: Router,
     private fb: FormBuilder,
     private router: ActivatedRoute,
-    private appComponent: AppComponent
+    private appComponent: AppComponent,
+    private salesOrderService: SalesOrderService,
+    private stockService: StockService
   ) {
-    this.addSalesQuotationDetailsFormBuilder();
+    this.addSalesOrderFormBuilder();
   }
 
   ngOnInit() {
-
     // for multile contact form starts
     this.salesOrder = {
-      itemName: "",
-      itemCode: "",
+      productType: "",
+      productName: "",
+      manufacturer: "",
       quantity: "",
       unitPrice: "",
+      batchNumber: "",
+      manufactureDate: "",
+      expiryDate: "",
       amount: "",
-      remarks: "",
     };
     this.salesOrderArray.push(this.salesOrder);
     // for multile contact form ends
+
+    this.getSalesOrderInvoiceNumber();
+    this.getAllStocks();
   }
 
-  addSalesQuotationDetailsFormBuilder() {
-    this.addSalesQuotation = this.fb.group({
-      saleName: ["", Validators.required],
-      invoiceNumber: ["", Validators.required],
-      doctorName: ["", Validators.required],
-      salesQuotationDate: ["", Validators.required],
-      salesQuotationSubTotal: ["", Validators.required],
-      salesQuotationTax: [""],
-      salesQuotationSgst: [""],
-      salesQuotationCgst: [""],
-      salesQuotationIgst: [""],
-      salesQuotationTotal: [""],
-      salesQuotationList: [''],
-      // itemName: "",
-      // itemCode: "",
-      // quantity: "",
-      // unitPrice: "",
-      // amount: "", 
-      // remarks: "",
+  getSalesOrderInvoiceNumber() {
+    this.salesOrderService
+      .getSalesInvoiceNumberAuto()
+      .subscribe((data: any) => {
+        this.addSalesOrder.patchValue({ invoiceNumber: data.object });
+      });
+  }
+
+  getAllStocks() {
+    this.stockService.getStockItemList().subscribe((data: any) => {
+      this.stockList = data.listObject;
+    });
+  }
+  allProductList = [];
+  getProductListUsingCategoryId(id: any, i) {
+    this.salesOrderService.getPrductsByCategoryId(id).subscribe((data: any) => {
+      this.allProductList[i] = data.listObject;
     });
   }
 
-  gstType:string;
-
-  gstTypeValue(selectedValue){ 
-    this.gstType = selectedValue.value;
-      if(selectedValue.value=='local'){      
-      this.addSalesQuotation.patchValue({ salesQuotationSgst: this.taxList[0].taxLocalSgst });
-      this.addSalesQuotation.patchValue({ salesQuotationCgst: this.taxList[0].taxLocalCgst });
-      this.isgstTypeValueinterstate=false;
-      this.isgstTypeValue=true;
-      this.calculateSubTotalAmounts();
-      
-    }
-    else if(selectedValue.value=='interState'){
-      this.addSalesQuotation.patchValue({ salesQuotationIgst: this.taxList[1].taxInterstateIgst });
-      this.isgstTypeValue=false;
-      this.isgstTypeValueinterstate=true;
-      this.calculateSubTotalAmounts();
-      
-    }
+  addSalesOrderFormBuilder() {
+    this.addSalesOrder = this.fb.group({
+      customerName: [
+        "",
+        [Validators.required, Validators.pattern(/^[A-Za-z]+$/)],
+      ],
+      invoiceNumber: ["", Validators.required],
+      doctorName: [
+        "",
+        [Validators.required, Validators.pattern(/^[A-Za-z]+$/)],
+      ],
+      salesDate: ["", Validators.required],
+      subTotal: [""],
+      sgstAmount: [
+        "",
+        [Validators.required, Validators.pattern(/^[1-9]\d*(\.\d+)?$/)],
+      ],
+      cgstAmount: [
+        "",
+        [Validators.required, Validators.pattern(/^[1-9]\d*(\.\d+)?$/)],
+      ],
+      paymentMode: ["", Validators.required],
+      totalNetAmount: [""],
+      salesOrderList: "",
+    });
   }
+
+  public matchProducts = (productName, value): boolean => {
+    if (value) {
+      return productName.productName.productId === value.productName.productId;
+    }
+  };
 
   addRow() {
     this.salesOrder = {
-      itemName: "",
-      itemCode: "",
+      productType: "",
+      productName: "",
+      manufacturer: "",
       quantity: "",
       unitPrice: "",
+      batchNumber: "",
+      manufactureDate: "",
+      expiryDate: "",
       amount: "",
-      remarks: "",
     };
     this.salesOrderArray.push(this.salesOrder);
-    this.validatesalesQuotationDetails(-1);
+    this.validateSalesOrderDetails(-1);
     return true;
   }
 
-  salesQuotationDetailsFlag: boolean = false;
-  validatesalesQuotationDetails(i: number) {
-    this.salesQuotationDetailsFlag = false;
+  salesOrderDetailsFlag: boolean = false;
+  validateSalesOrderDetails(i: number) {
+    this.salesOrderDetailsFlag = false;
     if (i > -1) {
-      this.itemNameRow(this.salesOrderArray[i].itemName, i);
+      this.productTypeRow(this.salesOrderArray[i].productType, i);
+      this.productNameRow(this.salesOrderArray[i].productName, i);
       this.quantityRow(this.salesOrderArray[i].quantity, i);
       this.unitPriceRow(this.salesOrderArray[i].unitPrice, i);
     }
     this.salesOrderArray.every((object, index) => {
-      let itemNameRowFlag = this.itemNameRow(object.itemName, index);
+      let productTypeRowFlag = this.productTypeRow(object.productType, index);
+      let productNameFlag = this.productNameRow(object.productName, index);
       let quantityRowFlag = this.quantityRow(object.quantity, index);
       let unitPriceFlag = this.unitPriceRow(object.unitPrice, index);
-      if (itemNameRowFlag && quantityRowFlag && unitPriceFlag) {
-        this.salesQuotationDetailsFlag = true;
+      if (
+        productTypeRowFlag &&
+        productNameFlag &&
+        quantityRowFlag &&
+        unitPriceFlag
+      ) {
+        this.salesOrderDetailsFlag = true;
         return true;
       } else {
-        this.salesQuotationDetailsFlag = false;
+        this.salesOrderDetailsFlag = false;
         return false;
       }
     });
-    return this.salesQuotationDetailsFlag;
+    return this.salesOrderDetailsFlag;
   }
 
-  itemNameRow(itemNameValue: any, i: number) {
-    if (itemNameValue != "") {
-      document.getElementById("itemNameMsg" + i).innerHTML = "";
-      this.salesOrderArray[i].itemCode = itemNameValue.itemCode;
-      this.salesOrderArray[i].unitPrice = itemNameValue.itemUnitPrice;
-      // (<HTMLInputElement>document.getElementById("itemCode" + i)).value = itemNameValue.itemCode;
-      // (<HTMLInputElement>document.getElementById("unitPrice" + i)).value = itemNameValue.itemUnitPrice;
+  productTypeRow(productTypeValue: any, i: number) {
+    if (productTypeValue != "") {
+      document.getElementById("productTypeMsg" + i).innerHTML = "";
+      this.getProductListUsingCategoryId(
+        productTypeValue.productType.categoryId,
+        i
+      );
+      //this.salesOrderArray[i].itemCode = productTypeValue.itemCode;
+      //this.salesOrderArray[i].unitPrice = productTypeValue.itemUnitPrice;
+      // (<HTMLInputElement>document.getElementById("itemCode" + i)).value = productTypeValue.itemCode;
+      // (<HTMLInputElement>document.getElementById("unitPrice" + i)).value = productTypeValue.itemUnitPrice;
       return true;
     } else {
-      if (!isNullOrUndefined(document.getElementById("itemNameMsg" + i))) {
-        document.getElementById("itemNameMsg" + i).innerHTML =
+      if (!isNullOrUndefined(document.getElementById("productTypeMsg" + i))) {
+        document.getElementById("productTypeMsg" + i).innerHTML =
           "Please select this option.";
       }
       return false;
     }
   }
+
+  productNameRow(productNameValue: any, i: number) {
+    if (productNameValue != "") {
+      document.getElementById("productNameMsg" + i).innerHTML = "";
+      this.remainingQuantity = productNameValue.balanceQuantity;
+      this.salesOrderArray[i].manufacturer =
+        productNameValue.productName.manufacturer.manufacturerName;
+      this.salesOrderArray[i].batchNumber = productNameValue.batchNumber;
+      this.salesOrderArray[i].unitPrice = productNameValue.unitPrice;
+      this.salesOrderArray[i].manufactureDate =
+        productNameValue.manufactureDate;
+      this.salesOrderArray[i].expiryDate = productNameValue.expiryDate;
+      this.salesOrderArray[i].stockItemId = productNameValue;
+      return true;
+    } else {
+      if (!isNullOrUndefined(document.getElementById("productNameMsg" + i))) {
+        document.getElementById("productNameMsg" + i).innerHTML =
+          "Please select this option.";
+      }
+      return false;
+    }
+  }
+
   quantityRow(quantityValue: any, i: number) {
     if (quantityValue != "") {
       if (quantityValue.match(/^[0-9]+$/)) {
@@ -164,8 +214,14 @@ export class AddSalesComponent implements OnInit {
           document.getElementById("unitPrice" + i)
         )).value;
         let amount: any = quantityValue * unitPrice;
+
         // (<HTMLInputElement>document.getElementById("amount" + i)).value = amount;
         this.salesOrderArray[i].amount = amount;
+        if (this.remainingQuantity < quantityValue) {
+          document.getElementById("quantityMsg" + i).innerHTML = "No stock";
+          return false;
+        }
+        this.remainingQuantity = this.remainingQuantity - quantityValue;
         this.calculateSubTotalAmounts();
         return true;
       } else {
@@ -208,24 +264,19 @@ export class AddSalesComponent implements OnInit {
     this.salesOrderArray.forEach((element) => {
       subTotal += element.amount;
     });
-    this.addSalesQuotation.patchValue({
-      salesQuotationSubTotal: subTotal,
+    this.addSalesOrder.patchValue({
+      subTotal: subTotal,
     });
-  
-      
-    let sgst = this.addSalesQuotation.get("salesQuotationSgst").value;
-    let cgst = this.addSalesQuotation.get("salesQuotationCgst").value;
-    let igst = this.addSalesQuotation.get("salesQuotationIgst").value;
-    
-    if (!isNullOrUndefined(sgst) && !isNullOrUndefined(cgst) && !isNullOrUndefined(cgst)) {
-      this.calculateTotalAmount(subTotal,sgst,cgst,igst);
-    } else {
-      this.addSalesQuotation.patchValue({ salesQuotationSgst: 0 });
-      this.addSalesQuotation.patchValue({ salesQuotationCgst: 0 });
-      this.addSalesQuotation.patchValue({ salesQuotationIgst: 0 });
-      this.calculateTotalAmount(subTotal,sgst,cgst,igst);
-    }
 
+    let sgst = this.addSalesOrder.get("sgstAmount").value;
+    let cgst = this.addSalesOrder.get("cgstAmount").value;
+
+    if (!isNullOrUndefined(sgst) && !isNullOrUndefined(cgst)) {
+      this.calculateTotalAmount(subTotal, sgst, cgst);
+    } else {
+      this.addSalesOrder.patchValue({ sgstAmount: 0, cgstAmount: 0 });
+      this.calculateTotalAmount(subTotal, sgst, cgst);
+    }
   }
 
   deleteRow(index: any) {
@@ -233,62 +284,21 @@ export class AddSalesComponent implements OnInit {
       return false;
     } else {
       this.salesOrderArray.splice(index, 1);
-      this.validatesalesQuotationDetails(-1);
+      this.validateSalesOrderDetails(-1);
       return true;
     }
   }
 
-  calculateTotalAmount(subTotal,sgst,cgst,igst) {
-    //alert(this.gstType)
-    if(this.gstType === "local"){ 
+  calculateTotalAmount(subTotal, sgst, cgst) {
     let cal1 = Math.round((subTotal / 100) * sgst);
     let cal2 = Math.round((subTotal / 100) * cgst);
-    let taxAmt = cal1+cal2
+    let taxAmt = cal1 + cal2;
     if (!isNullOrUndefined(cal1) && !isNullOrUndefined(cal2)) {
-       let totalAmt = +subTotal + +taxAmt;
-            
-        this.addSalesQuotation.patchValue({ salesQuotationTotal: totalAmt });
-      } else {
-        this.addSalesQuotation.patchValue({ salesQuotationTotal: 0 });
-     }
+      let totalAmt = +subTotal + +taxAmt;
+      this.addSalesOrder.patchValue({ totalNetAmount: totalAmt });
+    } else {
+      this.addSalesOrder.patchValue({ totalNetAmount: 0 });
     }
-    else if(this.gstType === "interState"){
-      //alert(igst)
-      let cal1 = Math.round((subTotal / 100) * igst);
-      if (!isNullOrUndefined(cal1)) {
-        let totalAmt = +subTotal + +cal1;
-         this.addSalesQuotation.patchValue({ salesQuotationTotal: totalAmt });
-       } else {
-         this.addSalesQuotation.patchValue({ salesQuotationTotal: 0 });
-      }
-    }
-
-    // if(this.gstType == "local"){
-    //   var sgst = $("#salesQuotationSgst").val();
-    //   var cgst = $("#salesQuotationCgst").val();
-
-    //  // alert(sgst);
-    //   //alert(cgst)
-     
-    //   let totalAmt = cal1+cal2;
-
-    //   //$("salesQuotationTotal").val(cal1+cal2);
-    //   this.addSalesQuotation.patchValue({ salesQuotationTotal: totalAmt });
-    // }
-    
-
-
-
-    // if(this.gstType == "local") {
-    // let taxAmt = Math.round((subTotal / 100) * taxRate);
-    // if (!isNullOrUndefined(taxAmt)) {
-    //   let totalAmt = +subTotal + +taxAmt;
-    //   this.addSalesQuotation.patchValue({ salesQuotationTotal: totalAmt });
-    // } else {
-    //   this.addSalesQuotation.patchValue({ salesQuotationTotal: 0 });
-    // }
-    // }
-    
   }
 
   reset() {
@@ -296,39 +306,44 @@ export class AddSalesComponent implements OnInit {
     this.addRow();
   }
 
-  itemParticularForm(): boolean {
-    let itemName: any = [];
-    let itemCode: any = [];
-    let quantity: any = [];
-    let unitPrice: any = [];
-    let amount: any = [];
-    let remarks: any = [];
-    this.salesOrderArray.forEach((object, i) => {
-      itemName[i] = object.itemName.itemName;
-      itemCode[i] = object.itemCode;
-      quantity[i] = object.quantity;
-      unitPrice[i] = object.unitPrice;
-      remarks[i] = object.remarks;
-
-      if (amount.includes(".")) {
-        amount[i] = object.amount;
-      } else {
-        amount[i] = object.amount + ".00";
-      }
-    });
-
-    this.addSalesQuotation.patchValue({
-      itemName: itemName.join(","),
-      itemCode: itemCode.join(","),
-      quantity: quantity.join(","),
-      unitPrice: unitPrice.join(","),
-      amount: unitPrice.join(","),
-      remarks: unitPrice.join(","),
-    });
-
-    return true;
+  addSalesOrderFormSubmit() {
+    if (this.salesOrderDetailsFlag && this.addSalesOrder.valid) {
+      this.appComponent.startSpinner("Saving data..\xa0\xa0Please wait ...");
+      this.addSalesOrder.patchValue({ salesOrderList: this.salesOrderArray });
+      this.salesOrderService
+        .addSalesOrderDetails(this.addSalesOrder.value)
+        .subscribe(
+          (resp: any) => {
+            if (resp.success) {
+              alert(resp.message);
+              this.appComponent.stopSpinner();
+              setTimeout(() => {
+                if (confirm("Do you want add more Item ?")) {
+                  location.reload();
+                } else {
+                  //this.backToSalesOrderList();
+                }
+              }, 500);
+            } else {
+              setTimeout(() => {
+                alert(resp.message);
+                this.appComponent.stopSpinner();
+              }, 1000);
+            }
+          },
+          (error) => {
+            setTimeout(() => {
+              alert("Error! - Something Went Wrong! Try again.");
+              this.appComponent.stopSpinner();
+            }, 1000);
+          }
+        );
+    } else {
+      alert("Please, fill the proper details.");
+    }
   }
 
-  
-  
+  backToSalesOrderList() {
+    this.route.navigate(["/home/salesHome/listSales"]);
+  }
 }

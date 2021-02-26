@@ -48,7 +48,7 @@ export class EditproductmasterComponent implements OnInit {
       .getProductDetails(this.productId)
       .subscribe((data: any) => {
         console.log(data);
-        
+
         let categoryName = this.productCategoryList.find(
           (jdata: any) =>
             JSON.stringify(jdata) === JSON.stringify(data.object.productCategory)

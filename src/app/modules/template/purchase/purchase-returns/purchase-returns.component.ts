@@ -161,12 +161,12 @@ export class PurchaseReturnsComponent implements OnInit {
 
   }
 
-  validateReturn:any=[];
+  validateReturn: any = [];
 
   // patching order data in to purchase entry data
   patchPurchaseEntryItemListDetails(orderData) {
     console.log(orderData);
-    this.validateReturn.length=orderData.listObject.length;
+    this.validateReturn.length = orderData.listObject.length;
 
     for (let index = 0; index < orderData.listObject.length; index++) {
       this.createOrder = {
@@ -186,7 +186,7 @@ export class PurchaseReturnsComponent implements OnInit {
       };
       this.purchaseOrderArray.push(this.createOrder);
       this.purchaseOrderDetailFlag = true;
-      this.validateReturn[index]=orderData.listObject[index].returnFlag;
+      this.validateReturn[index] = orderData.listObject[index].returnFlag;
     }
   }
 
@@ -251,7 +251,7 @@ export class PurchaseReturnsComponent implements OnInit {
         this.totalAfterReturn = +this.editPurchaseEntry.value.purchaseEntrySubTotal - +this.purchaseOrderArray[i].amount;
         this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: this.totalAfterReturn });
         this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
-        this.validateReturn[i]=true;
+        this.validateReturn[i] = true;
       }
     }
     else {
@@ -261,7 +261,7 @@ export class PurchaseReturnsComponent implements OnInit {
         let totalAfterReturn = +this.editPurchaseEntry.value.purchaseEntrySubTotal + +this.purchaseOrderArray[i].amount;
         this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn });
         this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
-        this.validateReturn[i]=false;
+        this.validateReturn[i] = false;
       }
     }
   }
@@ -284,7 +284,7 @@ export class PurchaseReturnsComponent implements OnInit {
       this.totalAfterReturn = this.editPurchaseEntry.value.purchaseEntrySubTotal - +createOrder.amount
       console.log("returnTotal", this.totalAfterReturn);
       this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: this.totalAfterReturn })
-      this.validateReturn[i]=true;
+      this.validateReturn[i] = true;
 
       // let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
       this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
@@ -299,7 +299,7 @@ export class PurchaseReturnsComponent implements OnInit {
       this.editPurchaseEntry.patchValue({ purchaseEntrySubTotal: totalAfterReturn })
       let taxRate = this.editPurchaseEntry.get("purchaseEntryTax").value;
       this.calculateTotalAmount(this.editPurchaseEntry.value.purchaseEntrySubTotal, this.editPurchaseEntry.value.purchaseEntryTax);
-      this.validateReturn[i]=false;
+      this.validateReturn[i] = false;
 
       // this.purchaseOrderArray[i].amount = temp;
       // console.log(temp,'tempsss');

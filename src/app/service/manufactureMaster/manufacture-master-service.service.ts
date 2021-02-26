@@ -34,7 +34,7 @@ export class ManufactureMasterServiceService {
     return this.http.get(`${this.baseUrl}/manufactureMaster/getManufactureListExceptOne/${manufacturerId}`);
   }
 
-  
+
   // get getManufacturerDetails by id
   getManufacturerDetails(manufacturerId: number) {
     return this.http.get(`${this.baseUrl}/manufactureMaster/getManufacturerDetails/${manufacturerId}`)

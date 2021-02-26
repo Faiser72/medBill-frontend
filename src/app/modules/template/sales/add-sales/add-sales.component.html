@@ -4,23 +4,26 @@
             <h4 class="text-center main-bg pt-3 mt-1">- Add Sales -</h4>
         </div>
         <mat-divider class="mx-5"></mat-divider>
-        <form action="" class="form-group customhover" [formGroup]="addSalesQuotation">
+        <form action="" class="form-group customhover" [formGroup]="addSalesOrder" (ngSubmit)="addSalesOrderFormSubmit()">
             <div class="container mt-3">
                 <div class="row">
                     <div class="col-md-3">
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Name<sup class="text-danger">*</sup></mat-label>
-                            <input matInput placeholder="Ex. Sudhakar" value="" formControlName="saleName" />
-                            <mat-error *ngIf="addSalesQuotation.get('saleName').hasError('required')">
+                            <input matInput placeholder="Ex. Sudhakar" value="" formControlName="customerName" />
+                            <mat-error *ngIf="addSalesOrder.get('customerName').hasError('required')">
                                 <b>Required</b>
+                            </mat-error>
+                            <mat-error *ngIf="addSalesOrder.get('customerName').hasError('pattern')">
+                                <b>Name Should Contain Only Alphabets</b>
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Invoice Number<sup class="text-danger">*</sup></mat-label>
-                            <input matInput placeholder="Ex. 11212111" value="" formControlName="invoiceNumber" />
-                            <mat-error *ngIf="addSalesQuotation.get('invoiceNumber').hasError('required')">
+                            <input matInput placeholder="Ex. 11212111" value="" formControlName="invoiceNumber" readonly />
+                            <mat-error *ngIf="addSalesOrder.get('invoiceNumber').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
                         </mat-form-field>
@@ -29,16 +32,19 @@
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label>Doctor Name<sup class="text-danger">*</sup></mat-label>
                             <input matInput placeholder="Ex. Sudhakar" value="" formControlName="doctorName" />
-                            <mat-error *ngIf="addSalesQuotation.get('doctorName').hasError('required')">
+                            <mat-error *ngIf="addSalesOrder.get('doctorName').hasError('required')">
                                 <b>Required</b>
+                            </mat-error>
+                            <mat-error *ngIf="addSalesOrder.get('doctorName').hasError('pattern')">
+                                <b>Name Should Contain Only Alphabets</b>
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="field-full-width" appearance="outline">
                             <mat-label> Date<sup class="text-danger">*</sup></mat-label>
-                            <input matInput placeholder="Ex. 7/2/1995" value="" formControlName="salesQuotationDate" type="date" />
-                            <mat-error *ngIf="addSalesQuotation.get('salesQuotationDate').hasError('required')">
+                            <input matInput placeholder="Ex. 7/2/1995" value="" formControlName="salesDate" type="date" />
+                            <mat-error *ngIf="addSalesOrder.get('salesDate').hasError('required')">
                                 <b>Required</b>
                             </mat-error>
                         </mat-form-field>
@@ -53,9 +59,11 @@
                         <thead>
                             <tr>
                                 <th style="width: 5%;">Sl.no</th>
+                                <th style="width: 20%;">Category Type</th>
                                 <th style="width: 20%;">Product Name</th>
                                 <th style="width: 10%;">Manufacture Name</th>
                                 <th style="width: 10%;">Batch</th>
+                                <th style="width: 10%;">Manufacture Date</th>
                                 <th style="width: 10%;">Expiry Date</th>
                                 <th style="width: 10%;">Quantity</th>
                                 <th style="width: 20%;">Price Per <br>Unit</th>
@@ -70,49 +78,66 @@
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dosage" appearance="outline">
-                                        <mat-select [(ngModel)]="salesOrder.itemName" [ngModelOptions]="{standalone: true}" id="itemName{{i}}" (selectionChange)="validatesalesQuotationDetails(i);">
+                                        <mat-select [(ngModel)]="salesOrder.productType" [ngModelOptions]="{standalone: true}" id="productType{{i}}" (selectionChange)="validateSalesOrderDetails(i);">
                                             <mat-option value='null' selected="">Select Here</mat-option>
-                                            <mat-option *ngFor="let item of allItemList" [value]="item">{{item.itemName}}</mat-option>
+                                            <mat-option *ngFor="let stockItm of stockList" [value]="stockItm">
+                                                {{stockItm.productType.categoryName}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <p style="color: red; font-size: 15px;" id="itemNameMsg{{i}}"></p>
+                                    <p style="color: red; font-size: 15px;" id="productTypeMsg{{i}}"></p>
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dosage" appearance="outline">
-                                        <input matInput [(ngModel)]="salesOrder.itemCode" [ngModelOptions]="{standalone: true}" id="itemCode{{i}}" (input)="validatesalesQuotationDetails(i);" readonly/>
+                                        <mat-select [compareWith]="matchProducts" [(ngModel)]="salesOrder.productName" [ngModelOptions]="{standalone: true}" id="productName{{i}}" (selectionChange)="validateSalesOrderDetails(i);">
+                                            <mat-option value='null' selected="">Select Here</mat-option>
+                                            <mat-option *ngFor="let prods of allProductList[i]" [value]="prods">
+                                                {{prods.productName.productName}}</mat-option>
+                                        </mat-select>
                                     </mat-form-field>
-                                    <p style="color: red;" id="itemCodeMsg{{i}}"></p>
+                                    <p style="color: red; font-size: 15px;" id="productNameMsg{{i}}"></p>
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dosage" appearance="outline">
-                                        <input matInput [(ngModel)]="salesOrder.quantity" [ngModelOptions]="{standalone: true}" id="quantity{{i}}" (input)="validatesalesQuotationDetails(i);" />
+                                        <input matInput [(ngModel)]="salesOrder.manufacturer" [ngModelOptions]="{standalone: true}" id="manufacturer{{i}}" (input)="validateSalesOrderDetails(i);" readonly />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="manufacturerMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <input matInput [(ngModel)]="salesOrder.batchNumber" [ngModelOptions]="{standalone: true}" id="batchNumber{{i}}" (input)="validateSalesOrderDetails(i);" readonly />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="batchNumberMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <input matInput [(ngModel)]="salesOrder.manufactureDate" [ngModelOptions]="{standalone: true}" id="manufactureDate{{i}}" (input)="validateSalesOrderDetails(i);" readonly />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="manufactureDateMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 15%;">
+                                    <mat-form-field class="field-drugName" appearance="outline">
+                                        <input matInput [(ngModel)]="salesOrder.expiryDate" [ngModelOptions]="{standalone: true}" id="expiryDate{{i}}" (input)="validateSalesOrderDetails(i);" readonly />
+                                    </mat-form-field>
+                                    <p style="color: red;" id="expiryDateMsg{{i}}"></p>
+                                </td>
+                                <td style="width: 10%;">
+                                    <mat-form-field class="field-dosage" appearance="outline">
+                                        <input matInput [(ngModel)]="salesOrder.quantity" [ngModelOptions]="{standalone: true}" id="quantity{{i}}" (input)="validateSalesOrderDetails(i);" />
+                                        <mat-hint><b>Stock Availability:&nbsp; {{ remainingQuantity }}</b></mat-hint>
                                     </mat-form-field>
                                     <p style="color: red; font-size: 15px;" id="quantityMsg{{i}}"></p>
                                 </td>
                                 <td style="width: 10%;">
                                     <mat-form-field class="field-dosage" appearance="outline">
-                                        <input matInput [(ngModel)]="salesOrder.unitPrice" [ngModelOptions]="{standalone: true}" id="unitPrice{{i}}" (input)="validatesalesQuotationDetails(i);" />
+                                        <input matInput [(ngModel)]="salesOrder.unitPrice" [ngModelOptions]="{standalone: true}" id="unitPrice{{i}}" (input)="validateSalesOrderDetails(i);" readonly />
                                     </mat-form-field>
                                     <p style="color: red;" id="unitPriceMsg{{i}}"></p>
                                 </td>
-                                <td style="width: 10%;">
-                                    <mat-form-field class="field-dosage" appearance="outline">
-                                        <input matInput [(ngModel)]="salesOrder.amount" [ngModelOptions]="{standalone: true}" id="amount{{i}}" (input)="validatesalesQuotationDetails(i);" readonly/>
-                                    </mat-form-field>
-                                    <p style="color: red;" id="amountMsg{{i}}"></p>
-                                </td>
-                                <td style="width: 10%;">
-                                    <mat-form-field class="field-dosage" appearance="outline">
-                                        <input matInput [(ngModel)]="salesOrder.amount" [ngModelOptions]="{standalone: true}" id="amount{{i}}" (input)="validatesalesQuotationDetails(i);" readonly/>
-                                    </mat-form-field>
-                                    <p style="color: red;" id="amountMsg{{i}}"></p>
-                                </td>
-
                                 <td style="width: 15%;">
                                     <mat-form-field class="field-drugName" appearance="outline">
-                                        <input matInput [(ngModel)]="salesOrder.remarks" [ngModelOptions]="{standalone: true}" id="remarks{{i}}" (input)="validatesalesQuotationDetails(i);" />
+                                        <input matInput [(ngModel)]="salesOrder.amount" [ngModelOptions]="{standalone: true}" id="amount{{i}}" (input)="validateSalesOrderDetails(i);" readonly />
                                     </mat-form-field>
-                                    <p style="color: red;" id="remarksMsg{{i}}"></p>
+                                    <p style="color: red;" id="amountMsg{{i}}"></p>
                                 </td>
 
                                 <td (click)="addRow()" class="text-center" style="width: 5%;">
@@ -140,43 +165,48 @@
                     <div class="col-md-6">
                         <div class="row">
                             <label for="exampleInputPassword1" class="lab">Sub Total</label>
-                            <input type="text" class="form-control" formControlName="salesQuotationSubTotal" id="salesQuotationSubTotal" #salesQuotationSubTotal readonly>
+                            <input type="text" class="form-control" formControlName="subTotal" id="subTotal" #subTotal readonly>
                         </div>
-                        <!-- <div class="row mt-2">
-                            <label class="lab">Tax (In %)</label>
-                            <input type="text" class="form-control" formControlName="salesQuotationTax" id="salesQuotationTax" #salesQuotationTax >
-                        </div> -->
                         <div>
                             <div class="row mt-2">
                                 <label class="lab">SGST</label>
-                                <input type="text" class="form-control" formControlName="salesQuotationSgst" id="salesQuotationSgst" #salesQuotationSgst readonly>
+                                <input type="text" class="form-control" formControlName="sgstAmount" id="sgstAmount" #sgstAmount (input)="calculateTotalAmount(subTotal.value,sgstAmount.value,cgstAmount.value);">
+                                <p style="color: red; font-size: 15px;" class="mt-2" *ngIf="addSalesOrder.get('sgstAmount').hasError('required')">Required</p>
                             </div>
                             <div class="row mt-2">
                                 <label for="exampleInputPassword1" class="lab">CGST</label>
-                                <input type="text" class="form-control" formControlName="salesQuotationCgst" id="salesQuotationCgst" #salesQuotationCgst readonly>
+                                <input type="text" class="form-control" formControlName="cgstAmount" id="cgstAmount" #cgstAmount (input)="calculateTotalAmount(subTotal.value,sgstAmount.value,cgstAmount.value);">
+                                <p style="color: red; font-size: 15px;" class="mt-2" *ngIf="addSalesOrder.get('cgstAmount').hasError('required')">Required</p>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <label for="exampleInputPassword1" class="lab">Total</label>
-                            <input type="text" class="form-control" formControlName="salesQuotationTotal" id="salesQuotationTotal" readonly>
+                            <input type="text" class="form-control" formControlName="totalNetAmount" id="totalNetAmount" readonly>
+                        </div>
+                        <div class="row mt-4">
+                            <mat-radio-group aria-label="Select an option" formControlName="paymentMode">
+                                <label for="exampleInputPassword1" class="lab">Payment Mode</label><br>
+                                <mat-radio-button value="Cash">Cash</mat-radio-button>
+                                <mat-radio-button value="Upi">UPI</mat-radio-button>
+                                <mat-radio-button value="Card">Card</mat-radio-button>
+                            </mat-radio-group>
                         </div>
                     </div>
                 </div>
+
             </div>
+
 
             <div class="row d-flex justify-content-around mt-5 ml-5 mr-5 mb-5">
                 <div class="col-lg-2 col-md-6 col-sm-12">
 
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12 d-flex justify-content-around">
-                    <button type="submit" mat-raised-button color="primary" class="w-25">
+                    <button type="submit" mat-raised-button color="primary" class="w-25" [disabled]='(addSalesOrder.invalid) || (!salesOrderDetailsFlag)'>
                         <mat-icon class="mr-2">save</mat-icon>Save
                     </button>
-                    <button type="button" mat-raised-button color="accent" class="w-25">
+                    <button type="button" mat-raised-button color="accent" class="w-25" (click)="backToSalesOrderList()">
                         <mat-icon class="mr-2">360</mat-icon>Back
-                    </button>
-                    <button mat-raised-button color="primary" class="w-25">
-                        <mat-icon class="mr-2">save</mat-icon>Print
                     </button>
                 </div>
                 <div class="col-lg-2 col-md-6 col-sm-12">

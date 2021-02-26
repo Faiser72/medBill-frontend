@@ -78,7 +78,7 @@ export class EditmanufacturermasterComponent implements OnInit {
   }
   editManufacturerMasterFormBuilder() {
     this.editManufacturerMasterForm = this.fb.group({
-      manufacturerId:"",
+      manufacturerId: "",
       manufacturerName: [null, [Validators.required, Validators.minLength(3)]],
       address: [null, [Validators.required, Validators.minLength(3)]],
       contactNumber: [

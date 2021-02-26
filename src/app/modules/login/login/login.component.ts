@@ -19,8 +19,8 @@ export interface DialogData {
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
- 
-  logInflag:boolean=false; 
+
+  logInflag: boolean = false;
   hide = true;
   username: string = "";
   password: string = "";
@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
         .subscribe(
           (resp: boolean) => {
             if (resp) {
-              this.logInflag=true;
+              this.logInflag = true;
               this.appComponent.startSpinner(
                 "Loading data..\xa0\xa0Please wait ..."
               );

@@ -24,7 +24,7 @@ export class AddsuppliermasterComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private router: Router,
-    private supplierMasterService : SupplierMasterService,
+    private supplierMasterService: SupplierMasterService,
     private appComponent: AppComponent) {
     // for date validation starts
     var today = new Date();
@@ -42,16 +42,17 @@ export class AddsuppliermasterComponent implements OnInit {
 
   addSupplierMasterFormBuilder() {
     this.addSupplierMasterForm = this.fb.group({
-      supplierName: [null, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z]*$/)]],
+      // Validators.pattern(/^[a-zA-Z]*$/)
+      supplierName: [null, [Validators.required, Validators.minLength(3)]],
       address: [null, [Validators.required, Validators.minLength(3)]],
       contactNumber: [
         null,
-        [Validators.required, Validators.pattern(this.phonePattern),Validators.pattern(/^[0-9]{10}$/)],
+        [Validators.required, Validators.pattern(this.phonePattern), Validators.pattern(/^[0-9]{10}$/)],
       ],
-      contactPersonName: [null, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z]*$/)]],
+      contactPersonName: [null, [Validators.required, Validators.minLength(3)]],
       contactPersonNumber: [
         null,
-        [Validators.required, Validators.pattern(this.phonePattern),Validators.pattern(/^[0-9]{10}$/)],
+        [Validators.required, Validators.pattern(this.phonePattern), Validators.pattern(/^[0-9]{10}$/)],
       ],
       contactPersonEmailId: [
         null,
@@ -59,7 +60,7 @@ export class AddsuppliermasterComponent implements OnInit {
           Validators.required,
           Validators.pattern("^[a-zA-Z0-9._-]+@[a-zA-Z]+.[a-zA-Z]{2,4}$"),
         ]),],
-     
+
 
     });
   }

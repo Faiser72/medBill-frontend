@@ -86,7 +86,6 @@ export class PurchaseEntryComponent implements OnInit {
 
     this.purchaseEntryService.listAllPurchaseEntryItem().subscribe((data: any) => {
       this.purchaseEntryItemList = data.listObject;
-      console.log(this.purchaseEntryItemList.length);
     })
 
 
@@ -369,38 +368,38 @@ export class PurchaseEntryComponent implements OnInit {
     if (batchNumberValue != "") {
       if (batchNumberValue.match(/^[0-9]+$/)) {
         this.batchNumberValidationArray[i] = batchNumberValue;
-        // for unique validation starts here
-        // if(batchNumberValue==this.purchaseEntryItemList.batchNumber)
-        for (var x = 0; x <= this.purchaseEntryItemList.length; x++) {
+        // // for unique validation starts here
+        // // if(batchNumberValue==this.purchaseEntryItemList.batchNumber)
+        // for (var x = 0; x <= this.purchaseEntryItemList.length; x++) {
 
-          // if (x != i) {
-          //   if (batchNumberValue == this.batchNumberValidationArray[x]) {
-          //     document.getElementById("batchNumberMsg" + i).innerHTML =
-          //       "this batch number is present already in this array";
-          //     return false;
-          //   }
-          //   else {
-          //     document.getElementById("batchNumberMsg" + i).innerHTML = "";
-          //     return true;
-          //   }
-          // }
-          console.log(this.purchaseEntryItemList[x].batchNumber);
+        //   // if (x != i) {
+        //   //   if (batchNumberValue == this.batchNumberValidationArray[x]) {
+        //   //     document.getElementById("batchNumberMsg" + i).innerHTML =
+        //   //       "this batch number is present already in this array";
+        //   //     return false;
+        //   //   }
+        //   //   else {
+        //   //     document.getElementById("batchNumberMsg" + i).innerHTML = "";
+        //   //     return true;
+        //   //   }
+        //   // }
+        //   console.log(this.purchaseEntryItemList[x].batchNumber);
 
 
-          if (batchNumberValue == this.purchaseEntryItemList[x].batchNumber) {
-            document.getElementById("batchNumberMsg" + i).innerHTML =
-              "this batch number is present already.";
-            // this.batchNumberFlag=false
-            return false;
-          }
-          else {
-            document.getElementById("batchNumberMsg" + i).innerHTML = "";
-            // this.batchNumberFlag=false
+        //   if (batchNumberValue == this.purchaseEntryItemList[x].batchNumber) {
+        //     document.getElementById("batchNumberMsg" + i).innerHTML =
+        //       "this batch number is present already.";
+        //     // this.batchNumberFlag=false
+        //     return false;
+        //   }
+        //   else {
+        //     document.getElementById("batchNumberMsg" + i).innerHTML = "";
+        //     // this.batchNumberFlag=false
 
-            return true;
-          }
-        }
-        // for unique validation ends here
+        //     return true;
+        //   }
+        // }
+        // // for unique validation ends here
 
         document.getElementById("batchNumberMsg" + i).innerHTML = "";
         return true;

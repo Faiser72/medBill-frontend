@@ -34,7 +34,7 @@ export class ProductMasterServiceService {
     return this.http.get(`${this.baseUrl}/productMaster/getProductListExceptOne/${productId}`);
   }
 
-    
+
   // get Product by id
   getProductDetails(productId: number) {
     return this.http.get(`${this.baseUrl}/productMaster/getProductDetails/${productId}`)

@@ -40,22 +40,61 @@
     </div>
     </span>
     <!-- For master ends here -->
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/orderHome/listOrder">
-        <mat-icon color="primary">assignment</mat-icon>Order
-    </a>
+    <!-- for Order starts here -->
+    <span>
+        <mat-list-item (click)="showOrderSubmenu = !showOrderSubmenu" class="parent mb-1"
+            (click)="toggleOrderSubmenu('Order_submenu')">
+            <mat-icon color="primary"><i class="fa fa-book" aria-hidden="true"></i></mat-icon>
+            <span class="full-width" color="primary">Order</span>
+    <mat-icon class="menu-button" color="primary" [ngClass]="{'rotated' : showOrderSubmenu}">expand_more
+    </mat-icon>
+    </mat-list-item>
+    <div class="submenu" [ngClass]="{'expanded' : showOrderSubmenu}" id="Order_submenu">
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/orderHome/listOrder">
+            <mat-icon color="primary"><i class="fa fa-list-ol" aria-hidden="true"></i></mat-icon>List Orders
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/orderHome/deletedOrders">
+            <mat-icon color="primary"><i class="fa fa-trash" aria-hidden="true"></i></mat-icon>Deleted Orders
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/orderHome/canceledOrders">
+            <mat-icon color="primary"><i class="fa fa-recycle" aria-hidden="true"></i></mat-icon>Canceled Orders
+        </a>
+    </div>
+    </span>
+    <!-- For Order ends here -->
+
 
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/puchaseEntryHome/listPurchaseEntry">
         <mat-icon color="primary">chrome_reader_mode</mat-icon>Purchase Entry
     </a>
 
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/salesHome/listSales">
-        <mat-icon color="primary">dns</mat-icon>Sales
-    </a>
+    <!-- for Sales Order starts here -->
+    <span>
+        <mat-list-item (click)="showSalesOrderSubmenu = !showSalesOrderSubmenu" class="parent mb-1"
+            (click)="toggleSalesOrderSubmenu('SalesOrder_submenu')">
+            <mat-icon color="primary"><i class="fa fa-book" aria-hidden="true"></i></mat-icon>
+            <span class="full-width" color="primary">Sales</span>
+    <mat-icon class="menu-button" color="primary" [ngClass]="{'rotated' : showSalesOrderSubmenu}">expand_more
+    </mat-icon>
+    </mat-list-item>
+    <div class="submenu" [ngClass]="{'expanded' : showSalesOrderSubmenu}" id="SalesOrder_submenu">
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/salesHome/listSales">
+            <mat-icon color="primary"><i class="fa fa-list-ol" aria-hidden="true"></i></mat-icon>List Sales Orders
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/salesHome/deletedSalesOrders">
+            <mat-icon color="primary"><i class="fa fa-trash" aria-hidden="true"></i></mat-icon>Deleted Sales Orders
+        </a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/salesHome/canceledSalesOrders">
+            <mat-icon color="primary"><i class="fa fa-recycle" aria-hidden="true"></i></mat-icon>Canceled Sales Orders
+        </a>
+    </div>
+    </span>
+    <!-- For Sales Order ends here -->
 
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/stockDetails">
         <span matBadge="{{noOfStocks}}" matBadgeOverlap="false">
-        <mat-icon color="primary">important_devices</mat-icon>Stock
-    </span>
+            <mat-icon color="primary">important_devices</mat-icon>Stock
+        </span>
     </a>
 
     <span>
@@ -84,10 +123,13 @@
         </a>
         <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/expiryIntimation">
             <span matBadge="{{noOfProductsExpireInNext30Days}}" matBadgeOverlap="false">
-            <mat-icon color="primary"><i class="fa fa-product-hunt" aria-hidden="true"></i></mat-icon>Expiry Intimation
-        </span>
+                    <mat-icon color="primary"><i class="fa fa-product-hunt" aria-hidden="true"></i></mat-icon>Expiry
+                    Intimation
+                </span>
         </a>
-
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/home/salesReportByPayment">
+            <mat-icon color="primary"><i class="fa fa-book" aria-hidden="true"></i></mat-icon>Sales Report
+        </a>
     </div>
     </span>
 

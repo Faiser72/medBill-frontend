@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatSnackBar } from '@angular/material';
+import { MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Router, NavigationExtras } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
+import { OrderService } from 'src/app/service/order/order.service';
 
 @Component({
   selector: 'app-list-order',
@@ -11,14 +12,14 @@ import { AppComponent } from 'src/app/app.component';
 export class ListOrderComponent implements OnInit {
 
   deleted_successfully_message: string = "Deleted Successfully";
-  doctorList;
+  orderList;
   dataSource: any;
   displayedColumns: string[] = [
     "slNo",
-    "doctorName",
-    "specialization",
-    "morningVisitFrom",
-    "phoneNumber",
+    "orderNumber",
+    "orderDate",
+    "supplierName",
+    "orderGrandTotal",
     "action"
   ];
 
@@ -28,29 +29,30 @@ export class ListOrderComponent implements OnInit {
   constructor(
     private router: Router,
     private _snackBar: MatSnackBar,
-    // private doctorService: DoctorserviceService,
+    private orderService: OrderService,
     private appComponent: AppComponent) { }
 
   ngOnInit() {
-    // this.appComponent.startSpinner("Loading...");
-    // this.doctorService.getDoctorList().subscribe((response: any) => {
-    //   if (response.success) {
-    //     this.doctorList = response.listObject;
-    //     this.dataSource = new MatTableDataSource(this.doctorList);
-    //     this.dataSource.paginator = this.paginator;
-    //     this.dataSource.sort = this.sort;
-    //     // this.customFilter();
-    //   } else {
-    //     this.dataSource = new MatTableDataSource();
-    //     this.dataSource.paginator = this.paginator;
-    //     this.dataSource.sort = this.sort;
-    //   }
-    // },
-    //   (error) => {
-    //     console.log(error, "Error Caught In Fetching Doctor Details");
-    //   }
-    // );
-    // this.appComponent.stopSpinner();
+    this.appComponent.startSpinner("Loading...");
+    this.orderService.getorderList().subscribe((response: any) => {
+      if (response.success) {
+        this.orderList = response.listObject;
+
+        this.dataSource = new MatTableDataSource(this.orderList);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        // this.customFilter();
+      } else {
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+    },
+      (error) => {
+        console.log(error, "Error Caught In Fetching Order Details");
+      }
+    );
+    this.appComponent.stopSpinner();
   }
 
 
@@ -64,28 +66,44 @@ export class ListOrderComponent implements OnInit {
   }
 
 
-  routeToDeleteDoctor(id_to_delete: any, doctor: any) {
-    // if (confirm(`Delete ${doctor.doctorName} doctor`)) {
-    //   let index = this.doctorList.findIndex((data: any) => data.doctorId === doctor.doctorId);
-    //   this.doctorService.deleteDoctor(id_to_delete).subscribe((response: any) => {
-    //     if (response.success) {
-    //       this.doctorList.splice(index, 1);
-    //       this.dataSource = new MatTableDataSource(this.doctorList);
-    //       this.dataSource.paginator = this.paginator;
-    //       this.dataSource.sort = this.sort;
-    //       // this.customFilter();
-    //     }
-    //     this._snackBar.open(doctor.doctorName, response.message, { duration: 2500, });
-    //   })
-    // }
+  routeToDeleteDOrder(id_to_delete: any, order: any) {
+    if (confirm(`Delete Order Id: ${order.orderNumber}`)) {
+      let index = this.orderList.findIndex((data: any) => data.orderId === order.orderId);
+      this.orderService.deleteOrderDetails(id_to_delete).subscribe((response: any) => {
+        if (response.success) {
+          this.orderList.splice(index, 1);
+          this.dataSource = new MatTableDataSource(this.orderList);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          // this.customFilter();
+        }
+        this._snackBar.open(order.orderNumber, response.message, { duration: 2500, });
+      })
+    }
+  }
+
+  routeToCancelOrder(id_to_delete: any, order: any) {
+    if (confirm(`Cancel Order Id: ${order.orderNumber}`)) {
+      let index = this.orderList.findIndex((data: any) => data.orderId === order.orderId);
+      this.orderService.cancelOrderDetails(id_to_delete).subscribe((response: any) => {
+        if (response.success) {
+          this.orderList.splice(index, 1);
+          this.dataSource = new MatTableDataSource(this.orderList);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          // this.customFilter();
+        }
+        this._snackBar.open(order.orderNumber, response.message, { duration: 2500, });
+      })
+    }
   }
 
 
-  routeToEditDoctor(doctorDetails) {
+  routeToEditOrder(orderDetails) {
     let navigationExtras: NavigationExtras = {
-      queryParams: { doctorId: doctorDetails.doctorId }
+      queryParams: { orderId: orderDetails.orderId }
     };
-    this.router.navigate(["/doctorshome/editdoctor"], navigationExtras);
+    this.router.navigate(["/home//orderHome/editOrder"], navigationExtras);
 
   }
 

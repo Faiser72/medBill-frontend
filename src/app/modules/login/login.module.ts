@@ -10,7 +10,7 @@ import { ChangepasswordComponent } from './changepassword/changepassword.compone
 
 
 @NgModule({
-  declarations: [LoginComponent ,ForgotPaswordDialog, ChangepasswordComponent],
+  declarations: [LoginComponent, ForgotPaswordDialog, ChangepasswordComponent],
   imports: [
     CommonModule,
     MatIconModule,

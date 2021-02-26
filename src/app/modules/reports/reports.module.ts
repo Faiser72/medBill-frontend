@@ -10,11 +10,12 @@ import { OrderReportsComponent } from './order-reports/order-reports.component';
 import { PurchaseReportByPaymentModeComponent } from './purchase-report-by-payment-mode/purchase-report-by-payment-mode.component';
 import { PurchaseReturnReportComponent } from './purchase-return-report/purchase-return-report.component';
 import { ExpiryIntimationComponent } from './expiry-intimation/expiry-intimation.component';
+import { SalesReportByPaymentModeComponent } from './sales-report-by-payment-mode/sales-report-by-payment-mode.component';
 
 
 
 @NgModule({
-  declarations: [SalesByProductComponent, CurrentStocksAndAgingComponent, OrderReportsComponent, PurchaseReportByPaymentModeComponent, PurchaseReturnReportComponent, ExpiryIntimationComponent],
+  declarations: [SalesByProductComponent, CurrentStocksAndAgingComponent, OrderReportsComponent, PurchaseReportByPaymentModeComponent, PurchaseReturnReportComponent, ExpiryIntimationComponent, SalesReportByPaymentModeComponent],
   imports: [
     CommonModule,
     MaterialImportModuleModule,

@@ -8,7 +8,7 @@
             <mat-divider class="w-75 " color="primary"></mat-divider>
         </div>
         <div class="card-body">
-            <div class="card w-50 d-flex justify-content-center border-0 mx-auto cardss">
+            <div class="card w-75 d-flex justify-content-center border-0 mx-auto cardss">
                 <form class="form-group customhover" [formGroup]="orderReportForm">
                     <div class="row d-flex justify-content-around w-100">
                         <div class="col-lg-6 col-md-12 col-sm-12">
@@ -80,12 +80,12 @@
                 <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
             </ng-container>
 
-            <!-- productCategory Column -->
-            <ng-container matColumnDef="productCategory">
+            <!-- orderNumber Column -->
+            <ng-container matColumnDef="orderNumber">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table_header">
-                    Product Category
+                    Order Number
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.productCategory }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.orderNumber }}</td>
             </ng-container>
 
             <!-- productName Column -->

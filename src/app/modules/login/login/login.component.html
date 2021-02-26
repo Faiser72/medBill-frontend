@@ -46,14 +46,17 @@ Description :- this component is used for login,
                                 <mat-label><b>Enter your password</b></mat-label>
                                 <input matInput [type]="hide ? 'password' : 'text'" name="password" id="password" [(ngModel)]="password" (input)="validatePassword();">
                                 <button class="hide-btn" type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                  <mat-icon style="color: #4801FF;">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
+                                    <mat-icon style="color: #4801FF;">{{hide ? 'visibility_off' : 'visibility'}}
+                                    </mat-icon>
+                                </button>
                             </mat-form-field>
                             <p style="color : red" *ngIf='passwordError'>{{passwordError}}</p>
                             <br />
 
-                            <button class="btn btn-lg btn-submit btn-block text-uppercase" type="submit">Sign in</button>
-                            <h6 mat-raised-button (click)="openDialog()" class="text-center fgpwd">Forgot Your Password?</h6>
+                            <button class="btn btn-lg btn-submit btn-block text-uppercase" type="submit">Sign
+                                in</button>
+                            <h6 mat-raised-button (click)="openDialog()" class="text-center fgpwd">Forgot Your Password?
+                            </h6>
 
                             <!-- <div class="custom-control custom-checkbox mb-3">
               <a mat-raised-button (click)="openDialog()">Forgot Your Password?</a>

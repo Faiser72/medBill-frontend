@@ -22,10 +22,12 @@
     min-width: 150px;
     max-width: 500px;
     width: 100%;
+    font-size: 12px;
 }
 
 .field-full-width {
     width: 100%;
+    font-size: 12px;
 }
 
 .upload-photo,
@@ -136,4 +138,12 @@ mat-datepicker-toggle {
 
 .form-control {
     border: 1px solid black !important;
+}
+
+.mat-radio-button~.mat-radio-button {
+    margin-left: 16px;
+}
+
+.lab {
+    font-weight: 500;
 }

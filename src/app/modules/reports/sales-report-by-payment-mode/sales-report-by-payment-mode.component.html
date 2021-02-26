@@ -1,0 +1,128 @@
+<div class="container-fluid mt-3">
+    <!-- <div class="card"> -->
+    <mat-card class="card">
+        <div class="card-title">
+            <h4 class="text-center main-bg pt-3">- Sales Report -</h4>
+        </div>
+        <div class="mx-auto text-center divider mt-2">
+            <mat-divider class="w-75 " color="primary"></mat-divider>
+        </div>
+        <div class="card-body">
+            <div class="card w-50 d-flex justify-content-center border-0 mx-auto cardss">
+                <form class="form-group customhover" [formGroup]="salesOrderReportForm">
+                    <mat-form-field class="master-full-width" appearance="outline">
+                        <mat-label>From Date</mat-label>
+                        <!-- <input matInput placeholder="Enter Category Name" formControlName="categoryName"> -->
+                        <input matInput type="date" placeholder="Ex. 7/7/2020" color="primary" formControlName="fromDate" />
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="salesOrderReportForm.get('fromDate') && salesOrderReportForm.get('fromDate').touched && salesOrderReportForm.get('fromDate').invalid">
+                        Plase Select from date</p>
+
+                    <mat-form-field class="master-full-width" appearance="outline">
+                        <mat-label>To Date</mat-label>
+                        <!-- <input matInput placeholder="Enter Category Name" formControlName="productName"> -->
+                        <input matInput type="date" placeholder="Ex. 8/8/2020" color="primary" formControlName="toDate" />
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="salesOrderReportForm.get('toDate') && salesOrderReportForm.get('toDate').touched && salesOrderReportForm.get('toDate').invalid">
+                        {{toDateInputMsg}}</p>
+
+                    <mat-form-field class="master-full-width" appearance="outline">
+                        <mat-label>Payment Mode</mat-label>
+                        <mat-select formControlName="paymentMode">
+                            <mat-option value="Cash">Cash</mat-option>
+                            <mat-option value="Card">Card</mat-option>
+                            <mat-option value="Upi">UPI</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <p style="color: red;" *ngIf="salesOrderReportForm.get('paymentMode') && salesOrderReportForm.get('paymentMode').touched && salesOrderReportForm.get('paymentMode').invalid">
+                        Please Select Payment Mode</p>
+                    <div class="text-center mt-4">
+                        <button [disabled]="salesOrderReportForm.invalid" mat-raised-button class="mb-2 mr-3 submit-btn" color="primary" type="submit" (click)="getSalesDetails(); reportShowHide()">
+                            <mat-icon class="mr-2">save</mat-icon>Generate Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- </div> -->
+    </mat-card>
+</div>
+<!-- <router-outlet></router-outlet> -->
+
+<br />
+<div [hidden]='pagination'>
+
+    <h4 class="title-header">- Sales List -</h4>
+
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" *ngIf='salesOrderList?.length>0'>
+            <!-- ID Column -->
+            <ng-container matColumnDef="slNo">
+                <th mat-header-cell *matHeaderCellDef class="table_header">Sl.no</th>
+                <td mat-cell *matCellDef="let row">{{dataSource.filteredData.indexOf(row) + 1}}.</td>
+            </ng-container>
+
+            <!-- invoiceNumber Column -->
+            <ng-container matColumnDef="invoiceNumber">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    Invoice Number
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
+            </ng-container>
+
+            <!-- customerName Column -->
+            <ng-container matColumnDef="customerName">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    Customer Name
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.customerName }}</td>
+            </ng-container>
+
+            <!-- salesDate Column -->
+            <ng-container matColumnDef="salesDate">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    Sales Date
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.salesDate }}</td>
+            </ng-container>
+
+            <!-- totalNetAmount Column -->
+            <ng-container matColumnDef="totalNetAmount">
+                <th mat-header-cell *matHeaderCellDef class="table_header">
+                    Total
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.totalNetAmount }}</td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <!-- <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="table_header">Action</th>
+                <td mat-cell *matCellDef="let row;">
+                    <div class="action-btn">
+                        <a (click)="routeToEditCategory(this.row)" class="action-link">
+                            <mat-icon class="edit-btn" title="Edit">edit</mat-icon>
+                        </a>
+                    </div>
+                    <span style="color: #3f51b5;">|</span>
+                    <div class="action-btn">
+                        <a (click)="routeToDeleteCategory(this.row)" class="action-link">
+                            <mat-icon class="delete-btn" title="Delete">delete_forever</mat-icon>
+                        </a>
+                    </div>
+                </td>
+            </ng-container> -->
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="row-style" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator [hidden]='pagination' [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+
+    <div>
+        <h6 class="text-right mt-5"> <span class="main-bg">Total :</span> {{grandTotal}} </h6>
+    </div>
+
+</div>
+
+<br />

@@ -22,9 +22,9 @@ export class SpinnerService {
 }
 
 // File Name :-spinner.service.ts	   	Created Date :-01-09-2020     Created By :- Faiser I (Emp. Id : VTPL/BLR/006)
-	
+
 // Description :- this is the service file to communicate wit api's 					
-	
+
 // ============================================================================================================================
 //   Sl.No			    Description			                                Modified By		              	      Modified Date	
 // ============================================================================================================================

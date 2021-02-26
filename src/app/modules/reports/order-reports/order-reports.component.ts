@@ -1,6 +1,7 @@
+import { OrderService } from 'src/app/service/order/order.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import { MatPaginator, MatSort, MatSnackBar } from '@angular/material';
+import { MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import { isNullOrUndefined } from 'util';
 
@@ -14,32 +15,52 @@ export class OrderReportsComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  pagination: boolean = true;
+
   dataSource: any;
   orderReportForm: FormGroup;
   isShow: boolean = false;
+  today: any;
 
   searchValue: string = null;
   displayedColumns: string[] = [
     "slNo",
+    "orderNumber",
     "orderDate",
-    "orderId",
+    "orderGrandTotal",
     "supplierName",
-    "orderStates",
-    "orderRecieved",
+    "contactPersonName",
+    "contactPersonNumber"
     // "action"
   ];
-  categoryDetailsList: any;
-  categoryDetailsListExceptOne: any;
+
+  // productCategoryList: any;
+
+  productList: any;
+  stockReport: any;
+
+  diffDays: any = [];
+  orderList: any;
 
   constructor(private fb: FormBuilder,
     private _snackBar: MatSnackBar,
-    private router: Router) {
+    private router: Router,
+    private orderService: OrderService) {
+
+    // for Current starts
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    this.today = yyyy + '-' + mm + '-' + dd;
+    // for Current ends
     this.orderReportFormBuilder();
   }
 
   ngOnInit() {
-
   }
+
   customFilter() {
     this.dataSource.filterPredicate = (data, filter) => {
       const dataStr = data.categoryName;
@@ -50,119 +71,75 @@ export class OrderReportsComponent implements OnInit {
   orderReportFormBuilder() {
     this.orderReportForm = this.fb.group({
       // categoryId: [0],
-      startDate: [null, [Validators.required]],
-      endDate: [null, [Validators.required]]
+      fromDate: [null, [Validators.required]],
+      toDate: [null, [Validators.required]],
     });
-    // this.orderReportForm.setValidators(this.customValidation());
+    this.orderReportForm.setValidators(this.customValidation());
   }
 
   saveCategoryDetails() {
+    console.log(this.orderReportForm.value);
+    this.orderService.getAllOrderListBtwnDates(this.orderReportForm.value.fromDate, this.orderReportForm.value.toDate).subscribe((data: any) => {
+      if (data.success) {
+        this.orderList = data.listObject;
+        console.log(this.orderList);
 
+        this.dataSource = new MatTableDataSource(data['listObject']);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.pagination = false;
+        this.customFilter();
+      }
+      else {
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.pagination = true;
+        alert('No Data Found')
+      }
+    })
   }
 
   reportShowHide() {
     this.isShow = true;
   }
 
-  categoryNameInputMsg: string; categoryName: string;
-  // customValidation(): ValidatorFn {
-  //   return (formGroup: FormGroup): ValidationErrors => {
-  //     const categoryNameFormGroup = formGroup.controls['categoryName'];
-  //     if (categoryNameFormGroup.value !== '' && categoryNameFormGroup.value !== null) {
-  //       if (categoryNameFormGroup.valid) {
-  //         if (this.btnFlag) {
-  //           if (!isNullOrUndefined(this.categoryDetailsListExceptOne)) {
-  //             this.categoryDetailsListExceptOne.forEach((data: any) => {
-  //               if (data.categoryName.toLowerCase() == categoryNameFormGroup.value.trim().toLowerCase().replace(/\s+/g, ' ')) {
-  //                 this.categoryName = data.categoryName.toLowerCase();
-  //                 this.categoryNameInputMsg = 'This category name already exist.';
-  //                 categoryNameFormGroup.setErrors({});
-  //               }
-  //             });
-  //           }
-  //         } else {
-  //           if (!isNullOrUndefined(this.categoryDetailsList)) {
-  //             this.categoryDetailsList.forEach((data: any) => {
-  //               if (data.categoryName.toLowerCase() == categoryNameFormGroup.value.trim().toLowerCase().replace(/\s+/g, ' ')) {
-  //                 this.categoryName = data.categoryName.toLowerCase();
-  //                 this.categoryNameInputMsg = 'This category name already exist.';
-  //                 categoryNameFormGroup.setErrors({});
-  //               }
-  //             });
-  //           }
-  //         }
-  //       } else {
-  //         if (this.categoryName == categoryNameFormGroup.value.trim().toLowerCase().replace(/\s+/g, ' ')) {
-  //           this.categoryNameInputMsg = 'This category name already exist.';
-  //         } else {
-  //           this.categoryNameInputMsg = 'Please enter a valid category name';
-  //         }
-  //       }
-  //     } else {
-  //       this.categoryNameInputMsg = 'Please enter this field.';
-  //     }
+  toDateInputMsg: string; toDate: string;
 
-  //     return;
-  //   };
-  // }
+  customValidation(): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors => {
 
+      // for toDate Autocomplete starts here
+      const toDateFormGroup = formGroup.controls["toDate"];
+      const fromDateFormGroup = formGroup.controls['fromDate'];
+      if (toDateFormGroup.value !== "" && toDateFormGroup.value !== null) {
+        console.log(toDateFormGroup.value);
+        if (toDateFormGroup.value < fromDateFormGroup.value) {
+          this.toDateInputMsg = "To Date Should be greater than From Date";
+          toDateFormGroup.setErrors({});
+        }
+      }
+      else {
+        this.toDateInputMsg = "Please enter this field.";
+        toDateFormGroup.setErrors({});
+      }
+      // for toDate Autocomplete ends here
+      return;
+    };
+  }
 
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
 
-  routeToDeleteCategory(categoryDetails: any) {
-    // let index = this.categoryDetailsList.findIndex((data: any) => data.categoryId === categoryDetails.categoryId);
-    // if ((categoryDetails.categoryId > 0) && (index > -1)) {
-    //   this.categoryMasterService.deleteCategoryMasterDetails(categoryDetails.categoryId).subscribe((resp: any) => {
-    //     this.categoryDetailsList.splice(index, 1);
-    //     this.customReset();
-    //     this._snackBar.open(categoryDetails.categoryName, resp.message, { duration: 2500 });
-    //   });
-    // }
-  }
-
-  btnFlag: boolean = false;
-  routeToEditCategory(categoryDetails: any) {
-    // this.btnFlag = true;
-    // this.categoryMasterService.getCategoryMasterListExceptOne(categoryDetails.categoryId).subscribe((data: any) => {
-    //   this.categoryDetailsListExceptOne = data.listObject;
-    //   this.orderReportForm.patchValue({
-    //     categoryName: categoryDetails.categoryName,
-    //     categoryId: categoryDetails.categoryId
-    //   });
-    // });
-  }
-
-  updateCategoryDetails() {
-    // let categoryName = this.orderReportForm.get('categoryName').value;
-    // this.orderReportForm.patchValue({ categoryName: categoryName.trim().replace(/\s+/g, ' ') });
-    // if (this.orderReportForm.valid) {
-    //   this.categoryMasterService.updateCategoryMasterDetails(this.orderReportForm.value).subscribe((resp: any) => {
-    //     if (resp.success) {
-    //       alert(resp.message);
-    //       this.customReset();
-    //     } else {
-    //       alert(resp.message);
-    //     }
-    //   });
-    // } else {
-    //   alert("please fill the proper Details")
-    //   return false;
-    // }
-  }
-
-
   customReset() {
     this.orderReportForm.reset();
     this.ngOnInit();
-    this.btnFlag = false;
     this.searchValue = null;
   }
 

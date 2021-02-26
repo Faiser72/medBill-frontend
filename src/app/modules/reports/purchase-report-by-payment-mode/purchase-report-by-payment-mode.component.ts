@@ -42,6 +42,9 @@ export class PurchaseReportByPaymentModeComponent implements OnInit {
   productList: any;
   stockReport: any;
 
+  grandTotal: any = 0;
+
+
   diffDays: any = [];
   purchaseEntryList: any;
 
@@ -91,6 +94,7 @@ export class PurchaseReportByPaymentModeComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.pagination = false;
         this.customFilter();
+        this.calculateTotal(this.purchaseEntryList);
       }
       else {
         this.dataSource = new MatTableDataSource();
@@ -100,6 +104,12 @@ export class PurchaseReportByPaymentModeComponent implements OnInit {
         alert('No Data Found')
       }
     })
+  }
+
+  calculateTotal(list) {
+    for (var i = 0; i < list.length; i++) {
+      this.grandTotal += +list[i].purchaseEntryTotal;
+    }
   }
 
   reportShowHide() {
