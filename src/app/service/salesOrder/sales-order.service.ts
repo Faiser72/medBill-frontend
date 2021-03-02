@@ -85,4 +85,8 @@ export class SalesOrderService {
     return this.http.get(`${this.baseUrl}/salesOrder/getAllSalesListBtwnDatesAndPayment/${fromDate}/${toDate}/${paymentMode}`)
   }
 
+  getAllSalesListOfProductBtwnDates(fromDate: string, toDate: string, productName: string) {
+    return this.http.get(`${this.baseUrl}/salesOrder/getAllSalesListOfProductBtwnDates/${fromDate}/${toDate}/${productName}`)
+  }
+
 }
